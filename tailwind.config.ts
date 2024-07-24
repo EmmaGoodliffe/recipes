@@ -8,6 +8,7 @@ export default {
 			colors: {
 				o: colors.orange[400],
 				y: colors.amber[300],
+				k: colors.zinc[900],
 				grey: colors.zinc[700],
 				w: colors.zinc[100]
 			}
