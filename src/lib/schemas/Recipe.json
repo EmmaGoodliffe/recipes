@@ -1,0 +1,11 @@
+{
+	"@context": {
+		"schema": "http://schema.org/",
+		"Recipe": { "@id": "schema:Recipe" }
+	},
+	"properties": {
+		"bla": {
+			"type": "Recipe"
+		}
+	}
+}
