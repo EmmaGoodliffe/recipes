@@ -2,10 +2,6 @@
 	import '../app.css';
 </script>
 
-<div class="app">
-	<nav>this is the nav</nav>
-
-	<main>
-		<slot />
-	</main>
-</div>
+<main class="w-11/12 mx-auto flex flex-col text-o">
+	<slot />
+</main>
