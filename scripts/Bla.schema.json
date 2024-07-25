@@ -1,0 +1,18 @@
+{
+	"$id": "schema:Bla",
+	"title": "Bla",
+	"description": "A bla.",
+	"type": "object",
+	"allOf": [
+		{
+			"description": "The base.",
+			"$ref": "schema:Base"
+		}
+	],
+	"properties": {
+		"extra": {
+			"description": "An extra.",
+			"type": "string"
+		}
+	}
+}

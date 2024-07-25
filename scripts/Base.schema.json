@@ -1,0 +1,13 @@
+{
+	"$id": "schema:Base",
+	"title": "Base",
+	"description": "A base.",
+	"type": "object",
+	"properties": {
+		"original": {
+			"description": "An original.",
+			"type": "boolean"
+		}
+	},
+	"required": ["original"]
+}
