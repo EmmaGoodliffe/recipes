@@ -8,13 +8,13 @@ ajv.addSchema(Base);
 const validate = ajv.compile(Bla);
 
 const data = {
-    original: false,
-    extra: "true"
+  original: false,
+  extra: "true",
 };
 
 const valid = validate(data);
 if (valid) {
-    console.log("Data is valid!");
+  console.log("Data is valid!");
 } else {
-    console.error("Data is invalid:", validate.errors);
+  console.error("Data is invalid:", validate.errors);
 }
