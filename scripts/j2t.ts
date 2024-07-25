@@ -1,7 +1,7 @@
+import { readFileSync, writeFileSync } from "fs";
 import { compileFromFile } from "json-schema-to-typescript";
-import { writeFileSync, readFileSync } from "fs";
-import type { ResolverOptions } from "@apidevtools/json-schema-ref-parser/";
 import path from "path";
+import type { ResolverOptions } from "@apidevtools/json-schema-ref-parser/";
 
 const read: Extract<ResolverOptions["read"], Function> = file =>
   new Promise((resolve, reject) => {
