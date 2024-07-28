@@ -1,11 +1,20 @@
 import Ajv from "ajv";
-const ajv = new Ajv();
-import Base from "./Base.schema.json";
-import Bla from "./Bla.schema.json";
+import { readFileSync, writeFileSync } from "fs";
+import { deepRemoveKvPair } from "./helpers";
+import type { R } from "./types";
+import { compile } from "json-schema-to-typescript";
+import { fetchSchema } from "./fetch";
 
-ajv.addSchema(Base);
-
-const validate = ajv.compile(Bla);
+const ajv = new Ajv({
+  loadSchema(uri) {
+    if (!/^schema:/.test(uri)) {
+      throw new Error(`URI didn't start with schema: ${uri}`);
+    }
+    const name = uri.slice("schema:".length);
+    return fetchSchema(name);
+  },
+});
+const validate = await ajv.compileAsync(await fetchSchema("Recipe"));
 
 const data = {
   original: false,
