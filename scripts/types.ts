@@ -1,4 +1,4 @@
-import { Fn, Call } from "hotscript";
+import { Call, Fn } from "hotscript";
 
 export type R = Record<string, unknown>;
 

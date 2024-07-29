@@ -1,0 +1,11 @@
+{
+  "title": "Everything",
+  "description": "...",
+  "type": "object",
+  "properties": {
+    "everything": {
+      "description": "...",
+      "type": "string"
+    }
+  }
+}

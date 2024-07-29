@@ -1,8 +1,5 @@
-import Ajv from "ajv";
-import { readFileSync, writeFileSync } from "fs";
 import { deepRemoveKvPair } from "./helpers";
 import type { R } from "./types";
-import { compile } from "json-schema-to-typescript";
 
 const url = (name: string) =>
   `https://raw.githubusercontent.com/charlestati/schema-org-json-schemas/master/schemas/${name}.schema.json`;

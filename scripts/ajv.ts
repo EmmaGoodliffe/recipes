@@ -1,8 +1,4 @@
 import Ajv from "ajv";
-import { readFileSync, writeFileSync } from "fs";
-import { deepRemoveKvPair } from "./helpers";
-import type { R } from "./types";
-import { compile } from "json-schema-to-typescript";
 import { fetchSchema } from "./fetch";
 
 const ajv = new Ajv({
