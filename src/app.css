@@ -7,10 +7,10 @@ h1 {
 }
 
 dialog {
-  @apply bg-k text-w px-4 py-2 rounded border-grey border-2;
+  @apply bg-k text-w rounded border-grey border-2;
 }
 
-::backdrop {
+dialog::backdrop {
   @apply bg-k opacity-75;
 }
 
