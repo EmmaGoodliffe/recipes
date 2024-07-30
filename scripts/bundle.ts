@@ -1,7 +1,8 @@
 import { fetchSchema } from "./fetch";
 import { isR } from "./helpers";
 import type { SchemaOrg, BundledSchema, R, DeepOverwriteKey } from "./types";
-import { writeFileSync } from "fs";
+import { writeFileSync , readFileSync} from "fs";
+import Ajv from "ajv";
 
 // const flattenExtNames = async (name: string): Promise<string[]> => {
 //   const schema = await fetchSchema(name);
@@ -160,7 +161,9 @@ const fetchRefAdjustedSchema = async (name: string) => {
   ).result;
 };
 
-const refs = await fetchRefs("Recipe");
+const name = "Recipe";
+const refs = await fetchRefs(name);
+writeFileSync("./scripts/refs.txt", refs.join(","));
 console.log("FETCHED REFS");
 const schemas = await Promise.all(refs.map(ref => fetchRefAdjustedSchema(ref)));
 console.log("FETCHED ADJUSTED SCHEMAS");
@@ -168,7 +171,18 @@ const defs: Record<string, (typeof schemas)[number]> = {};
 for (const def of schemas) {
   defs[def.$id.slice("schema:".length)] = def;
 }
-const schema = { ...(await fetchRefAdjustedSchema("Recipe")), $defs: defs };
-writeFileSync("./scripts/bundle.json", JSON.stringify(schema));
+const schema = {
+  ...(await fetchRefAdjustedSchema(name)),
+  $defs: {
+    ...defs,
+    Butt: {
+      $id: "schema:Butt",
+      title: "Butt",
+      type: "object",
+      properties: { foo: { type: "string" } },
+    },
+  },
+};
+// writeFileSync("./scripts/.bundle.json", JSON.stringify(schema));
 
 // TODO: memoize fetching

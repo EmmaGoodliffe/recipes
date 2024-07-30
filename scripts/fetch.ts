@@ -13,6 +13,6 @@ export const fetchSchema = async (name: string) => {
   const noTime = deepRemoveKvPair(noDateTime, "format", "time");
   const noDate = deepRemoveKvPair(noTime, "format", "date");
   const cleaned = noDate;
-  console.log(`fetched ${name}`);
+  // console.log(`fetched ${name}`);
   return cleaned;
 };
