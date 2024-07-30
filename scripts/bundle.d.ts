@@ -8,7 +8,7 @@
 /**
  * A recipe. For dietary restrictions covered by the recipe, a few common restrictions are enumerated via [[suitableForDiet]]. The [[keywords]] property can also be used to add more detail.
  */
-export type Recipe = HowTo & {
+export type Recipe = Butt & {
   /**
    * The time it takes to actually cook the dish, in [ISO 8601 duration format](http://en.wikipedia.org/wiki/ISO_8601).
    */
@@ -21,12 +21,7 @@ export type Recipe = HowTo & {
    * A single ingredient used in the recipe, e.g. sugar, flour or garlic.
    */
   ingredients?: string | string[];
-  /**
-   * Nutrition information about the recipe or menu item.
-   */
-  nutrition?: {
-    [k: string]: unknown;
-  };
+  nutrition?: Butt1;
   /**
    * The category of the recipe—for example, appetizer, entree, etc.
    */
@@ -42,53 +37,33 @@ export type Recipe = HowTo & {
   /**
    * A step in making the recipe, in the form of a single item (document, video, etc.) or an ordered list with HowToStep and/or HowToSection items.
    */
-  recipeInstructions?: string;
+  recipeInstructions?: string | Butt2;
   /**
    * The quantity produced by the recipe (for example, number of people served, number of servings, etc).
    */
-  recipeYield?: string;
+  recipeYield?: string | Butt2;
+  /**
+   * Indicates a dietary restriction or guideline for which this recipe or menu item is suitable, e.g. diabetic, halal etc.
+   */
+  suitableForDiet?: Butt2 | Butt2[];
   [k: string]: unknown;
 };
 
 /**
  * Instructions that explain how to achieve a result by performing a sequence of steps.
  */
-export interface HowTo {
-  /**
-   * The estimated cost of the supply or supplies consumed when performing instructions.
-   */
-  estimatedCost?: string;
-  /**
-   * The length of time it takes to perform instructions or a direction (not including time to prepare the supplies), in [ISO 8601 duration format](http://en.wikipedia.org/wiki/ISO_8601).
-   */
-  performTime?: string;
-  /**
-   * The length of time it takes to prepare the items to be used in instructions or a direction, in [ISO 8601 duration format](http://en.wikipedia.org/wiki/ISO_8601).
-   */
-  prepTime?: string;
-  /**
-   * A single step item (as HowToStep, text, document, video, etc.) or a HowToSection.
-   */
-  step?: string | string[];
-  /**
-   * A single step item (as HowToStep, text, document, video, etc.) or a HowToSection (originally misnamed 'steps'; 'step' is preferred).
-   */
-  steps?: string | string[];
-  /**
-   * A sub-property of instrument. A supply consumed when performing instructions or a direction.
-   */
-  supply?: string | string[];
-  /**
-   * A sub property of instrument. An object used (but not consumed) when performing instructions or a direction.
-   */
-  tool?: string | string[];
-  /**
-   * The total time required to perform instructions or a direction (including time to prepare the supplies), in [ISO 8601 duration format](http://en.wikipedia.org/wiki/ISO_8601).
-   */
-  totalTime?: string;
-  /**
-   * The quantity that results by performing instructions. For example, a paper airplane, 10 personalized candles.
-   */
-  yield?: string;
+export interface Butt {
+  foo?: string;
+  [k: string]: unknown;
+}
+/**
+ * Nutrition information about the recipe or menu item.
+ */
+export interface Butt1 {
+  foo?: string;
+  [k: string]: unknown;
+}
+export interface Butt2 {
+  foo?: string;
   [k: string]: unknown;
 }

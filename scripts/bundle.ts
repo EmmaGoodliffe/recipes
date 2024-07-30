@@ -141,8 +141,15 @@ const fetchRefsInner = async (state: RefState): Promise<RefState> => {
 };
 
 const fetchRefs = async (name: string) =>
-  (await fetchRefsInner({ searched: new Set([]), refs: new Set([name]), i: 0 }))
-    .refs;
+  Array.from(
+    (
+      await fetchRefsInner({
+        searched: new Set([]),
+        refs: new Set([name]),
+        i: 0,
+      })
+    ).refs,
+  ).filter(r => r !== name);
 
 const fetchRefAdjustedSchema = async (name: string) => {
   const schema = await fetchSchema(name);
@@ -155,15 +162,13 @@ const fetchRefAdjustedSchema = async (name: string) => {
 
 const refs = await fetchRefs("Recipe");
 console.log("FETCHED REFS");
-const schemas = await Promise.all(
-  Array.from(refs).map(ref => fetchRefAdjustedSchema(ref)),
-);
+const schemas = await Promise.all(refs.map(ref => fetchRefAdjustedSchema(ref)));
 console.log("FETCHED ADJUSTED SCHEMAS");
 const defs: Record<string, (typeof schemas)[number]> = {};
 for (const def of schemas) {
   defs[def.$id.slice("schema:".length)] = def;
 }
 const schema = { ...(await fetchRefAdjustedSchema("Recipe")), $defs: defs };
-writeFileSync("./scripts/Recipe.schema.json", JSON.stringify(schema));
+writeFileSync("./scripts/bundle.json", JSON.stringify(schema));
 
-// TODO: some things are being written as [object Object]
+// TODO: memoize fetching
