@@ -60,7 +60,7 @@ const deepSearch = (obj: Object, k: string): unknown[] => {
 
 // bundle("Recipe");
 
-const deepFindAndReplace = <T extends R, K extends string>(
+export const deepFindAndReplace = <T extends R, K extends string>(
   obj: T,
   k: K,
   replace: (x: string) => string,
@@ -141,7 +141,7 @@ const fetchRefsInner = async (state: RefState): Promise<RefState> => {
   });
 };
 
-const fetchRefs = async (name: string) =>
+export const fetchRefs = async (name: string) =>
   Array.from(
     (
       await fetchRefsInner({
@@ -161,28 +161,28 @@ const fetchRefAdjustedSchema = async (name: string) => {
   ).result;
 };
 
-const name = "Recipe";
-const refs = await fetchRefs(name);
-writeFileSync("./scripts/refs.txt", refs.join(","));
-console.log("FETCHED REFS");
-const schemas = await Promise.all(refs.map(ref => fetchRefAdjustedSchema(ref)));
-console.log("FETCHED ADJUSTED SCHEMAS");
-const defs: Record<string, (typeof schemas)[number]> = {};
-for (const def of schemas) {
-  defs[def.$id.slice("schema:".length)] = def;
-}
-const schema = {
-  ...(await fetchRefAdjustedSchema(name)),
-  $defs: {
-    ...defs,
-    Butt: {
-      $id: "schema:Butt",
-      title: "Butt",
-      type: "object",
-      properties: { foo: { type: "string" } },
-    },
-  },
-};
+// const name = "Recipe";
+// const refs = await fetchRefs(name);
+// writeFileSync("./scripts/refs.txt", refs.join(","));
+// console.log("FETCHED REFS");
+// const schemas = await Promise.all(refs.map(ref => fetchRefAdjustedSchema(ref)));
+// console.log("FETCHED ADJUSTED SCHEMAS");
+// const defs: Record<string, (typeof schemas)[number]> = {};
+// for (const def of schemas) {
+//   defs[def.$id.slice("schema:".length)] = def;
+// }
+// const schema = {
+//   ...(await fetchRefAdjustedSchema(name)),
+//   $defs: {
+//     ...defs,
+//     Butt: {
+//       $id: "schema:Butt",
+//       title: "Butt",
+//       type: "object",
+//       properties: { foo: { type: "string" } },
+//     },
+//   },
+// };
 // writeFileSync("./scripts/.bundle.json", JSON.stringify(schema));
 
 // TODO: memoize fetching

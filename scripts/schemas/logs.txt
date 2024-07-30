@@ -1,0 +1,41 @@
+[A-L] worked
+[A-G] failed
+[G-L] failed
+[A-G,G-L] worked
+[A-D,I-L] worked
+[A-D] failed
+[I-L] failed
+=> at least two separate problems, one in A-D and the other in I-L
+[A-B,I-L] failed
+[C-D,I-L] worked
+[C,I-L] worked
+=> the problems in A-D are confined to C
+[C,K-L] failed
+[C,I-K] failed
+[C,I,J,K,L] worked
+[C,I,J,K] failed
+=> definitely a problem in L
+[C,I,J,L] worked
+[C,I,L] worked
+[C,L] failed
+=> definitely problems in C, I & L
+(C|I|L) worked
+(C[l-z]|I|L) worked
+(C[l-o]|I|L) failed
+(Cr|I|L) worked
+(CreativeWorkS|I|L) failed
+(I|L) followed by CreativeWork worked
+=> C problem confined to CreativeWork
+(CreativeWork|I\w+|L\w+) worked
+(CreativeWork|ItemList|L\w+) failed
+(CreativeWork|It\w+|L\w+) failed
+(CreativeWork|I[m-n]\w+|L\w+) failed
+(CreativeWork|I[m-t]\w+|L\w+) worked
+=> definitely a problem in It
+(CreativeWork|I[n-t]\w+|L\w+) worked
+=> definitely another problem in In
+(CreativeWork|Inta\w+|It\w+|L\w+) worked
+(CreativeWork|Intangible|ItemList|L\w+) worked
+=> I problem confined to Intangible & ItemList
+(CreativeWork|Intangible|ItemList|ListItem) worked
+=> all problems are confined to CreativeWork, Intangible, ItemList & ListItem
