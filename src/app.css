@@ -14,6 +14,11 @@ dialog::backdrop {
   @apply bg-k opacity-75;
 }
 
-button.big {
-  @apply w-full my-1 py-2 rounded-lg text-lg font-semibold;
+.long {
+  @apply w-full my-1 px-4 py-2 rounded-lg text-lg font-semibold;
+}
+
+select {
+  @apply bg-transparent w-full;
+  border-right: 1rem solid transparent;
 }

@@ -2,16 +2,23 @@
   import { toast } from "./stores";
   import Dialog from "./Dialog.svelte";
 
-  let showAddRecipeDialog = false;
+  let show = true;
+  let method: "by-url" | "from-clipboard" = "by-url";
 </script>
 
-<button
-  class="big bg-orange-400 text-w"
-  on:click={() => (showAddRecipeDialog = true)}>&plus; recipe</button
+<button class="long bg-orange-400 text-w" on:click={() => (show = true)}
+  >&plus; recipe</button
 >
-<Dialog bind:show={showAddRecipeDialog}
-  ><button class="big bg-grey text-w">by URL</button>
-  <button class="big bg-grey text-w" on:click={() => toast("can't do that yet")}
-    >from clipboard</button
-  ></Dialog
->
+<Dialog bind:show title="add recipe" wide={true}>
+  <select name="method" class="long bg-grey" bind:value={method}>
+    <option value="by-url">by URL</option>
+    <option value="from-clipboard">from clipboard</option>
+  </select>
+  {#if method === "by-url"}
+    <input
+      type="text"
+      class="long bg-grey font-mono"
+      placeholder="https://www.example.com"
+    />
+  {/if}
+</Dialog>

@@ -1,5 +1,7 @@
 <script lang="ts">
   export let show = false;
+  export let title = "";
+  export let wide = false;
 
   let dialog: HTMLDialogElement | undefined = undefined;
 
@@ -18,10 +20,10 @@
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<dialog bind:this={dialog} on:click={dialogBlur}>
+<dialog bind:this={dialog} on:click={dialogBlur} class:w-full={wide}>
   <div class="px-4 py-2">
     <header class="flex justify-between items-start mb-4 text-lg">
-      <span class="font-bold pr-6">add recipe</span>
+      <span class="font-bold pr-6">{title}</span>
       <button
         aria-label="Close"
         title="Close"
