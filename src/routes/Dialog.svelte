@@ -20,17 +20,28 @@
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<dialog bind:this={dialog} on:click={dialogBlur} class:w-full={wide}>
+<dialog
+  class="bg-light-bg text-inherit rounded border-bg border-2"
+  bind:this={dialog}
+  on:click={dialogBlur}
+  class:w-full={wide}
+>
   <div class="px-4 py-2">
     <header class="flex justify-between items-start mb-4 text-lg">
       <span class="font-bold pr-6">{title}</span>
       <button
         aria-label="Close"
         title="Close"
-        class="self-start"
+        class="self-start bg-transparent"
         on:click={() => (show = false)}>&times;</button
       >
     </header>
     <slot />
   </div>
 </dialog>
+
+<style lang="postcss">
+  dialog::backdrop {
+    @apply bg-dark-bg opacity-75;
+  }
+</style>

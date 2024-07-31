@@ -6,19 +6,24 @@ h1 {
   @apply my-6 text-2xl text-center font-bold tracking-wide;
 }
 
-dialog {
-  @apply bg-k text-w rounded border-grey border-2;
-}
-
-dialog::backdrop {
-  @apply bg-k opacity-75;
-}
-
 .long {
   @apply w-full my-1 px-4 py-2 rounded-lg text-lg font-semibold;
 }
 
-select {
-  @apply bg-transparent w-full;
+button.long {
+  @apply bg-button;
+}
+
+select.long {
+  @apply w-full;
   border-right: 1rem solid transparent;
+}
+
+select,
+input {
+  @apply bg-input;
+}
+
+input::placeholder {
+  @apply text-text opacity-50;
 }

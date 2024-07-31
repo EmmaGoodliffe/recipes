@@ -6,19 +6,20 @@
   let method: "by-url" | "from-clipboard" = "by-url";
 </script>
 
-<button class="long bg-orange-400 text-w" on:click={() => (show = true)}
+<button class="long bg-pri-1" on:click={() => (show = true)}
   >&plus; recipe</button
 >
 <Dialog bind:show title="add recipe" wide={true}>
-  <select name="method" class="long bg-grey" bind:value={method}>
+  <select name="method" class="long" bind:value={method}>
     <option value="by-url">by URL</option>
     <option value="from-clipboard">from clipboard</option>
   </select>
   {#if method === "by-url"}
     <input
       type="text"
-      class="long bg-grey font-mono"
+      class="long font-mono"
       placeholder="https://www.example.com"
     />
+    <button class="long bg-pri-1">go</button>
   {/if}
 </Dialog>
