@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { toastQueue } from "./stores";
+  import { toastQueue } from "$lib/stores";
 
   let pop: HTMLDivElement | undefined = undefined;
 

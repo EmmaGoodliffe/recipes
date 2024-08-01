@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { toast } from "./stores";
+  import { toast } from "$lib/stores";
   import Dialog from "./Dialog.svelte";
+  import { enhance } from "$app/forms";
 
   let show = true;
   let method: "by-url" | "from-clipboard" = "by-url";
@@ -15,11 +16,27 @@
     <option value="from-clipboard">from clipboard</option>
   </select>
   {#if method === "by-url"}
-    <input
-      type="text"
-      class="long font-mono"
-      placeholder="https://www.example.com"
-    />
-    <button class="long bg-pri-1">go</button>
+    <form
+      action="?/addByUrl"
+      method="post"
+      use:enhance={() => {
+        return async ({ result }) => {
+          if (result.type !== "success") {
+            console.log(result);
+            throw new Error("something went wrong adding recipe");
+          }
+          console.log(result.data);
+        };
+      }}
+    >
+      <input
+        type="url"
+        name="url"
+        placeholder="https://www.example.com"
+        value="https://www.example.com"
+        class="long font-mono"
+      />
+      <button class="long bg-pri-1">go</button>
+    </form>
   {/if}
 </Dialog>

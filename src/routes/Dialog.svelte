@@ -42,6 +42,6 @@
 
 <style lang="postcss">
   dialog::backdrop {
-    @apply bg-dark-bg opacity-75;
+    @apply bg-black opacity-75;
   }
 </style>
