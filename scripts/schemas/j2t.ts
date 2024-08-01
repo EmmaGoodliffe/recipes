@@ -1,7 +1,7 @@
 import $RefParser from "@apidevtools/json-schema-ref-parser";
+import { readFileSync, writeFileSync } from "fs";
 import { fetchSchema } from "./fetch";
 import type { ResolverOptions } from "@apidevtools/json-schema-ref-parser";
-import { writeFileSync, readFileSync } from "fs";
 
 const read: Extract<ResolverOptions["read"], Function> = async file => {
   const name = file.url.slice("schema:".length);

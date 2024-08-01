@@ -67,7 +67,9 @@ export type HowTo = Butt & {
   /**
    * A single step item (as HowToStep, text, document, video, etc.) or a HowToSection.
    */
-  step?: (string | Butt2 | HowToSection | HowToStep) | (string | Butt2 | HowToSection | HowToStep)[];
+  step?:
+    | (string | Butt2 | HowToSection | HowToStep)
+    | (string | Butt2 | HowToSection | HowToStep)[];
   /**
    * A single step item (as HowToStep, text, document, video, etc.) or a HowToSection (originally misnamed 'steps'; 'step' is preferred).
    */
@@ -330,7 +332,9 @@ export type Enumeration = Butt12 & {
   /**
    * Relates a term (i.e. a property, class or enumeration) to one that supersedes it.
    */
-  supersededBy?: (Class | Enumeration | Property) | (Class | Enumeration | Property)[];
+  supersededBy?:
+    | (Class | Enumeration | Property)
+    | (Class | Enumeration | Property)[];
   [k: string]: unknown;
 };
 /**
@@ -340,7 +344,9 @@ export type Class = Butt13 & {
   /**
    * Relates a term (i.e. a property, class or enumeration) to one that supersedes it.
    */
-  supersededBy?: (Class | Enumeration | Property) | (Class | Enumeration | Property)[];
+  supersededBy?:
+    | (Class | Enumeration | Property)
+    | (Class | Enumeration | Property)[];
   [k: string]: unknown;
 };
 /**
@@ -362,7 +368,9 @@ export type Property = Butt14 & {
   /**
    * Relates a term (i.e. a property, class or enumeration) to one that supersedes it.
    */
-  supersededBy?: (Class | Enumeration | Property) | (Class | Enumeration | Property)[];
+  supersededBy?:
+    | (Class | Enumeration | Property)
+    | (Class | Enumeration | Property)[];
   [k: string]: unknown;
 };
 /**

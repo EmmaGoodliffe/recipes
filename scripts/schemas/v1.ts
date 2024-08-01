@@ -1,8 +1,8 @@
-import { deepFindAndReplace, fetchRefs } from "./bundle";
-import { fetchSchema } from "./fetch";
 import { writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
+import { deepFindAndReplace, fetchRefs } from "./bundle";
+import { fetchSchema } from "./fetch";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

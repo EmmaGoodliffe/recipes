@@ -1,8 +1,8 @@
+import Ajv from "ajv";
+import { readFileSync, writeFileSync } from "fs";
 import { fetchSchema } from "./fetch";
 import { isR } from "./helpers";
-import type { SchemaOrg, BundledSchema, R, DeepOverwriteKey } from "./types";
-import { writeFileSync , readFileSync} from "fs";
-import Ajv from "ajv";
+import type { BundledSchema, DeepOverwriteKey, R, SchemaOrg } from "./types";
 
 // const flattenExtNames = async (name: string): Promise<string[]> => {
 //   const schema = await fetchSchema(name);
@@ -41,7 +41,7 @@ import Ajv from "ajv";
 //   return bundled;
 // };
 
-const deepSearch = (obj: Object, k: string): unknown[] => {
+const deepSearch = (obj: object, k: string): unknown[] => {
   const results: unknown[] = [];
   for (const key in obj) {
     if (key === k) {

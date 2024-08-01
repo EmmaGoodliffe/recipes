@@ -1,4 +1,3 @@
-import colors from "tailwindcss/colors";
 import type { Config } from "tailwindcss";
 
 const palette = {
