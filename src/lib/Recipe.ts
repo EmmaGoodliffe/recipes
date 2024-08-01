@@ -5,7 +5,7 @@ type Person = { name: string; url: string };
 type Organization = { name: string; url: string; logo: ImageObject };
 type ImageObject = { height: number; url: string; width: number };
 
-export interface Recipe extends HowTo {
+export interface Rec extends HowTo {
   /** The time it takes to actually cook the dish, in ISO 8601 duration format. */
   cookTime: Duration;
   /** Nutrition information about the recipe or menu item. */

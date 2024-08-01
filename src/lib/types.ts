@@ -1,6 +1,6 @@
-import type { Recipe as Rec } from "./Recipe";
+import type { Rec } from "./Recipe";
 
-interface Recipe extends Rec {
+export interface Recipe extends Rec {
   "@context": "https://schema.org";
   "@id": string;
   "@type": "Recipe";

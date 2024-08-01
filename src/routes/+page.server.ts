@@ -1,6 +1,7 @@
 import { fail } from "@sveltejs/kit";
 import { load } from "cheerio";
 import type { Actions } from "./$types";
+import { delay } from "$lib/util";
 
 export const actions = {
   fetchRecipe: async event => {
@@ -16,6 +17,7 @@ export const actions = {
     if (!content) {
       return fail(400, { message: "no readable content on url" });
     }
+    await delay(2000);
     return { content: JSON.parse(content) };
   },
 } satisfies Actions;
