@@ -1,5 +1,6 @@
 import { fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
+import { load } from "cheerio";
 
 export const actions = {
   addByUrl: async event => {
@@ -9,8 +10,12 @@ export const actions = {
       return fail(400, { message: "no url" });
     }
     const res = await fetch(url);
-    console.log(res);
-    const recipe = { dummy: true };
-    return { recipe };
+    const html = await res.text();
+    const $ = load(html);
+    const schema = $('script[data-testid="page-schema"]').text();
+    if (!schema) {
+      return fail(400, { message: "no readable content on url" });
+    }
+    return { recipe: JSON.parse(schema) };
   },
 } satisfies Actions;

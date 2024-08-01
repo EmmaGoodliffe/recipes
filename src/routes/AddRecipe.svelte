@@ -32,7 +32,7 @@
         type="url"
         name="url"
         placeholder="https://www.example.com"
-        value="https://www.example.com"
+        value="https://www.bbcgoodfood.com/recipes/courgette-curry"
         class="long font-mono"
       />
       <button class="long bg-pri-1">go</button>
