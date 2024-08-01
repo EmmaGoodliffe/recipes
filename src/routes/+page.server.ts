@@ -1,6 +1,6 @@
 import { fail } from "@sveltejs/kit";
-import type { Actions } from "./$types";
 import { load } from "cheerio";
+import type { Actions } from "./$types";
 
 export const actions = {
   addByUrl: async event => {
