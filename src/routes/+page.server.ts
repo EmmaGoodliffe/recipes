@@ -8,8 +8,8 @@ export const actions = {
     if (typeof url !== "string") {
       return fail(400, { message: "no url" });
     }
-    // const res = await fetch(url);
-    // console.log(res);
+    const res = await fetch(url);
+    console.log(res);
     const recipe = { dummy: true };
     return { recipe };
   },
