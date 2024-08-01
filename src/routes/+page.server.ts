@@ -3,7 +3,7 @@ import { load } from "cheerio";
 import type { Actions } from "./$types";
 
 export const actions = {
-  addByUrl: async event => {
+  fetchRecipe: async event => {
     const data = await event.request.formData();
     const url = data.get("url");
     if (typeof url !== "string") {
@@ -12,10 +12,10 @@ export const actions = {
     const res = await fetch(url);
     const html = await res.text();
     const $ = load(html);
-    const schema = $('script[data-testid="page-schema"]').text();
-    if (!schema) {
+    const content = $('script[data-testid="page-schema"]').text();
+    if (!content) {
       return fail(400, { message: "no readable content on url" });
     }
-    return { recipe: JSON.parse(schema) };
+    return { content: JSON.parse(content) };
   },
 } satisfies Actions;

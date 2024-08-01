@@ -1,6 +1,7 @@
 <script lang="ts">
   import Dialog from "./Dialog.svelte";
   import { enhance } from "$app/forms";
+  import { isRecipe } from "$lib/types";
 
   let show = true;
   let method: "by-url" | "from-clipboard" = "by-url";
@@ -16,15 +17,18 @@
   </select>
   {#if method === "by-url"}
     <form
-      action="?/addByUrl"
+      action="?/fetchRecipe"
       method="post"
       use:enhance={() => {
         return async ({ result }) => {
+          console.log(result);
           if (result.type !== "success") {
-            console.log(result);
             throw new Error("something went wrong adding recipe");
           }
-          console.log(result.data);
+          if (!isRecipe(result.data?.content)) {
+            throw new Error("invalid recipe");
+          }
+          console.log("preview", result.data.content);
         };
       }}
     >
