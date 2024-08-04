@@ -27,3 +27,23 @@ input {
 input::placeholder {
   @apply text-text opacity-50;
 }
+
+/* width */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-bg;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-input;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-text;
+}

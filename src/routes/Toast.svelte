@@ -12,14 +12,14 @@
 
 <div
   popover="manual"
-  class="w-11/12 bg-transparent mb-0 text-w"
+  class="w-11/12 bg-transparent mb-0 text-text"
   bind:this={pop}
 >
   <div>
     {#each $toastQueue as toast, i}
       {#if toast.open}
         <div
-          class="bg-k rounded-lg py-1 px-4 mt-2 flex justify-between items-start"
+          class="bg-black rounded-lg py-1 px-4 mt-2 flex justify-between items-start"
         >
           <p>{toast.text}</p>
           <button

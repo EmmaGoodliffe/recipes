@@ -13,7 +13,7 @@ export interface Rec extends HowTo {
   /** The category of the recipe—for example, appetizer, entree, etc. */
   recipeCategory: string;
   /** A single ingredient used in the recipe, e.g. sugar, flour or garlic. Supersedes ingredients. */
-  recipeIngredient: string;
+  recipeIngredient: string | string[];
   /** A step in making the recipe, in the form of a single item (document, video, etc.) or an ordered list with HowToStep and/or HowToSection items. */
   recipeInstructions: HowToStep[];
   /** The quantity produced by the recipe (for example, number of people served, number of servings, etc). */
@@ -31,7 +31,7 @@ interface HowTo extends CreativeWork {
 
 interface CreativeWork extends Thing {
   /** The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably. */
-  author: Person;
+  author: Person | Person[];
   /** The date on which the CreativeWork was most recently modified or when the item's entry was modified within a DataFeed. */
   dateModified: string;
   /** Date of first publication or broadcast. For example the date a CreativeWork was broadcast or a Certification was issued. */
@@ -56,7 +56,7 @@ interface Thing {
   image: ImageObject;
   /** Indicates a page (or other CreativeWork) for which this thing is the main entity being described. See background notes for details.
 Inverse property: mainEntity */
-  mainEntityOfPage: CreativeWork;
+  mainEntityOfPage: CreativeWork & { "@id": string };
   /** The name of the item. */
   name: string;
   /** URL of the item. */

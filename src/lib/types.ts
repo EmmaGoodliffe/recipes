@@ -1,6 +1,7 @@
 import type { Rec } from "./Recipe";
+import type { Call, Objects } from "hotscript";
 
-export interface Recipe extends Rec {
+export interface Recipe extends Call<Objects.PartialDeep, Rec> {
   "@context": "https://schema.org";
   "@id": string;
   "@type": "Recipe";
