@@ -1,1 +1,1 @@
-// export const prerender = true;
+// TODO: choose the rendering correct options for every page

@@ -6,6 +6,10 @@ h1 {
   @apply my-6 text-2xl text-center font-bold tracking-wide;
 }
 
+button.square {
+  @apply w-8 h-8 rounded;
+}
+
 .long {
   @apply w-full my-1 px-4 py-2 rounded-lg text-lg font-semibold;
 }
@@ -28,7 +32,11 @@ input::placeholder {
   @apply text-text opacity-50;
 }
 
-/* width */
+i {
+  @apply text-text;
+}
+
+/* Width */
 ::-webkit-scrollbar {
   @apply w-2;
 }

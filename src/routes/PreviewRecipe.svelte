@@ -12,32 +12,21 @@
 </script>
 
 <article class="px-4 pb-4 max-h-[60vh] overflow-y-scroll">
-  <header class="py-4 flex justify-center items-center">
-    {#if pub}
-      <div class="px-4">
-        <img src={pub.logo?.url} alt="{pub.name} logo" class="max-w-12" />
+  <header class="mx-2 py-4 text-center">
+    <div class="text-lg">
+      <span class="font-bold">{recipeData.get("name")}</span>
+      {#if recipeData.get("url")}
+        <a href={recipeData.get("url")} class="hover:underline" target="_blank"
+          >(&nearr;)</a
+        >
+      {/if}
+    </div>
+    {#if authors.length}
+      <div>
+        <span class="opacity-50 italic">by</span>
+        <span>{authors.map(a => a?.name ?? "?").join(", ")}</span>
       </div>
     {/if}
-    <div class="px-4">
-      <div class="text-lg text-center">
-        <span class="font-bold">{recipeData.get("name")}</span>
-        {#if recipeData.get("url")}
-          <a
-            href={recipeData.get("url")}
-            class="hover:underline"
-            target="_blank">(&nearr;)</a
-          >
-        {/if}
-      </div>
-      <div>
-        {#if authors.length}
-          <div>
-            <span class="opacity-50 italic">by</span>
-            <span>{authors.map(a => a?.name ?? "?").join(", ")}</span>
-          </div>
-        {/if}
-      </div>
-    </div>
   </header>
   {#if recipeData.get("image")?.url}
     <img
@@ -46,17 +35,29 @@
       class="max-w-[75%] mx-auto pb-4 rounded"
     />
   {/if}
-  {#if recipeData.get("dateModified")}
-    <div class="text-sm text-center opacity-50">
-      <span class="italic">edited in</span>
-      <abbr
-        title={dateToText(recipeData.get("dateModified"))?.full}
-        class="underline-offset-2"
-        >{dateToText(recipeData.get("dateModified"))?.month}</abbr
-      >
-      <!-- TODO: version history -->
-    </div>
-  {/if}
+  <div class="flex justify-center items-center">
+    {#if pub}
+      <a href={pub.url} target="_blank">
+        <img
+          src={pub.logo?.url}
+          alt="{pub.name} logo"
+          class="w-24 mx-2"
+          style="filter: contrast(50%);"
+        />
+      </a>
+    {/if}
+    {#if recipeData.get("dateModified")}
+      <div class="mx-2 text-sm text-center opacity-50">
+        <span class="italic">edited in</span>
+        <abbr
+          title={dateToText(recipeData.get("dateModified"))?.full}
+          class="underline-offset-2"
+          >{dateToText(recipeData.get("dateModified"))?.month}</abbr
+        >
+        <!-- TODO: version history -->
+      </div>
+    {/if}
+  </div>
   <p class="my-2 px-2 py-2">{recipeData.get("description") ?? ""}</p>
   <div class="stats">
     <div class="times">
@@ -167,4 +168,8 @@
   tr:not(:last-child) {
     @apply border-b-2;
   }
+
+  /* .back-light {
+    background: radial-gradient(currentColor, transparent);
+  } */
 </style>

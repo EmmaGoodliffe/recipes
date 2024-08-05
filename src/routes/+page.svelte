@@ -1,11 +1,11 @@
 <script lang="ts">
-  import AddRecipe from "./AddRecipe.svelte";
   // import welcome_fallback from '$lib/images/svelte-welcome.png';
   // <img src={welcome_fallback} alt="..." />
+  import AddRecipe from "./AddRecipe.svelte";
 </script>
 
 <svelte:head>
-  <title>Home</title>
+  <title>recipes</title>
   <meta name="description" content="recipes" />
 </svelte:head>
 
