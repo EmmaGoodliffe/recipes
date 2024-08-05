@@ -40,6 +40,9 @@ export default {
         input: palette.asparagus.grey[0],
         button: palette.asparagus[1],
       },
+      screens: {
+        xs: "320px",
+      },
     },
   },
   plugins: [],

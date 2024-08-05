@@ -1,23 +1,23 @@
 <script lang="ts">
-  import Dialog from "./Dialog.svelte";
+  import Dialog from "$lib/Dialog.svelte";
   import { enhance } from "$app/forms";
   import { isRecipe, type Recipe } from "$lib/types";
   import PreviewRecipe from "./PreviewRecipe.svelte";
-  import LoaderButton from "./LoaderButton.svelte";
+  import LoaderButton from "$lib/LoaderButton.svelte";
   import { toast, toastWrap } from "$lib/stores";
-  import egRecipe from "$lib/eg.json";
   import { getFb } from "./fb";
   import { doc, getDoc, type Firestore } from "firebase/firestore";
   import { onMount } from "svelte";
   import type { Auth } from "firebase/auth";
   import { addRecipe } from "$lib/db";
+  import eg from "$lib/eg.json";
 
   let auth: Auth | undefined = undefined;
   let db: Firestore | undefined = undefined;
   let show = false;
   let loading = false;
   let method: "by-url" | "from-clipboard" = "by-url";
-  let recipe: Recipe | undefined = egRecipe as Recipe;
+  let recipe: Recipe | undefined = undefined;
   let onCancel = () => {};
 
   onMount(() => {
@@ -80,7 +80,9 @@
     {/if}
   {:else}
     <PreviewRecipe {recipe} />
-    <div class="w-full bg-bg px-4 py-2">
+  {/if}
+  <div slot="footer">
+    {#if recipe !== undefined}
       <LoaderButton
         text="+ confirm"
         onClick={async () => {
@@ -88,11 +90,26 @@
             show = false;
             recipe = undefined;
           } else {
+            recipe = undefined;
+            show = false;
             toast("added recipe");
             // TODO: open recipe
           }
         }}
       />
-    </div>
-  {/if}
+      <button
+        class="long cancel"
+        on:click={() => {
+          recipe = undefined;
+          show = false;
+        }}>&times; cancel</button
+      >
+    {/if}
+  </div>
 </Dialog>
+
+<style lang="postcss">
+  button.long.cancel {
+    @apply bg-input;
+  }
+</style>

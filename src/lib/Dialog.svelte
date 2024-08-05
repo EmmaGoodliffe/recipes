@@ -22,7 +22,7 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <dialog
-  class="w-3/4 max-w-lg bg-light-bg text-inherit rounded border-bg border-2"
+  class="w-11/12 sm:w-3/4 max-w-lg bg-light-bg text-inherit rounded border-bg border-2"
   bind:this={dialog}
   on:click={onClick}
 >
@@ -36,10 +36,17 @@
     >
   </header>
   <slot />
+  <footer>
+    <slot name="footer"></slot>
+  </footer>
 </dialog>
 
 <style lang="postcss">
   dialog::backdrop {
     @apply bg-black opacity-75;
+  }
+
+  footer:has(div :first-child) {
+    @apply w-full bg-bg px-4 py-2;
   }
 </style>

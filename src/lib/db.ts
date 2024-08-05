@@ -8,7 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { toast } from "./stores";
-import { isRecipe, type Recipe } from "./types";
+import { isRecipe, toRecipes, type Recipe } from "./types";
 
 const checkAuthAndDb = (auth: Auth | undefined, db: Firestore | undefined) => {
   if (!db) {
@@ -49,15 +49,25 @@ export const addRecipe = async (
   if (!userDoc.exists()) {
     await setDoc(ref, { recipes: [recipe] });
   } else {
-    const { recipes } = userDoc.data();
-    if (Array.isArray(recipes) && recipes.every(r => isRecipe(r))) {
-      const ids = recipes.map(r => r["@id"]);
-      if (ids.includes(recipe["@id"])) {
-        throw new Error("you already have that recipe");
-      }
-      await updateDoc(ref, { recipes: [...recipes, recipe] });
-    } else {
-      throw new Error("invalid existing recipes");
+    const recipes = toRecipes(userDoc.data().recipes);
+    const ids = recipes.map(r => r["@id"]);
+    if (ids.includes(recipe["@id"])) {
+      throw new Error("you already have that recipe");
     }
+    await updateDoc(ref, { recipes: [...recipes, recipe] });
   }
+};
+
+export const getRecipes = async (
+  auth_: Auth | undefined,
+  db_: Firestore | undefined,
+) => {
+  const { auth, db } = checkAuthAndDb(auth_, db_);
+  const uid = auth.currentUser?.uid;
+  if (!uid) {
+    return null;
+  }
+  const ref = doc(db, "users", uid);
+  const userDoc = await getDoc(ref);
+  return toRecipes(userDoc.data()?.recipes);
 };

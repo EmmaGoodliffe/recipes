@@ -36,22 +36,28 @@ i {
   @apply text-text;
 }
 
-/* Width */
+.enforced-rounded {
+  @apply rounded;
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* Scroller width */
 ::-webkit-scrollbar {
   @apply w-2;
 }
 
-/* Track */
+/* Scroller track */
 ::-webkit-scrollbar-track {
   @apply bg-bg;
 }
 
-/* Handle */
+/* Scroller handle */
 ::-webkit-scrollbar-thumb {
   @apply bg-input;
 }
 
-/* Handle on hover */
+/* Scroller handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-text;
 }

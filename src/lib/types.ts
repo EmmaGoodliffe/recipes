@@ -14,3 +14,10 @@ export const isRecipe = (x: unknown): x is Recipe => {
   }
   return false;
 };
+
+export const toRecipes = (x: unknown) => {
+  if (Array.isArray(x) && x.every(r => isRecipe(r))) {
+    return x;
+  }
+  throw new Error("invalid recipes");
+};

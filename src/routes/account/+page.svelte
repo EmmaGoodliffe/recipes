@@ -12,7 +12,7 @@
     type Auth,
   } from "firebase/auth";
   import { FirebaseError } from "firebase/app";
-  import LoaderButton from "../LoaderButton.svelte";
+  import LoaderButton from "$lib/LoaderButton.svelte";
   import { toast } from "$lib/stores";
   import { delay } from "$lib/util";
 

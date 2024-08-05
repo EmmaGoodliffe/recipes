@@ -1,12 +1,12 @@
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
 
-export const flexArray = <T>(x: T | T[] | undefined) =>
+export const toArray = <T>(x: T | T[] | undefined) =>
   x === undefined ? [] : Array.isArray(x) ? x : [x];
 
 const getKeys = <T extends {}>(obj: T) => Object.keys(obj) as (keyof T)[];
 
-export const objToData = <T extends {}>(obj: T) => ({
+export const toReader = <T extends {}>(obj: T) => ({
   get<K extends string & keyof T>(key: K) {
     this.unread.delete(key);
     return obj[key];

@@ -1,22 +1,22 @@
 <script lang="ts">
   import { toast } from "$lib/stores";
   import type { Recipe } from "$lib/types";
-  import { flexArray, objToData, durToText, dateToText } from "$lib/util";
-  import LoaderButton from "./LoaderButton.svelte";
+  import { toArray, toReader, durToText, dateToText } from "$lib/util";
+  import LoaderButton from "$lib/LoaderButton.svelte";
 
   export let recipe: Recipe;
 
-  $: recipeData = objToData(recipe);
-  $: authors = flexArray(recipeData.get("author"));
-  $: pub = recipeData.get("publisher");
+  $: recReader = toReader(recipe);
+  $: authors = toArray(recReader.get("author"));
+  $: pub = recReader.get("publisher");
 </script>
 
 <article class="px-4 pb-4 max-h-[60vh] overflow-y-scroll">
   <header class="mx-2 py-4 text-center">
     <div class="text-lg">
-      <span class="font-bold">{recipeData.get("name")}</span>
-      {#if recipeData.get("url")}
-        <a href={recipeData.get("url")} class="hover:underline" target="_blank"
+      <span class="font-bold">{recReader.get("name")}</span>
+      {#if recReader.get("url")}
+        <a href={recReader.get("url")} class="hover:underline" target="_blank"
           >(&nearr;)</a
         >
       {/if}
@@ -28,10 +28,10 @@
       </div>
     {/if}
   </header>
-  {#if recipeData.get("image")?.url}
+  {#if recReader.get("image")?.url}
     <img
-      src={recipeData.get("image")?.url}
-      alt="meal"
+      src={recReader.get("image")?.url}
+      alt={recReader.get("name")}
       class="max-w-[75%] mx-auto pb-4 rounded"
     />
   {/if}
@@ -46,36 +46,36 @@
         />
       </a>
     {/if}
-    {#if recipeData.get("dateModified")}
+    {#if recReader.get("dateModified")}
       <div class="mx-2 text-sm text-center opacity-50">
         <span class="italic">edited in</span>
         <abbr
-          title={dateToText(recipeData.get("dateModified"))?.full}
+          title={dateToText(recReader.get("dateModified"))?.full}
           class="underline-offset-2"
-          >{dateToText(recipeData.get("dateModified"))?.month}</abbr
+          >{dateToText(recReader.get("dateModified"))?.month}</abbr
         >
         <!-- TODO: version history -->
       </div>
     {/if}
   </div>
-  <p class="my-2 px-2 py-2">{recipeData.get("description") ?? ""}</p>
+  <p class="my-2 px-2 py-2">{recReader.get("description") ?? ""}</p>
   <div class="stats">
     <div class="times">
       <div class="stat">
         <span class="quantity"
-          >{durToText(recipeData.get("cookTime")) ?? "?:??"}</span
+          >{durToText(recReader.get("cookTime")) ?? "?:??"}</span
         >
         <span class="label">cook</span>
       </div>
       <div class="stat">
         <span class="quantity"
-          >{durToText(recipeData.get("prepTime")) ?? "?:??"}</span
+          >{durToText(recReader.get("prepTime")) ?? "?:??"}</span
         >
         <span class="label">prep</span>
       </div>
       <div class="stat">
         <span class="quantity"
-          >{durToText(recipeData.get("totalTime")) ?? "?:??"}</span
+          >{durToText(recReader.get("totalTime")) ?? "?:??"}</span
         >
         <span class="label">total</span>
       </div>
@@ -83,37 +83,37 @@
     <div class="serves">
       <div class="stat">
         <span class="label">serves</span>
-        <span class="quantity">{recipeData.get("recipeYield") ?? "?"}</span>
+        <span class="quantity">{recReader.get("recipeYield") ?? "?"}</span>
       </div>
     </div>
   </div>
   <div class="px-2">
     <div class="pt-4 pb-1 font-bold">Ingredients</div>
     <ul class="list-inside">
-      {#each flexArray(recipeData.get("recipeIngredient")) as ing}
+      {#each toArray(recReader.get("recipeIngredient")) as ing}
         <li>{ing}</li>
       {/each}
     </ul>
     <div class="pt-4 pb-1 font-bold">Instructions</div>
     <ol class="list-inside list-decimal">
-      {#each flexArray(recipeData.get("recipeInstructions")) as step}
+      {#each toArray(recReader.get("recipeInstructions")) as step}
         <li class="truncate">{step?.text ?? "?"}</li>
       {/each}
     </ol>
     <div class="pt-4 pb-1 font-bold">Nutrition info</div>
     <ul class="list-inside">
-      {#each Object.values(recipeData.get("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
+      {#each Object.values(recReader.get("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
         <li>{info}</li>
       {/each}
     </ul>
   </div>
-  <table class="my-4 font-mono border-input border-2">
+  <table class="my-4 enforced-rounded font-mono border-input border-2">
     <tbody>
-      {#each Array.from(recipeData.unread).filter(k => k[0] !== "@") as key}
+      {#each Array.from(recReader.unread).filter(k => k[0] !== "@") as key}
         <tr class="border-input">
           <td class="px-2 border-r-2 border-input">{key}</td>
           <td class="px-2 json"
-            >{JSON.stringify(recipeData.get(key), null, 2)}</td
+            >{JSON.stringify(recReader.get(key), null, 2)}</td
           >
         </tr>
       {/each}
@@ -156,13 +156,6 @@
 
   .json {
     overflow-wrap: anywhere;
-  }
-
-  table {
-    /* legwork for border radius */
-    @apply rounded;
-    overflow: hidden;
-    display: inline-block;
   }
 
   tr:not(:last-child) {
