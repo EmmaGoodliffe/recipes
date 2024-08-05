@@ -1,6 +1,4 @@
 <script lang="ts">
-  // import welcome_fallback from '$lib/images/svelte-welcome.png';
-  // <img src={welcome_fallback} alt="..." />
   import { onMount } from "svelte";
   import AddRecipe from "./AddRecipe.svelte";
   import Gallery from "./Gallery.svelte";

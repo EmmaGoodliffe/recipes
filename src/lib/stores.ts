@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import type { Recipe } from "./types";
 
 const TOAST_TIME = 10 * 1000;
 
@@ -16,7 +17,6 @@ setInterval(() => {
   );
 }, 1000);
 
-
 export const toastWrap = <T extends (...args: any[]) => any>(func: T) => {
   return async (
     ...params: Parameters<T>
@@ -30,3 +30,5 @@ export const toastWrap = <T extends (...args: any[]) => any>(func: T) => {
     }
   };
 };
+
+export const selectedRecipe = writable<Recipe | undefined>(undefined);

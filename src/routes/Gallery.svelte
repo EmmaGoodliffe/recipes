@@ -8,7 +8,7 @@
   import PreviewRecipe from "./PreviewRecipe.svelte";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { toastWrap } from "$lib/stores";
+  import { selectedRecipe, toastWrap } from "$lib/stores";
   import type { Firestore } from "firebase/firestore";
   import LoaderText from "$lib/LoaderText.svelte";
 
@@ -17,7 +17,6 @@
 
   let auth: Auth | undefined = undefined;
   let db: Firestore | undefined = undefined;
-  let previewRecipe: Recipe | undefined = undefined;
   let showPreview = false;
   let loading = false;
 
@@ -38,7 +37,7 @@
       <button
         class="card enforced-rounded"
         on:click={() => {
-          previewRecipe = rec;
+          selectedRecipe.set(rec);
           showPreview = true;
         }}
       >
@@ -62,24 +61,27 @@
     {/each}
   {/if}
 </div>
-{#if previewRecipe}
+{#if $selectedRecipe}
   <Dialog bind:show={showPreview} title="preview recipe">
-    <PreviewRecipe recipe={previewRecipe} />
+    <PreviewRecipe recipe={$selectedRecipe} />
     <div slot="footer">
       <LoaderButton
         className="long bg-input"
         {loading}
         onClick={async () => {
           loading = true;
-          await toastWrap(deleteRecipe)(auth, db, previewRecipe?.["@id"]);
+          await toastWrap(deleteRecipe)(auth, db, $selectedRecipe?.["@id"]);
           loading = false;
-          previewRecipe = undefined;
+          selectedRecipe.set(undefined);
           showPreview = false;
           return onDeletion();
         }}
       >
         <i class="bx bx-trash align-middle"></i> <span class="">delete</span>
       </LoaderButton>
+      <a href="/cook" class="long bg-button block text-center"
+        ><i class="bx bxs-flask"></i> cook</a
+      >
     </div>
   </Dialog>
 {/if}
