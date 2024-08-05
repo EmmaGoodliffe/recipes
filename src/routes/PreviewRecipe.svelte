@@ -168,8 +168,4 @@
   tr:not(:last-child) {
     @apply border-b-2;
   }
-
-  /* .back-light {
-    background: radial-gradient(currentColor, transparent);
-  } */
 </style>

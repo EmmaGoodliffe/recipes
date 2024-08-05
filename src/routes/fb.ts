@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBPBzkRo0qkqSG7j03pmQnPeeyzSLxhDlI",
@@ -17,7 +18,8 @@ export const getFb = () => {
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth();
-    return { auth };
+    const db = getFirestore();
+    return { auth, db };
   } catch (error) {
     if (`${error}`.includes("window is not defined")) {
       console.error("call fb from within onMount to ensure window is defined");

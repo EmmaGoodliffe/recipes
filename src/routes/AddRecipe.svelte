@@ -3,16 +3,27 @@
   import { enhance } from "$app/forms";
   import { isRecipe, type Recipe } from "$lib/types";
   import PreviewRecipe from "./PreviewRecipe.svelte";
-  import { delay } from "$lib/util";
   import LoaderButton from "./LoaderButton.svelte";
-  import { toast } from "$lib/stores";
+  import { toast, toastWrap } from "$lib/stores";
   import egRecipe from "$lib/eg.json";
+  import { getFb } from "./fb";
+  import { doc, getDoc, type Firestore } from "firebase/firestore";
+  import { onMount } from "svelte";
+  import type { Auth } from "firebase/auth";
+  import { addRecipe } from "$lib/db";
 
+  let auth: Auth | undefined = undefined;
+  let db: Firestore | undefined = undefined;
   let show = false;
   let loading = false;
   let method: "by-url" | "from-clipboard" = "by-url";
   let recipe: Recipe | undefined = egRecipe as Recipe;
   let onCancel = () => {};
+
+  onMount(() => {
+    auth = getFb().auth;
+    db = getFb().db;
+  });
 </script>
 
 <button class="long bg-pri-1" on:click={() => (show = true)}
@@ -72,8 +83,14 @@
     <div class="w-full bg-bg px-4 py-2">
       <LoaderButton
         text="+ confirm"
-        onClick={() => {
-          // TODO: add recipe
+        onClick={async () => {
+          if ((await toastWrap(addRecipe)(auth, db, recipe)) instanceof Error) {
+            show = false;
+            recipe = undefined;
+          } else {
+            toast("added recipe");
+            // TODO: open recipe
+          }
         }}
       />
     </div>

@@ -8,6 +8,8 @@
       pop.showPopover();
     }
   });
+
+  // TODO: smooth motion
 </script>
 
 <div
