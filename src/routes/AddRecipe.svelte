@@ -12,6 +12,8 @@
   import { addRecipe } from "$lib/db";
   import eg from "$lib/eg.json";
 
+  export let onAddition = () => {};
+
   let auth: Auth | undefined = undefined;
   let db: Firestore | undefined = undefined;
   let show = false;
@@ -26,8 +28,8 @@
   });
 </script>
 
-<button class="long bg-pri-1" on:click={() => (show = true)}
-  >&plus; recipe</button
+<button class="long bg-button" on:click={() => (show = true)}
+  ><i class="bx bx-plus align-middle"></i> <span class="">recipe</span></button
 >
 <Dialog bind:show title="add recipe" onBlur={onCancel}>
   <div class="px-4">
@@ -75,7 +77,7 @@
           value="https://www.bbcgoodfood.com/recipes/courgette-curry"
           class="long font-mono"
         />
-        <LoaderButton text="go" {loading} />
+        <LoaderButton {loading}>go</LoaderButton>
       </form>
     {/if}
   {:else}
@@ -84,7 +86,6 @@
   <div slot="footer">
     {#if recipe !== undefined}
       <LoaderButton
-        text="+ confirm"
         onClick={async () => {
           if ((await toastWrap(addRecipe)(auth, db, recipe)) instanceof Error) {
             show = false;
@@ -93,16 +94,16 @@
             recipe = undefined;
             show = false;
             toast("added recipe");
-            // TODO: open recipe
+            return onAddition();
           }
-        }}
-      />
+        }}><i class="bx bx-save align-middle"></i> save</LoaderButton
+      >
       <button
         class="long cancel"
         on:click={() => {
           recipe = undefined;
           show = false;
-        }}>&times; cancel</button
+        }}><i class="bx bx-x align-middle"></i> cancel</button
       >
     {/if}
   </div>

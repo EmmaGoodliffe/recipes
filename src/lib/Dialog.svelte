@@ -31,8 +31,8 @@
     <button
       aria-label="Close"
       title="Close"
-      class="self-start bg-transparent"
-      on:click={() => (show = false)}>&times;</button
+      class="square self-start bg-transparent"
+      on:click={() => (show = false)}><i class="bx bx-x"></i></button
     >
   </header>
   <slot />

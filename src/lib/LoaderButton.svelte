@@ -2,7 +2,7 @@
   import { tweened } from "svelte/motion";
   import { sineInOut } from "svelte/easing";
 
-  export let text: string;
+  export let className = "long bg-button";
   export let loading = false;
   export let onClick: (e: Event) => void = () => {};
 
@@ -20,7 +20,7 @@
 </script>
 
 <button
-  class="long bg-pri-1"
+  class={className}
   disabled={loading}
   on:click={e => {
     x.update(v => v + 1);
@@ -28,7 +28,7 @@
   }}
 >
   <div class="px-4 pt-2 pb-1" class:opacity-50={loading}>
-    {text}
+    <slot />
   </div>
   <div
     class="loader"

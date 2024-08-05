@@ -14,7 +14,7 @@
 
 <div
   popover="manual"
-  class="w-11/12 bg-transparent mb-0 text-text"
+  class="w-11/12 bg-transparent mb-16 text-text"
   bind:this={pop}
 >
   <div>
@@ -32,7 +32,7 @@
               toastQueue.update(q => {
                 q[i].open = false;
                 return q;
-              })}>&times;</button
+              })}><i class="bx bx-x"></i></button
           >
         </div>
       {/if}

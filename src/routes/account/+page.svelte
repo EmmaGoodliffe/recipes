@@ -3,7 +3,6 @@
   import { onMount } from "svelte";
   import {
     onAuthStateChanged,
-    fetchSignInMethodsForEmail,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     updateProfile,
@@ -15,6 +14,7 @@
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { toast } from "$lib/stores";
   import { delay } from "$lib/util";
+  import LoaderText from "$lib/LoaderText.svelte";
 
   let auth: Auth;
   let user: User | null = null;
@@ -76,11 +76,7 @@
 
 <h1>account</h1>
 {#if downloading}
-  <div class="mx-auto flex items-center">
-    <i class="bx bx-loader-alt animate-spin"></i><span
-      class="px-2 pb-[0.125rem]">authenticating...</span
-    >
-  </div>
+  <LoaderText text="authenticating..." />
 {:else if user === null}
   <form>
     <div class="group">
@@ -111,7 +107,6 @@
       />
     </div>
     <LoaderButton
-      text="go"
       loading={uploading}
       onClick={async () => {
         uploading = true;
@@ -137,8 +132,8 @@
           console.error(error);
         }
         uploading = false;
-      }}
-    />
+      }}>go</LoaderButton
+    >
   </form>
 {:else}
   <table>
@@ -199,7 +194,7 @@
       {/each}
     </tbody>
   </table>
-  <button class="long" on:click={() => signOut(auth)}>log out</button>
+  <button class="long bg-input" on:click={() => signOut(auth)}>log out</button>
 {/if}
 
 <style lang="postcss">

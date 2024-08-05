@@ -14,10 +14,6 @@ button.square {
   @apply w-full my-1 px-4 py-2 rounded-lg text-lg font-semibold;
 }
 
-button.long {
-  @apply bg-button;
-}
-
 select.long {
   @apply w-full;
   border-right: 1rem solid transparent;

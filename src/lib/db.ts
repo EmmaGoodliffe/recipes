@@ -47,14 +47,14 @@ export const addRecipe = async (
   const ref = doc(db, "users", uid);
   const userDoc = await getDoc(ref);
   if (!userDoc.exists()) {
-    await setDoc(ref, { recipes: [recipe] });
+    return setDoc(ref, { recipes: [recipe] });
   } else {
     const recipes = toRecipes(userDoc.data().recipes);
     const ids = recipes.map(r => r["@id"]);
     if (ids.includes(recipe["@id"])) {
       throw new Error("you already have that recipe");
     }
-    await updateDoc(ref, { recipes: [...recipes, recipe] });
+    return updateDoc(ref, { recipes: [recipe, ...recipes] });
   }
 };
 
@@ -70,4 +70,18 @@ export const getRecipes = async (
   const ref = doc(db, "users", uid);
   const userDoc = await getDoc(ref);
   return toRecipes(userDoc.data()?.recipes);
+};
+
+export const deleteRecipe = async (
+  auth_: Auth | undefined,
+  db_: Firestore | undefined,
+  id: string | undefined,
+) => {
+  const { auth, db } = checkAuthAndDb(auth_, db_);
+  const uid = checkUid(auth);
+  const ref = doc(db, "users", uid);
+  const userDoc = await getDoc(ref);
+  return updateDoc(ref, {
+    recipes: toRecipes(userDoc.data()?.recipes).filter(r => r["@id"] !== id),
+  });
 };
