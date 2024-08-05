@@ -7,9 +7,11 @@
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     updateProfile,
+    signOut,
     type User,
     type Auth,
   } from "firebase/auth";
+  import { FirebaseError } from "firebase/app";
   import LoaderButton from "../LoaderButton.svelte";
   import { toast } from "$lib/stores";
   import { delay } from "$lib/util";
@@ -20,7 +22,6 @@
   let password = "";
   let downloading = true;
   let uploading = false;
-  let isNewUser: boolean | undefined = undefined;
 
   const settings: {
     id: string;
@@ -74,16 +75,19 @@
 </svelte:head>
 
 <h1>account</h1>
-<div class="w-11/12 max-w-lg mx-auto">
-  {#if downloading}
-    <div class="mx-auto flex items-center">
-      <i class="bx bx-loader-alt animate-spin"></i><span
-        class="px-2 pb-[0.125rem]">authenticating...</span
+{#if downloading}
+  <div class="mx-auto flex items-center">
+    <i class="bx bx-loader-alt animate-spin"></i><span
+      class="px-2 pb-[0.125rem]">authenticating...</span
+    >
+  </div>
+{:else if user === null}
+  <form>
+    <div class="group">
+      <label
+        for="email"
+        class="text-lg opacity-50 group-focus-within:opacity-100">email</label
       >
-    </div>
-  {:else if user === null}
-    <form>
-      <label for="email">email</label>
       <input
         type="email"
         name="email"
@@ -91,123 +95,114 @@
         id="email"
         bind:value={email}
       />
-      {#if isNewUser === undefined}
-        <LoaderButton
-          text="next"
-          loading={uploading}
-          onClick={async () => {
-            uploading = true;
-            const methods = await fetchSignInMethodsForEmail(auth, email);
-            if (methods.length === 0) {
-              isNewUser = true;
+    </div>
+    <div class="group">
+      <label
+        for="password"
+        class="text-lg opacity-50 group-focus-within:opacity-100"
+        >password</label
+      >
+      <input
+        type="password"
+        name="password"
+        class="long font-mono"
+        id="password"
+        bind:value={password}
+      />
+    </div>
+    <LoaderButton
+      text="go"
+      loading={uploading}
+      onClick={async () => {
+        uploading = true;
+        try {
+          try {
+            await createUserWithEmailAndPassword(auth, email, password);
+          } catch (error) {
+            if (
+              error instanceof FirebaseError &&
+              error.code === "auth/email-already-in-use"
+            ) {
+              await signInWithEmailAndPassword(auth, email, password);
             } else {
-              throw new Error("don't know what to do with existing users");
+              throw error;
             }
-            uploading = false;
-          }}
-        />
-      {:else}
-        <label for="password">password</label>
-        <input
-          type="password"
-          name="password"
-          class="long font-mono"
-          id="password"
-          bind:value={password}
-        />
-        <LoaderButton
-          text={isNewUser ? "sign up" : "log in"}
-          loading={uploading}
-          onClick={async () => {
-            uploading = true;
-            try {
-              if (isNewUser) {
-                await createUserWithEmailAndPassword(auth, email, password);
-              } else {
-                await signInWithEmailAndPassword(auth, email, password);
-              }
-            } catch (error) {
-              let message = error instanceof Error ? error.message : `${error}`;
-              message = message.startsWith("Firebase:")
-                ? message.slice("Firebase:".length)
-                : message;
-              toast(`auth failed: ${message}`);
-              console.error(error);
-            }
-            uploading = false;
-          }}
-        />
-      {/if}
-    </form>
-  {:else}
-    <table>
-      <tbody>
-        {#each settings as set, i}
-          <tr class="w-full flex items-baseline">
-            <td class="text-right">
-              <label for={set.id}>{set.id}</label>
-              <p class="text-sm opacity-50">{set.description}</p>
-            </td>
-            <td class="h-16">
-              <div
-                class="px-2 py-1"
-                class:hidden={set.state !== "static"}
-                class:font-mono={set.value(user) === null}
-              >
-                {set.value(user) ?? "none"}
-              </div>
-              <input
-                type="text"
-                class="w-full px-2 py-1 rounded"
-                class:collapse={set.state === "static"}
-                id={set.id}
-                disabled={set.state === "updating"}
-                bind:value={inputValues[i]}
-                bind:this={inputRefs[i]}
-                on:keypress={e => e.key === "Enter" && updateSetting(i)}
-              />
-            </td>
-            <td>
-              {#if set.state === "static"}
-                <button
-                  class="square bg-input"
-                  on:click={async () => {
-                    settings[i].state = "editing";
-                    await delay(100);
-                    inputRefs[i].focus();
-                  }}><i class="bx bx-pencil"></i></button
-                >
-              {:else if set.state === "editing"}
-                <button
-                  class="square bg-button"
-                  on:click={() => updateSetting(i)}
-                  ><i class="bx bx-check"></i></button
-                >
-              {:else}
-                <button class="square bg-button" disabled
-                  ><i class="bx bx-loader-alt animate-spin"></i></button
-                >
-              {/if}
+          }
+        } catch (error) {
+          let message = error instanceof Error ? error.message : `${error}`;
+          message = message.startsWith("Firebase:")
+            ? message.slice("Firebase:".length)
+            : message;
+          toast(`auth failed: ${message}`);
+          console.error(error);
+        }
+        uploading = false;
+      }}
+    />
+  </form>
+{:else}
+  <table>
+    <tbody>
+      {#each settings as set, i}
+        <tr class="w-full flex items-baseline">
+          <td class="text-right">
+            <label for={set.id}>{set.id}</label>
+            <p class="text-sm opacity-50">{set.description}</p>
+          </td>
+          <td class="h-16">
+            <div
+              class="px-2 py-1"
+              class:hidden={set.state !== "static"}
+              class:font-mono={set.value(user) === null}
+            >
+              {set.value(user) ?? "none"}
+            </div>
+            <input
+              type="text"
+              class="w-full px-2 py-1 rounded"
+              class:collapse={set.state === "static"}
+              id={set.id}
+              disabled={set.state === "updating"}
+              bind:value={inputValues[i]}
+              bind:this={inputRefs[i]}
+              on:keypress={e => e.key === "Enter" && updateSetting(i)}
+            />
+          </td>
+          <td>
+            {#if set.state === "static"}
               <button
                 class="square bg-input"
-                class:collapse={set.state !== "editing"}
-                on:click={() => (set.state = "static")}
+                on:click={async () => {
+                  settings[i].state = "editing";
+                  await delay(100);
+                  inputRefs[i].focus();
+                }}><i class="bx bx-pencil"></i></button
               >
-                <i class="bx bx-x"></i>
-              </button>
-            </td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
-  {/if}
-</div>
+            {:else if set.state === "editing"}
+              <button class="square bg-button" on:click={() => updateSetting(i)}
+                ><i class="bx bx-check"></i></button
+              >
+            {:else}
+              <button class="square bg-button" disabled
+                ><i class="bx bx-loader-alt animate-spin"></i></button
+              >
+            {/if}
+            <button
+              class="square bg-input"
+              class:collapse={set.state !== "editing"}
+              on:click={() => (set.state = "static")}
+            >
+              <i class="bx bx-x"></i>
+            </button>
+          </td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+  <button class="long" on:click={() => signOut(auth)}>log out</button>
+{/if}
 
 <style lang="postcss">
-  form label {
-    @apply text-lg opacity-50;
-  }
-
   td {
     @apply flex-1 mx-4;
   }
