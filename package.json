@@ -40,6 +40,8 @@
   "type": "module",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
-    "firebase": "^10.12.5"
+    "firebase": "^10.12.5",
+    "wink-eng-lite-web-model": "^1.8.0",
+    "wink-nlp": "^2.3.0"
   }
 }
