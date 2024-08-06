@@ -1,6 +1,7 @@
 <script lang="ts">
   import { tweened } from "svelte/motion";
   import { sineInOut } from "svelte/easing";
+  import { onMount } from "svelte";
 
   export let className = "long bg-button";
   export let loading = false;
@@ -8,15 +9,17 @@
 
   const x = tweened<number>(-1, { duration: 1000, easing: sineInOut });
 
-  x.subscribe(v => {
-    if (loading && typeof v === "number") {
-      if (v <= 0) {
-        x.set(75);
-      } else if (v >= 75) {
-        x.set(0);
+  onMount(() =>
+    x.subscribe(v => {
+      if (loading && typeof v === "number") {
+        if (v <= 0) {
+          x.set(75);
+        } else if (v >= 75) {
+          x.set(0);
+        }
       }
-    }
-  });
+    }),
+  );
 </script>
 
 <button

@@ -12,7 +12,7 @@
   } from "firebase/auth";
   import { FirebaseError } from "firebase/app";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { toast } from "$lib/stores";
+  import { initAll, toast } from "$lib/stores";
   import { delay } from "$lib/util";
   import LoaderText from "$lib/LoaderText.svelte";
 
@@ -54,6 +54,7 @@
       inputValues = settings.map(s => s.value(user) ?? "");
     });
     downloading = false;
+    return initAll();
   });
 
   const updateSetting = async (index: number) => {
