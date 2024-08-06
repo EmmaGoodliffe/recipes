@@ -4,11 +4,12 @@
   import { delay, toArray, uniqueByKey } from "$lib/util";
   import { searchInstructionForIngredients } from "$lib/nlp";
   import Gallery from "../Gallery.svelte";
-  import { recipes, initialiseRecipes } from "$lib/stores";
+  import { recipes, initAll
+  } from "$lib/stores";
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
 
-  onMount(initialiseRecipes);
+  onMount(initAll);
 
   // let truncateIngredients = true;
   let direction: "l" | "r" = "r";

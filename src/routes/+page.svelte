@@ -2,9 +2,9 @@
   import { onMount } from "svelte";
   import AddRecipe from "./AddRecipe.svelte";
   import Gallery from "./Gallery.svelte";
-  import { recipes, initialiseRecipes } from "$lib/stores";
+  import { recipes, initAll } from "$lib/stores";
 
-  onMount(initialiseRecipes);
+  onMount(initAll);
 </script>
 
 <svelte:head>

@@ -3,6 +3,7 @@ import type { Recipe } from "./types";
 import { getFb } from "../routes/fb";
 import { getRecipes } from "./db";
 import { onAuthStateChanged } from "firebase/auth";
+import type { onDestroy, onMount } from "svelte";
 
 const TOAST_TIME = 10 * 1000;
 
@@ -14,11 +15,18 @@ export const toast = (text: string) => {
   toastQueue.update(q => [...q, { text, since: Date.now(), open: true }]);
 };
 
-setInterval(() => {
-  toastQueue.update(q =>
-    q.map(t => ({ ...t, open: t.open && Date.now() - t.since < TOAST_TIME })),
-  );
-}, 1000);
+const initToasts = () => {
+  const int = setInterval(() => {
+    toastQueue.update(q =>
+      q.map(t => ({ ...t, open: t.open && Date.now() - t.since < TOAST_TIME })),
+    );
+  }, 1000);
+  console.log("created int", int);
+  return () => {
+    console.log("clearing int", int);
+    clearInterval(int);
+  };
+};
 
 export const toastWrap = <T extends (...args: any[]) => any>(func: T) => {
   return async (
@@ -41,9 +49,14 @@ export const updateRecipes = async () => {
   recipes.set((await getRecipes(auth, db)) ?? []);
 };
 
-export const initialiseRecipes = async () => {
-  await updateRecipes();
-  onAuthStateChanged(getFb().auth, updateRecipes);
+const initRecipes = () => {
+  updateRecipes();
+  return onAuthStateChanged(getFb().auth, updateRecipes);
 };
 
 export const selectedRecipe = writable<Recipe | undefined>(undefined);
+
+export const initAll = () => {
+  const ends = [initRecipes(), initToasts()];
+  return () => ends.map(f => f());
+};

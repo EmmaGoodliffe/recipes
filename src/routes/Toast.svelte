@@ -1,13 +1,23 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
-  import { toastQueue } from "$lib/stores";
+  import { toast, toastQueue } from "$lib/stores";
+  import { delay } from "$lib/util";
 
   let pop: HTMLDivElement | undefined = undefined;
 
-  onMount(() => pop && pop.showPopover());
+  onMount(async () => {
+    pop && pop.showPopover();
+    toast("foo");
+    await delay(1000);
+    toast("bar");
+  });
 
   $: openToasts = $toastQueue.map((t, i) => ({ ...t, i })).filter(t => t.open);
+
+  toastQueue.subscribe(() => {
+    console.log(pop?.clientHeight);
+  })
 </script>
 
 <div
