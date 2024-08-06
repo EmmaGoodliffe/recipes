@@ -1,13 +1,18 @@
 <script lang="ts">
   import { selectedRecipe } from "$lib/stores";
   import RecipeStats from "../RecipeStats.svelte";
-  import { toArray, uniqueByKey } from "$lib/util";
+  import { delay, toArray, uniqueByKey } from "$lib/util";
   import { searchInstructionForIngredients } from "$lib/nlp";
   import Gallery from "../Gallery.svelte";
   import { recipes, initialiseRecipes } from "$lib/stores";
   import { onMount } from "svelte";
+  import { fly } from "svelte/transition";
 
   onMount(initialiseRecipes);
+
+  // let truncateIngredients = true;
+  let direction: "l" | "r" = "r";
+  let instructionIndex = 0;
 
   const bolden = (text: string, words: string[]) => {
     let result = text;
@@ -18,8 +23,6 @@
     return result;
   };
 
-  // let truncateIngredients = true;
-  let instructionIndex = 0;
   $: instructions = toArray($selectedRecipe?.recipeInstructions);
   $: instructionText = instructions[instructionIndex]?.text;
   $: ingredients = toArray($selectedRecipe?.recipeIngredient).filter(
@@ -46,16 +49,33 @@
     recipeYield={$selectedRecipe.recipeYield}
   />
   <div class="instruction">
-    <p>{instructionIndex + 1}. {@html instructionHtml}</p>
+    {#each instructions as inst, i}
+      {#if i === instructionIndex}
+        <p
+          in:fly={{ x: direction === "r" ? 200 : -200 }}
+          out:fly={{ x: direction === "r" ? -200 : 200 }}
+        >
+          {instructionIndex + 1}. {@html instructionHtml}
+        </p>
+      {/if}
+    {/each}
     <div class="flex">
       <button
         disabled={instructionIndex <= 0}
-        on:click={() => instructionIndex--}>&larr;</button
+        on:click={async () => {
+          direction = "l";
+          await delay(50);
+          instructionIndex--;
+        }}>&larr;</button
       >
       <button
         disabled={instructionIndex >=
           toArray($selectedRecipe.recipeInstructions).length - 1}
-        on:click={() => instructionIndex++}>&rarr;</button
+        on:click={async () => {
+          direction = "r";
+          await delay(50);
+          instructionIndex++;
+        }}>&rarr;</button
       >
     </div>
   </div>
@@ -86,7 +106,7 @@
   } */
 
   .instruction {
-    @apply w-auto mx-auto my-4 text-xl bg-bg;
+    @apply w-auto mx-auto my-4 text-xl bg-bg overflow-x-hidden;
   }
 
   .instruction button {
