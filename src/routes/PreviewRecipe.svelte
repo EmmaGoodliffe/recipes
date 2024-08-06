@@ -1,4 +1,6 @@
 <script lang="ts">
+  import RecipeStats from "./RecipeStats.svelte";
+
   import { toast } from "$lib/stores";
   import type { Recipe } from "$lib/types";
   import { toArray, toReader, durToText, dateToText } from "$lib/util";
@@ -59,37 +61,15 @@
     {/if}
   </div>
   <p class="my-2 px-2 py-2">{recReader.get("description") ?? ""}</p>
-  <div class="stats">
-    <div class="times">
-      <div class="stat">
-        <span class="quantity"
-          >{durToText(recReader.get("cookTime")) ?? "?:??"}</span
-        >
-        <span class="label">cook</span>
-      </div>
-      <div class="stat">
-        <span class="quantity"
-          >{durToText(recReader.get("prepTime")) ?? "?:??"}</span
-        >
-        <span class="label">prep</span>
-      </div>
-      <div class="stat">
-        <span class="quantity"
-          >{durToText(recReader.get("totalTime")) ?? "?:??"}</span
-        >
-        <span class="label">total</span>
-      </div>
-    </div>
-    <div class="serves">
-      <div class="stat">
-        <span class="label">serves</span>
-        <span class="quantity">{recReader.get("recipeYield") ?? "?"}</span>
-      </div>
-    </div>
-  </div>
+  <RecipeStats
+    prepTime={recReader.get("prepTime")}
+    cookTime={recReader.get("cookTime")}
+    totalTime={recReader.get("totalTime")}
+    recipeYield={recReader.get("recipeYield")}
+  />
   <div class="px-2">
     <div class="pt-4 pb-1 font-bold">Ingredients</div>
-    <ul class="list-inside">
+    <ul>
       {#each toArray(recReader.get("recipeIngredient")) as ing}
         <li>{ing}</li>
       {/each}
@@ -101,7 +81,7 @@
       {/each}
     </ol>
     <div class="pt-4 pb-1 font-bold">Nutrition info</div>
-    <ul class="list-inside">
+    <ul>
       {#each Object.values(recReader.get("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
         <li>{info}</li>
       {/each}
@@ -122,38 +102,6 @@
 </article>
 
 <style lang="postcss">
-  ul li::marker {
-    content: "  →  ";
-  }
-
-  .stats {
-    @apply flex justify-between max-w-80 mx-auto;
-  }
-
-  .times {
-    @apply flex justify-between border-2 border-input rounded;
-  }
-
-  .serves {
-    @apply border-2 border-input rounded;
-  }
-
-  .stat {
-    @apply flex flex-col items-center px-4 py-2 border-input;
-  }
-
-  .stat:not(:last-child) {
-    @apply border-r-2;
-  }
-
-  .quantity {
-    @apply font-mono font-bold;
-  }
-
-  .label {
-    @apply text-sm italic;
-  }
-
   .json {
     overflow-wrap: anywhere;
   }

@@ -3,6 +3,7 @@
   import Toast from "./Toast.svelte";
   import { navigating } from "$app/stores";
   import emptyFlask from "$lib/images/empty-flask.svg";
+  import { onMount } from "svelte";
 
   const pageIcons: { url: string; icon: string; emptySvg?: string }[] = [
     { url: "/", icon: "home" },
@@ -12,19 +13,22 @@
   const pages = Object.values(pageIcons);
   let selectedPage = "";
 
+  onMount(() => {
+    selectedPage = window.location.pathname;
+  });
+
   $: {
     if ($navigating?.to?.route.id) {
       selectedPage = $navigating.to.route.id;
-      console.log(selectedPage);
     }
   }
 </script>
 
-<main class="w-11/12 mx-auto flex flex-col text-text">
+<main class="w-11/12 mx-auto pb-12 flex flex-col text-text">
   <slot />
 </main>
 <Toast />
-<footer class="absolute bottom-0 w-full py-2 bg-dark-bg text-3xl">
+<footer class="fixed bottom-0 w-full py-2 bg-dark-bg text-3xl">
   <nav class="flex justify-evenly">
     {#each pages as p, i}
       <a href={p.url}>

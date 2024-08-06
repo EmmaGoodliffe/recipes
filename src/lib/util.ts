@@ -1,7 +1,7 @@
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
 
-export const toArray = <T>(x: T | T[] | undefined) =>
+export const toArray = <T>(x: T | T[] | undefined | null) =>
   x === undefined ? [] : Array.isArray(x) ? x : [x];
 
 const getKeys = <T extends {}>(obj: T) => Object.keys(obj) as (keyof T)[];
@@ -17,7 +17,18 @@ export const toReader = <T extends {}>(obj: T) => ({
 const overwrite = (x: string, overs: Record<string, string>) =>
   getKeys(overs).includes(x) ? overs[x] : x;
 
-/** `P3Y6M4DT12H30M5S` -> `3y 6mo 4d 12h 30m 5s` */
+const unique = <T>(items: T[]) => Array.from(new Set(items));
+
+export const uniqueByKey = <
+  K extends string,
+  T extends Record<string, unknown>,
+>(
+  key: K,
+  items: (T & Record<K, number | string | null | undefined>)[],
+) => {
+  const uniqueValues = unique(items.map(i => i[key]));
+  return uniqueValues.map(v => items.filter(i => i[key] === v)[0]);
+};
 
 /**
  * Convert ISO durations to a concise readable form
@@ -56,4 +67,47 @@ export const dateToText = (date: string | undefined) => {
     month: `${["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"][d.getUTCMonth()]} ${d.getUTCFullYear()}`,
     full: `${d.toLocaleTimeString()} ${d.toLocaleDateString()}`,
   };
+};
+
+export const parseIngredient = (ing: string | null | undefined) => {
+  const i = ing ?? "";
+  const re = /^[-\d]+/;
+  const num = toArray(i.match(re))[0];
+  const text = i.replace(re, "").trim();
+  const words = text.split(" ");
+  const [head, ...tail] = words;
+  const unit = ["g", "tbsp", "tsp"].includes(head) ? head : null;
+  const [item, desc] = (unit === null ? words : tail)
+    .join(" ")
+    .split(",")
+    .map(x => x.trim());
+  return { num, unit, item, desc: desc as string | undefined, whole: ing };
+};
+
+const wordsShareMajority = (a: string, b: string) => {
+  const n = Math.max(a.length, b.length);
+  return a.slice(0, n) === b.slice(0, n);
+};
+
+export const searchInstructionForIngredients = (
+  instruction: string | undefined,
+  ingredients: ReturnType<typeof parseIngredient>[],
+) => {
+  if (!instruction) {
+    return [];
+  }
+  const ingredientWords = ingredients.map(i => ({
+    ...i,
+    words: i.item.split(/\s/),
+  }));
+  const result = [];
+  for (const word of instruction
+    .split(/\s/)
+    .map(w => w.replaceAll(/[^\w]/g, ""))) {
+    const matchedIngredients = ingredientWords.filter(ing =>
+      ing.words.some(w => wordsShareMajority(w, word)),
+    );
+    result.push(...matchedIngredients);
+  }
+  return result;
 };

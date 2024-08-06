@@ -38,6 +38,14 @@ i {
   display: inline-block;
 }
 
+ul {
+  @apply list-inside;
+}
+
+ul li::marker {
+  content: "  →  ";
+}
+
 /* Scroller width */
 ::-webkit-scrollbar {
   @apply w-2;
