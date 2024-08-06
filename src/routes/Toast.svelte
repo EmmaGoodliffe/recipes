@@ -1,53 +1,67 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fly } from "svelte/transition";
   import { toast, toastQueue } from "$lib/stores";
-  import { delay } from "$lib/util";
+  import { delay, toArray } from "$lib/util";
   import { tweened } from "svelte/motion";
 
   let pop: HTMLDivElement | undefined = undefined;
-  let inner: HTMLDivElement | undefined = undefined;
-  const h = tweened(0);
+
+  const int = (a: number, b: number) => (t: number) => a + t * (b - a);
+  const arrInt = (as: number[], bs: number[]) => (t: number) =>
+    bs.map((b, i) => int(as[i] ?? 0, b)(t));
+
+  const pad = <T,>(length: number, filler: T, arr: T[]) =>
+    arr.length >= length
+      ? arr
+      : [...arr, ...new Array(length - arr.length).fill(filler)];
+
+  const heights = tweened([0], { interpolate: arrInt });
 
   onMount(() => {
     pop && pop.showPopover();
-    toast("foo");
-    delay(2000).then(() => toast("bar"));
-    // return toastQueue.subscribe(() => {
-    //   console.log("now");
-    //   if (inner?.clientHeight) {
-    //     h.set(inner.clientHeight);
-    //   }
-    // });
+    return toastQueue.subscribe(q => {
+      const internalHeights = [...(pop?.querySelectorAll(".toast") ?? [])].map(
+        el => el.clientHeight,
+      );
+      heights.set(
+        pad(
+          q.length + 2,
+          0,
+          q.map((t, i) =>
+            !t.open || !internalHeights[i] ? 0 : internalHeights[i] + 10,
+          ),
+        ),
+      );
+    });
   });
-
-  $: openToasts = $toastQueue.map((t, i) => ({ ...t, i })).filter(t => t.open);
 </script>
 
-<!-- style="height: {$h}px;" -->
 <div
   popover="manual"
   class="w-11/12 bg-transparent mb-16 text-text overflow-y-hidden"
   bind:this={pop}
-  >
-  <!-- <div class="pb-6" bind:this={inner}> -->
-    {#each openToasts as toast}
-      <div
-        class="bg-black rounded-lg py-1 px-4 mt-2 flex justify-between items-start"
-        transition:fly={{ y: 100 }}
-      >
+>
+  {#each $toastQueue as toast, i}
+    <div class="overflow-y-hidden" style="height: {$heights[i]}px;">
+      <div class="toast">
         <p>{toast.text}</p>
         <button
           aria-label="Close"
           title="Close"
-          class="self-start"
-          on:click={() =>
+          on:click={() => {
             toastQueue.update(q => {
-              q[toast.i].open = false;
+              q[i].open = false;
               return q;
-            })}><i class="bx bx-x"></i></button
+            });
+          }}><i class="bx bx-x"></i></button
         >
       </div>
-    {/each}
-  <!-- </div> -->
+    </div>
+  {/each}
 </div>
+
+<style lang="postcss">
+  .toast {
+    @apply bg-black rounded-lg px-4 py-2 overflow-hidden flex justify-between items-center;
+  }
+</style>
