@@ -8,12 +8,11 @@
   import PreviewRecipe from "./PreviewRecipe.svelte";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { selectedRecipe, toastWrap } from "$lib/stores";
+  import { selectedRecipe, toastWrap, updateRecipes } from "$lib/stores";
   import type { Firestore } from "firebase/firestore";
   import LoaderText from "$lib/LoaderText.svelte";
 
   export let recipes: Recipe[] | undefined;
-  export let onDeletion = () => {};
 
   let auth: Auth | undefined = undefined;
   let db: Firestore | undefined = undefined;
@@ -74,7 +73,7 @@
           loading = false;
           selectedRecipe.set(undefined);
           showPreview = false;
-          return onDeletion();
+          return updateRecipes();
         }}
       >
         <i class="bx bx-trash align-middle"></i> <span class="">delete</span>

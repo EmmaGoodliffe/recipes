@@ -1,5 +1,8 @@
 import { writable } from "svelte/store";
 import type { Recipe } from "./types";
+import { getFb } from "../routes/fb";
+import { getRecipes } from "./db";
+import { onAuthStateChanged } from "firebase/auth";
 
 const TOAST_TIME = 10 * 1000;
 
@@ -29,6 +32,18 @@ export const toastWrap = <T extends (...args: any[]) => any>(func: T) => {
       return new Error(message);
     }
   };
+};
+
+export const recipes = writable<Recipe[] | undefined>(undefined);
+
+export const updateRecipes = async () => {
+  const { auth, db } = getFb();
+  recipes.set((await getRecipes(auth, db)) ?? []);
+};
+
+export const initialiseRecipes = async () => {
+  await updateRecipes();
+  onAuthStateChanged(getFb().auth, updateRecipes);
 };
 
 export const selectedRecipe = writable<Recipe | undefined>(undefined);

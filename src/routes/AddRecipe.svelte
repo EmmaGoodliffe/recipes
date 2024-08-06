@@ -4,15 +4,13 @@
   import { isRecipe, type Recipe } from "$lib/types";
   import PreviewRecipe from "./PreviewRecipe.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { toast, toastWrap } from "$lib/stores";
+  import { toast, toastWrap, updateRecipes } from "$lib/stores";
   import { getFb } from "./fb";
   import { doc, getDoc, type Firestore } from "firebase/firestore";
   import { onMount } from "svelte";
   import type { Auth } from "firebase/auth";
   import { addRecipe } from "$lib/db";
   import eg from "$lib/eg.json";
-
-  export let onAddition = () => {};
 
   let auth: Auth | undefined = undefined;
   let db: Firestore | undefined = undefined;
@@ -94,7 +92,7 @@
             recipe = undefined;
             show = false;
             toast("added recipe");
-            return onAddition();
+            return updateRecipes();
           }
         }}><i class="bx bx-save align-middle"></i> save</LoaderButton
       >

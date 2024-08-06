@@ -1,33 +1,42 @@
 <script lang="ts">
   import { selectedRecipe } from "$lib/stores";
   import RecipeStats from "../RecipeStats.svelte";
-  import {
-    toArray,
-    parseIngredient,
-    searchInstructionForIngredients,
-    uniqueByKey,
-  } from "$lib/util";
+  import { toArray, uniqueByKey } from "$lib/util";
+  import { searchInstructionForIngredients } from "$lib/nlp";
+  import Gallery from "../Gallery.svelte";
+  import { recipes, initialiseRecipes } from "$lib/stores";
+  import { onMount } from "svelte";
+
+  onMount(initialiseRecipes);
+
+  const bolden = (text: string, words: string[]) => {
+    let result = text;
+    for (const w of words) {
+      const re = new RegExp(`\\b${w}\\b`, "g");
+      result = result.replaceAll(re, `<span class="font-bold">${w}</span>`);
+    }
+    return result;
+  };
 
   // let truncateIngredients = true;
   let instructionIndex = 0;
-  $: instruction = toArray($selectedRecipe?.recipeInstructions)[
-    instructionIndex
-  ]?.text;
-  $: ingredients = toArray($selectedRecipe?.recipeIngredient).map(
-    parseIngredient,
+  $: instructions = toArray($selectedRecipe?.recipeInstructions);
+  $: instructionText = instructions[instructionIndex]?.text;
+  $: ingredients = toArray($selectedRecipe?.recipeIngredient).filter(
+    i => i !== undefined,
   );
-  $: matchedIngredients = uniqueByKey(
-    "whole",
-    searchInstructionForIngredients(instruction, ingredients),
-  );
+  $: matches = searchInstructionForIngredients(instructionText, ingredients);
+  $: matchedIngredients = uniqueByKey("value", matches.ingredientMatches);
   $: unmatchedIngredients = ingredients.filter(
-    ing => !matchedIngredients.map(mi => mi.whole).includes(ing.whole),
+    ing => !matchedIngredients.map(mi => mi.value).includes(ing),
   );
+  $: matchedInstructionWords = matches.instructionMatches.map(i => i.value);
+  $: instructionHtml = bolden(instructionText ?? "", matchedInstructionWords);
 </script>
 
 {#if !$selectedRecipe}
-  <h1>no recipe to cook...</h1>
-  <a href="/" class="text-center hover:underline">&larr; home</a>
+  <h1>cook</h1>
+  <Gallery recipes={$recipes?.slice(0, 4)} />
 {:else}
   <h1>{$selectedRecipe.name}</h1>
   <RecipeStats
@@ -37,24 +46,27 @@
     recipeYield={$selectedRecipe.recipeYield}
   />
   <div class="instruction">
-    <button disabled={instructionIndex <= 0} on:click={() => instructionIndex--}
-      >&larr;</button
-    >
-    <p>{instructionIndex + 1}. {instruction}</p>
-    <button
-      disabled={instructionIndex >=
-        toArray($selectedRecipe.recipeInstructions).length - 1}
-      on:click={() => instructionIndex++}>&rarr;</button
-    >
+    <p>{instructionIndex + 1}. {@html instructionHtml}</p>
+    <div class="flex">
+      <button
+        disabled={instructionIndex <= 0}
+        on:click={() => instructionIndex--}>&larr;</button
+      >
+      <button
+        disabled={instructionIndex >=
+          toArray($selectedRecipe.recipeInstructions).length - 1}
+        on:click={() => instructionIndex++}>&rarr;</button
+      >
+    </div>
   </div>
   <div class="my-4 relative enforced-rounded">
     <!-- (ul) class:v-truncate={truncateIngredients} -->
-    <ul class="mx-4 my-2">
+    <ul class="mx-4 text-lg">
       {#each matchedIngredients as ing}
-        <li class="font-bold">{ing.whole}</li>
+        <li class="font-bold">{ing.value}</li>
       {/each}
       {#each unmatchedIngredients as ing}
-        <li>{ing.whole}</li>
+        <li>{ing}</li>
       {/each}
     </ul>
     <!-- {#if truncateIngredients}
@@ -74,10 +86,10 @@
   } */
 
   .instruction {
-    @apply w-[inherit] mx-auto my-4 text-xl bg-bg flex justify-center;
+    @apply w-auto mx-auto my-4 text-xl bg-bg;
   }
 
   .instruction button {
-    @apply mx-2 px-4 rounded transition-all hover:bg-input disabled:opacity-50;
+    @apply flex-1 mx-2 my-2 px-4 pt-2 pb-3 rounded transition-all hover:bg-input disabled:opacity-50;
   }
 </style>
