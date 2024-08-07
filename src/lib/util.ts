@@ -4,9 +4,10 @@ export const delay = (ms: number): Promise<void> =>
 export const toArray = <T>(x: T | T[] | undefined | null) =>
   x === undefined || x === null ? [] : Array.isArray(x) ? x : [x];
 
-export const getKeys = <T extends {}>(obj: T) => Object.keys(obj) as (keyof T)[];
+export const getKeys = <T extends object>(obj: T) =>
+  Object.keys(obj) as (keyof T)[];
 
-export const toReader = <T extends {}>(obj: T) => ({
+export const toReader = <T extends object>(obj: T) => ({
   get<K extends string & keyof T>(key: K) {
     this.unread.delete(key);
     return obj[key];
@@ -31,12 +32,6 @@ export const uniqueByKey = <
 };
 
 export const overlap = <T>(a: T[], b: T[]) => a.filter(x => b.includes(x));
-
-const hasOverlap = <T>(a: T[], b: T[]) => overlap(a, b).length > 0;
-
-const zip = <T>(a: T[], b: T[]): [T, T][] => a.map((x, i) => [x, b[i]]);
-
-const isSorted = (a: number[]) => a.join(",") === [...a].sort().join(",");
 
 /**
  * Convert ISO durations to a concise readable form

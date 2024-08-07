@@ -1,10 +1,8 @@
+import { onAuthStateChanged } from "firebase/auth";
 import { writable } from "svelte/store";
-import type { Recipe } from "./types";
 import { getFb } from "../routes/fb";
 import { getRecipes } from "./db";
-import { onAuthStateChanged } from "firebase/auth";
-import type { onDestroy, onMount } from "svelte";
-import { tweened, type Tweened } from "svelte/motion";
+import type { Func, Recipe } from "./types";
 
 const TOAST_TIME = 10 * 1000;
 
@@ -29,7 +27,7 @@ const initToasts = () => {
   };
 };
 
-export const toastWrap = <T extends (...args: any[]) => any>(func: T) => {
+export const toastWrap = <T extends Func>(func: T) => {
   return async (
     ...params: Parameters<T>
   ): Promise<Awaited<ReturnType<T>> | Error> => {

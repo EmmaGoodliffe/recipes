@@ -25,11 +25,13 @@ export default [
     languageOptions: {
       parserOptions: {
         parser: ts.parser,
+        project: "./tsconfig.json",
+        extraFileExtensions: [".svelte"],
       },
     },
   },
   {
-    ignores: ["build/", ".svelte-kit/", "dist/"],
+    ignores: ["build/", ".svelte-kit/", "dist/", "schemas/"],
   },
   {
     plugins: {

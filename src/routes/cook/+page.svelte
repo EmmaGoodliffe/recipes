@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { selectedRecipe } from "$lib/stores";
-  import RecipeStats from "../RecipeStats.svelte";
-  import { delay, toArray, uniqueByKey } from "$lib/util";
-  import { searchInstructionForIngredients } from "$lib/nlp";
-  import Gallery from "../Gallery.svelte";
-  import { recipes, initAll
-  } from "$lib/stores";
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
+  import Gallery from "../Gallery.svelte";
+  import RecipeStats from "../RecipeStats.svelte";
+  import { searchInstructionForIngredients } from "$lib/nlp";
+  import SmoothHeight from "$lib/SmoothHeight.svelte";
+  import { selectedRecipe } from "$lib/stores";
+  import { initAll, recipes } from "$lib/stores";
+  import { delay, toArray, uniqueByKey } from "$lib/util";
 
   onMount(initAll);
 
@@ -49,37 +49,40 @@
     totalTime={$selectedRecipe.totalTime}
     recipeYield={$selectedRecipe.recipeYield}
   />
-  <div class="instruction">
-    {#each instructions as inst, i}
-      {#if i === instructionIndex}
-        <p
-          in:fly={{ x: direction === "r" ? 200 : -200 }}
-          out:fly={{ x: direction === "r" ? -200 : 200 }}
+  <SmoothHeight>
+    <div class="instruction">
+      {#each instructions as inst, i}
+        {#if i === instructionIndex}
+          <p
+            in:fly={{ x: direction === "r" ? 200 : -200 }}
+            out:fly={{ x: direction === "r" ? -200 : 200 }}
+          >
+            {instructionIndex + 1}. {@html instructionHtml}
+          </p>
+        {/if}
+      {/each}
+      <div class="flex">
+        <button
+          disabled={instructionIndex <= 0}
+          on:click={async () => {
+            direction = "l";
+            await delay(50);
+            instructionIndex--;
+          }}>&larr;</button
         >
-          {instructionIndex + 1}. {@html instructionHtml}
-        </p>
-      {/if}
-    {/each}
-    <div class="flex">
-      <button
-        disabled={instructionIndex <= 0}
-        on:click={async () => {
-          direction = "l";
-          await delay(50);
-          instructionIndex--;
-        }}>&larr;</button
-      >
-      <button
-        disabled={instructionIndex >=
-          toArray($selectedRecipe.recipeInstructions).length - 1}
-        on:click={async () => {
-          direction = "r";
-          await delay(50);
-          instructionIndex++;
-        }}>&rarr;</button
-      >
+        <button
+          disabled={instructionIndex >=
+            toArray($selectedRecipe.recipeInstructions).length - 1}
+          on:click={async () => {
+            direction = "r";
+            await delay(50);
+            instructionIndex++;
+          }}>&rarr;</button
+        >
+        <!-- TODO: allow swipes -->
+      </div>
     </div>
-  </div>
+  </SmoothHeight>
   <div class="my-4 relative enforced-rounded">
     <!-- (ul) class:v-truncate={truncateIngredients} -->
     <ul class="mx-4 text-lg">

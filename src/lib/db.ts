@@ -1,14 +1,9 @@
-import type { Auth } from "firebase/auth";
-import {
-  getDoc,
-  doc,
-  type Firestore,
-  addDoc,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { toast } from "./stores";
-import { isRecipe, toRecipes, type Recipe } from "./types";
+import { toRecipes } from "./types";
+import type { Recipe } from "./types";
+import type { Auth } from "firebase/auth";
+import type { Firestore } from "firebase/firestore";
 
 const checkAuthAndDb = (auth: Auth | undefined, db: Firestore | undefined) => {
   if (!db) {
@@ -29,7 +24,7 @@ const checkUid = (auth: Auth) => {
   return uid;
 };
 
-const checkData = <T extends {}>(data: T | undefined, desc = "data") => {
+const checkData = <T extends object>(data: T | undefined, desc = "data") => {
   if (!data) {
     throw new Error(`no ${desc}`);
   }

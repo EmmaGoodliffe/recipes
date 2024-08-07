@@ -1,6 +1,9 @@
 import type { Rec } from "./Recipe";
 import type { Call, Objects } from "hotscript";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Func<P extends unknown[] = any[], R = any> = (...args: P) => R;
+
 export interface Recipe extends Call<Objects.PartialDeep, Rec> {
   "@context": "https://schema.org";
   "@id": string;

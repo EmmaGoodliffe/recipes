@@ -1,16 +1,16 @@
 <script lang="ts">
-  import Dialog from "$lib/Dialog.svelte";
-  import { enhance } from "$app/forms";
-  import { isRecipe, type Recipe } from "$lib/types";
+  import { onMount } from "svelte";
+  import { getFb } from "./fb";
   import PreviewRecipe from "./PreviewRecipe.svelte";
+  import type { Recipe } from "$lib/types";
+  import type { Auth } from "firebase/auth";
+  import type { Firestore } from "firebase/firestore";
+  import { enhance } from "$app/forms";
+  import { addRecipe } from "$lib/db";
+  import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { toast, toastWrap, updateRecipes } from "$lib/stores";
-  import { getFb } from "./fb";
-  import { doc, getDoc, type Firestore } from "firebase/firestore";
-  import { onMount } from "svelte";
-  import type { Auth } from "firebase/auth";
-  import { addRecipe } from "$lib/db";
-  import eg from "$lib/eg.json";
+  import { isRecipe } from "$lib/types";
 
   let auth: Auth | undefined = undefined;
   let db: Firestore | undefined = undefined;

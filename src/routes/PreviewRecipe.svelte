@@ -1,10 +1,7 @@
 <script lang="ts">
   import RecipeStats from "./RecipeStats.svelte";
-
-  import { toast } from "$lib/stores";
   import type { Recipe } from "$lib/types";
-  import { toArray, toReader, durToText, dateToText } from "$lib/util";
-  import LoaderButton from "$lib/LoaderButton.svelte";
+  import { dateToText, toArray, toReader } from "$lib/util";
 
   export let recipe: Recipe;
 

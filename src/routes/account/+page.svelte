@@ -1,20 +1,19 @@
 <script lang="ts">
-  import { getFb } from "../fb";
-  import { onMount } from "svelte";
-  import {
-    onAuthStateChanged,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    updateProfile,
-    signOut,
-    type User,
-    type Auth,
-  } from "firebase/auth";
   import { FirebaseError } from "firebase/app";
+  import {
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut,
+    updateProfile,
+  } from "firebase/auth";
+  import { onMount } from "svelte";
+  import { getFb } from "../fb";
+  import type { Auth, User } from "firebase/auth";
   import LoaderButton from "$lib/LoaderButton.svelte";
+  import LoaderText from "$lib/LoaderText.svelte";
   import { initAll, toast } from "$lib/stores";
   import { delay } from "$lib/util";
-  import LoaderText from "$lib/LoaderText.svelte";
 
   let auth: Auth;
   let user: User | null = null;
@@ -44,7 +43,7 @@
       },
     },
   ];
-  let inputValues: string[] = settings.map(s => "");
+  let inputValues: string[] = settings.map(() => "");
   const inputRefs: HTMLInputElement[] = [];
 
   onMount(() => {

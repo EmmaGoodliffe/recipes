@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { toast, toastQueue } from "$lib/stores";
-  import { delay, toArray } from "$lib/util";
   import { tweened } from "svelte/motion";
+  import { toastQueue } from "$lib/stores";
 
   let pop: HTMLDivElement | undefined = undefined;
 
@@ -18,7 +17,9 @@
   const heights = tweened([0], { interpolate: arrInt });
 
   onMount(() => {
-    pop && pop.showPopover();
+    if (pop) {
+      pop.showPopover();
+    }
     return toastQueue.subscribe(q => {
       const internalHeights = [...(pop?.querySelectorAll(".toast") ?? [])].map(
         el => el.clientHeight,

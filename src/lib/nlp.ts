@@ -1,6 +1,7 @@
-import wink, { type ItsFunction } from "wink-nlp";
 import model from "wink-eng-lite-web-model";
-import { unique, getKeys, overlap } from "./util";
+import wink from "wink-nlp";
+import { getKeys, overlap, unique } from "./util";
+import type { ItsFunction } from "wink-nlp";
 
 const nlp = wink(model);
 

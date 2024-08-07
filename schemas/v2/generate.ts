@@ -1,9 +1,9 @@
+import { readFileSync, writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
-import { writeFileSync, readFileSync } from "fs";
-import Recipe from "./scraped/Recipe.json";
-import NutritionInformation from "./scraped/NutritionInformation.json";
 import eg from "./scraped/eg.json";
+import NutritionInformation from "./scraped/NutritionInformation.json";
+import Recipe from "./scraped/Recipe.json";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

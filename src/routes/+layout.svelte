@@ -1,9 +1,9 @@
 <script lang="ts">
   import "../app.css";
+  import { onMount } from "svelte";
   import Toast from "./Toast.svelte";
   import { navigating } from "$app/stores";
   import emptyFlask from "$lib/images/empty-flask.svg";
-  import { onMount } from "svelte";
 
   const pageIcons: { url: string; icon: string; emptySvg?: string }[] = [
     { url: "/", icon: "home" },
@@ -24,13 +24,13 @@
   }
 </script>
 
-<main class="w-11/12 mx-auto pb-12 flex flex-col text-text">
+<main class="w-11/12 max-w-5xl mx-auto pb-12 flex flex-col text-text">
   <slot />
 </main>
 <Toast />
 <footer class="fixed bottom-0 w-full py-2 bg-dark-bg text-3xl">
   <nav class="flex justify-evenly">
-    {#each pages as p, i}
+    {#each pages as p}
       <a href={p.url}>
         {#if p.url !== selectedPage && p.emptySvg}
           <img src={p.emptySvg} alt="flask" class="h-[30px] mt-[0.125rem]" />

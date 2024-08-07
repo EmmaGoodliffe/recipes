@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { getFb } from "./fb";
-  import { getRecipes, deleteRecipe } from "$lib/db";
   import { onMount } from "svelte";
-  import type { Recipe } from "$lib/types";
-  import { onAuthStateChanged, type Auth } from "firebase/auth";
-  import { toArray } from "$lib/util";
+  import { getFb } from "./fb";
   import PreviewRecipe from "./PreviewRecipe.svelte";
+  import type { Recipe } from "$lib/types";
+  import type { Auth } from "firebase/auth";
+  import type { Firestore } from "firebase/firestore";
+  import { deleteRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { selectedRecipe, toastWrap, updateRecipes } from "$lib/stores";
-  import type { Firestore } from "firebase/firestore";
   import LoaderText from "$lib/LoaderText.svelte";
+  import { selectedRecipe, toastWrap, updateRecipes } from "$lib/stores";
+  import { toArray } from "$lib/util";
 
   export let recipes: Recipe[] | undefined;
 

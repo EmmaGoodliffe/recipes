@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import AddRecipe from "./AddRecipe.svelte";
   import Gallery from "./Gallery.svelte";
-  import { recipes, initAll } from "$lib/stores";
+  import { initAll, recipes } from "$lib/stores";
 
   onMount(initAll);
 </script>

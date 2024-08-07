@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { tweened } from "svelte/motion";
-  import { sineInOut } from "svelte/easing";
   import { onMount } from "svelte";
+  import { sineInOut } from "svelte/easing";
+  import { tweened } from "svelte/motion";
 
   export let className = "long bg-button";
   export let loading = false;
