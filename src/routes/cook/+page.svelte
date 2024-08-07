@@ -49,40 +49,37 @@
     totalTime={$selectedRecipe.totalTime}
     recipeYield={$selectedRecipe.recipeYield}
   />
-  <SmoothHeight>
-    <div class="instruction">
+  <div class="instruction">
+    <SmoothHeight>
       {#each instructions as inst, i}
         {#if i === instructionIndex}
-          <p
-            in:fly={{ x: direction === "r" ? 200 : -200 }}
-            out:fly={{ x: direction === "r" ? -200 : 200 }}
-          >
+          <p in:fly={{ x: direction === "r" ? 200 : -200 }}>
             {instructionIndex + 1}. {@html instructionHtml}
           </p>
         {/if}
       {/each}
-      <div class="flex">
-        <button
-          disabled={instructionIndex <= 0}
-          on:click={async () => {
-            direction = "l";
-            await delay(50);
-            instructionIndex--;
-          }}>&larr;</button
-        >
-        <button
-          disabled={instructionIndex >=
-            toArray($selectedRecipe.recipeInstructions).length - 1}
-          on:click={async () => {
-            direction = "r";
-            await delay(50);
-            instructionIndex++;
-          }}>&rarr;</button
-        >
-        <!-- TODO: allow swipes -->
-      </div>
+    </SmoothHeight>
+    <div class="flex">
+      <button
+        disabled={instructionIndex <= 0}
+        on:click={async () => {
+          direction = "l";
+          await delay(50);
+          instructionIndex--;
+        }}>&larr;</button
+      >
+      <button
+        disabled={instructionIndex >=
+          toArray($selectedRecipe.recipeInstructions).length - 1}
+        on:click={async () => {
+          direction = "r";
+          await delay(50);
+          instructionIndex++;
+        }}>&rarr;</button
+      >
+      <!-- TODO: allow swipes -->
     </div>
-  </SmoothHeight>
+  </div>
   <div class="my-4 relative enforced-rounded">
     <!-- (ul) class:v-truncate={truncateIngredients} -->
     <ul class="mx-4 text-lg">

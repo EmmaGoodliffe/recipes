@@ -1,9 +1,21 @@
 <script lang="ts">
-  let outer: HTMLDivElement;
-  let inner: HTMLDivElement;
+  import { afterUpdate } from "svelte";
+  import { delay } from "./util";
+  import { tweened } from "svelte/motion";
+
+  let outer: HTMLDivElement | undefined;
+  let inner: HTMLDivElement | undefined;
+  const h = tweened(0, { duration: 200 });
+
+  afterUpdate(async () => {
+    await delay(0); // hacky
+    if (inner) {
+      h.set(inner.clientHeight);
+    }
+  });
 </script>
 
-<div bind:this={outer}>
+<div class="overflow-hidden" style="height: {$h + 20}px;" bind:this={outer}>
   <div bind:this={inner}>
     <slot />
   </div>

@@ -7,8 +7,7 @@
 
   $: {
     if (dialog) {
-      const f = show ? dialog.showModal : dialog.close;
-      f();
+      show ? dialog.showModal() : dialog.close();
     }
   }
 
