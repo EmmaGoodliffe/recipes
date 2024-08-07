@@ -20,11 +20,7 @@ const initToasts = () => {
       q.map(t => ({ ...t, open: t.open && Date.now() - t.since < TOAST_TIME })),
     );
   }, 1000);
-  console.log("created int", int);
-  return () => {
-    console.log("clearing int", int);
-    clearInterval(int);
-  };
+  return () => clearInterval(int);
 };
 
 export const toastWrap = <T extends Func>(func: T) => {

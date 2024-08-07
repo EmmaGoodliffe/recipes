@@ -38,6 +38,11 @@
   $: instructionHtml = bolden(instructionText ?? "", matchedInstructionWords);
 </script>
 
+<svelte:head>
+  <title>cook | recipes</title>
+  <meta name="description" content="cook" />
+</svelte:head>
+
 {#if !$selectedRecipe}
   <h1>cook</h1>
   <Gallery recipes={$recipes?.slice(0, 4)} />

@@ -1,21 +1,35 @@
 <script lang="ts">
   import { afterUpdate } from "svelte";
-  import { delay } from "./util";
+  import { cubicOut } from "svelte/easing";
   import { tweened } from "svelte/motion";
+  import { delay } from "./util";
+
+  export let padding = 5;
+  export let ease = false;
+  export let duration = ease ? 600 : 200;
 
   let outer: HTMLDivElement | undefined;
   let inner: HTMLDivElement | undefined;
-  const h = tweened(0, { duration: 200 });
+  const h = tweened(0, { duration, easing: ease ? cubicOut : undefined });
+
+  let targetH = 0;
 
   afterUpdate(async () => {
     await delay(1); // hacky
     if (inner) {
-      h.set(inner.clientHeight);
+      if (Math.abs(targetH - inner.clientHeight) > 0.01) {
+        targetH = inner.clientHeight;
+        h.set(inner.clientHeight);
+      }
     }
   });
 </script>
 
-<div class="overflow-hidden" style="height: {$h + 20}px;" bind:this={outer}>
+<div
+  class="overflow-hidden"
+  style="height: {$h + padding}px;"
+  bind:this={outer}
+>
   <div bind:this={inner}>
     <slot />
   </div>

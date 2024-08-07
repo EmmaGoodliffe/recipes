@@ -1,39 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { tweened } from "svelte/motion";
-  import { toastQueue } from "$lib/stores";
+  import { fly } from "svelte/transition";
+  import SmoothHeight from "$lib/SmoothHeight.svelte";
+  import { toast, toastQueue } from "$lib/stores";
+  import { delay } from "$lib/util";
 
   let pop: HTMLDivElement | undefined;
-
-  const int = (a: number, b: number) => (t: number) => a + t * (b - a);
-  const arrInt = (as: number[], bs: number[]) => (t: number) =>
-    bs.map((b, i) => int(as[i] ?? 0, b)(t));
-
-  const pad = <T,>(length: number, filler: T, arr: T[]) =>
-    arr.length >= length
-      ? arr
-      : [...arr, ...new Array(length - arr.length).fill(filler)];
-
-  const heights = tweened([0], { interpolate: arrInt });
 
   onMount(() => {
     if (pop) {
       pop.showPopover();
     }
-    return toastQueue.subscribe(q => {
-      const internalHeights = [...(pop?.querySelectorAll(".toast") ?? [])].map(
-        el => el.clientHeight,
-      );
-      heights.set(
-        pad(
-          q.length + 2,
-          0,
-          q.map((t, i) =>
-            !t.open || !internalHeights[i] ? 0 : internalHeights[i] + 10,
-          ),
-        ),
-      );
-    });
+    toast("foo");
+    delay(1000).then(() => toast("bar"));
   });
 </script>
 
@@ -43,21 +22,23 @@
   bind:this={pop}
 >
   {#each $toastQueue as toast, i}
-    <div class="overflow-y-hidden" style="height: {$heights[i]}px;">
-      <div class="toast">
-        <p>{toast.text}</p>
-        <button
-          aria-label="Close"
-          title="Close"
-          on:click={() => {
-            toastQueue.update(q => {
-              q[i].open = false;
-              return q;
-            });
-          }}><i class="bx bx-x"></i></button
-        >
-      </div>
-    </div>
+    <SmoothHeight ease={true}>
+      {#if toast.open}
+        <div class="toast" transition:fly={{ y: 50 }}>
+          <p>{toast.text}</p>
+          <button
+            aria-label="Close"
+            title="Close"
+            on:click={() => {
+              toastQueue.update(q => {
+                q[i].open = false;
+                return q;
+              });
+            }}><i class="bx bx-x"></i></button
+          >
+        </div>
+      {/if}
+    </SmoothHeight>
   {/each}
 </div>
 
