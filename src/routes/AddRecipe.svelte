@@ -12,12 +12,12 @@
   import { toast, toastWrap, updateRecipes } from "$lib/stores";
   import { isRecipe } from "$lib/types";
 
-  let auth: Auth | undefined = undefined;
-  let db: Firestore | undefined = undefined;
+  let auth: Auth | undefined;
+  let db: Firestore | undefined;
   let show = false;
   let loading = false;
   let method: "by-url" | "from-clipboard" = "by-url";
-  let recipe: Recipe | undefined = undefined;
+  let recipe: Recipe | undefined;
   let onCancel = () => {};
 
   onMount(() => {
@@ -85,12 +85,12 @@
     {#if recipe !== undefined}
       <LoaderButton
         onClick={async () => {
-          if ((await toastWrap(addRecipe)(auth, db, recipe)) instanceof Error) {
-            show = false;
-            recipe = undefined;
+          const res = await toastWrap(addRecipe)(auth, db, recipe);
+          show = false;
+          recipe = undefined;
+          if (res instanceof Error) {
+            console.error(res);
           } else {
-            recipe = undefined;
-            show = false;
             toast("added recipe");
             return updateRecipes();
           }
@@ -99,8 +99,8 @@
       <button
         class="long cancel"
         on:click={() => {
-          recipe = undefined;
           show = false;
+          recipe = undefined;
         }}><i class="bx bx-x align-middle"></i> cancel</button
       >
     {/if}

@@ -14,8 +14,8 @@
 
   export let recipes: Recipe[] | undefined;
 
-  let auth: Auth | undefined = undefined;
-  let db: Firestore | undefined = undefined;
+  let auth: Auth | undefined;
+  let db: Firestore | undefined;
   let showPreview = false;
   let loading = false;
 

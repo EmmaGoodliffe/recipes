@@ -3,7 +3,7 @@
   import { tweened } from "svelte/motion";
   import { toastQueue } from "$lib/stores";
 
-  let pop: HTMLDivElement | undefined = undefined;
+  let pop: HTMLDivElement | undefined;
 
   const int = (a: number, b: number) => (t: number) => a + t * (b - a);
   const arrInt = (as: number[], bs: number[]) => (t: number) =>
