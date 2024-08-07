@@ -11,6 +11,6 @@ A simple and free app for collecting recipes and generating shopping lists.
   - Tag recipes
   - Shopping list
 - Aesthetics
-  - Smooth motion
+  - ~~Smooth motion~~
 - DX
-  - Linting within Svelte
+  - ~~Linting within Svelte~~
