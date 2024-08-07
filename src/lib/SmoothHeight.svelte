@@ -8,7 +8,7 @@
   const h = tweened(0, { duration: 200 });
 
   afterUpdate(async () => {
-    await delay(0); // hacky
+    await delay(1); // hacky
     if (inner) {
       h.set(inner.clientHeight);
     }
