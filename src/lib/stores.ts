@@ -49,9 +49,11 @@ const initRecipes = () => {
   return onAuthStateChanged(getFb().auth, updateRecipes);
 };
 
-export const selectedRecipe = writable<Recipe | undefined>(undefined);
-
 export const initAll = () => {
   const ends = [initRecipes(), initToasts()];
   return () => ends.map(f => f());
 };
+
+export const toBePreviewed = writable<Recipe | undefined>(undefined);
+export const toBeCooked = writable<Recipe | undefined>(undefined);
+export const toBeEdited = writable<Recipe | undefined>(undefined);

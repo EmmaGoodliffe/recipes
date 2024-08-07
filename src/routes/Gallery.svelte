@@ -9,10 +9,17 @@
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
-  import { selectedRecipe, toastWrap, updateRecipes } from "$lib/stores";
+  import {
+    toBeCooked,
+    toBePreviewed,
+    toastWrap,
+    updateRecipes,
+  } from "$lib/stores";
   import { toArray } from "$lib/util";
+  import type { Writable } from "svelte/store";
 
   export let recipes: Recipe[] | undefined;
+  export let selectStores: Writable<Recipe | undefined>[];
 
   let auth: Auth | undefined;
   let db: Firestore | undefined;
@@ -36,7 +43,7 @@
       <button
         class="card enforced-rounded"
         on:click={() => {
-          selectedRecipe.set(rec);
+          selectStores.map(s => s.set(rec));
           showPreview = true;
         }}
       >
@@ -60,25 +67,28 @@
     {/each}
   {/if}
 </div>
-{#if $selectedRecipe}
+{#if $toBePreviewed}
   <Dialog bind:show={showPreview} title="preview recipe">
-    <PreviewRecipe recipe={$selectedRecipe} />
+    <PreviewRecipe recipe={$toBePreviewed} />
     <div slot="footer">
-      <LoaderButton
+      <!-- <LoaderButton
         className="long bg-input"
         {loading}
         onClick={async () => {
           loading = true;
-          await toastWrap(deleteRecipe)(auth, db, $selectedRecipe?.["@id"]);
+          await toastWrap(deleteRecipe)(auth, db, $toBePreviewed?.["@id"]);
           loading = false;
-          selectedRecipe.set(undefined);
+          toBePreviewed.set(undefined);
           showPreview = false;
           return updateRecipes();
         }}
       >
         <i class="bx bx-trash align-middle"></i> <span class="">delete</span>
-      </LoaderButton>
-      <a href="/cook" class="long bg-button block text-center"
+      </LoaderButton> -->
+      <a
+        href="/cook"
+        class="long bg-button block text-center"
+        on:click={() => toBeCooked.set($toBePreviewed)}
         ><i class="bx bxs-flask"></i> cook</a
       >
     </div>

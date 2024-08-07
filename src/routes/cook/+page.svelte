@@ -5,7 +5,7 @@
   import RecipeStats from "../RecipeStats.svelte";
   import { searchInstructionForIngredients } from "$lib/nlp";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
-  import { selectedRecipe } from "$lib/stores";
+  import { toBeCooked } from "$lib/stores";
   import { initAll, recipes } from "$lib/stores";
   import { delay, toArray, uniqueByKey } from "$lib/util";
 
@@ -24,9 +24,9 @@
     return result;
   };
 
-  $: instructions = toArray($selectedRecipe?.recipeInstructions);
+  $: instructions = toArray($toBeCooked?.recipeInstructions);
   $: instructionText = instructions[instructionIndex]?.text;
-  $: ingredients = toArray($selectedRecipe?.recipeIngredient).filter(
+  $: ingredients = toArray($toBeCooked?.recipeIngredient).filter(
     i => i !== undefined,
   );
   $: matches = searchInstructionForIngredients(instructionText, ingredients);
@@ -43,16 +43,16 @@
   <meta name="description" content="cook" />
 </svelte:head>
 
-{#if !$selectedRecipe}
+{#if !$toBeCooked}
   <h1>cook</h1>
-  <Gallery recipes={$recipes?.slice(0, 4)} />
+  <Gallery recipes={$recipes?.slice(0, 4)} selectStores={[toBeCooked]} />
 {:else}
-  <h1>{$selectedRecipe.name}</h1>
+  <h1>{$toBeCooked.name}</h1>
   <RecipeStats
-    prepTime={$selectedRecipe.prepTime}
-    cookTime={$selectedRecipe.cookTime}
-    totalTime={$selectedRecipe.totalTime}
-    recipeYield={$selectedRecipe.recipeYield}
+    prepTime={$toBeCooked.prepTime}
+    cookTime={$toBeCooked.cookTime}
+    totalTime={$toBeCooked.totalTime}
+    recipeYield={$toBeCooked.recipeYield}
   />
   <div class="instruction">
     <SmoothHeight>
@@ -75,7 +75,7 @@
       >
       <button
         disabled={instructionIndex >=
-          toArray($selectedRecipe.recipeInstructions).length - 1}
+          toArray($toBeCooked.recipeInstructions).length - 1}
         on:click={async () => {
           direction = "r";
           await delay(50);

@@ -2,8 +2,7 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
-  import { toast, toastQueue } from "$lib/stores";
-  import { delay } from "$lib/util";
+  import { toastQueue } from "$lib/stores";
 
   let pop: HTMLDivElement | undefined;
 
@@ -11,8 +10,6 @@
     if (pop) {
       pop.showPopover();
     }
-    toast("foo");
-    delay(1000).then(() => toast("bar"));
   });
 </script>
 

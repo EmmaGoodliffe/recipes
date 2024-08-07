@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import AddRecipe from "./AddRecipe.svelte";
   import Gallery from "./Gallery.svelte";
-  import { initAll, recipes } from "$lib/stores";
+  import { initAll, recipes, toBePreviewed } from "$lib/stores";
 
   onMount(initAll);
 </script>
@@ -14,4 +14,4 @@
 
 <h1>recipes</h1>
 <AddRecipe />
-<Gallery recipes={$recipes} />
+<Gallery recipes={$recipes} selectStores={[toBePreviewed]} />
