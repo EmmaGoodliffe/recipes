@@ -7,10 +7,16 @@ export const toArray = <T>(x: T | T[] | undefined | null) =>
 export const getKeys = <T extends object>(obj: T) =>
   Object.keys(obj) as (keyof T)[];
 
-export const toReader = <T extends object>(obj: T) => ({
+export const toEditable = <T extends object>(obj: T) => ({
+ initial: obj,
+  data: { ...obj },
   get<K extends string & keyof T>(key: K) {
     this.unread.delete(key);
-    return obj[key];
+    return this.data[key];
+  },
+  set<K extends string & keyof T>(key: K, value: T[K]) {
+    this.data[key] = value;
+    return this.data;
   },
   unread: new Set(getKeys(obj)),
 });

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { getFb } from "./fb";
-  import PreviewRecipe from "./PreviewRecipe.svelte";
+  import ViewRecipe from "./ViewRecipe.svelte";
   import type { Recipe } from "$lib/types";
   import type { Auth } from "firebase/auth";
   import type { Firestore } from "firebase/firestore";
@@ -79,7 +79,7 @@
       </form>
     {/if}
   {:else}
-    <PreviewRecipe {recipe} />
+    <ViewRecipe {recipe} />
   {/if}
   <div slot="footer">
     {#if recipe !== undefined}

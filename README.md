@@ -14,3 +14,4 @@ A simple and free app for collecting recipes and generating shopping lists.
   - ~~Smooth motion~~
 - DX
   - ~~Linting within Svelte~~
+  - Purge unused exports

@@ -35,7 +35,9 @@
       on:click={() => (show = false)}><i class="bx bx-x"></i></button
     >
   </header>
-  <slot />
+  <main class="max-h-[60vh] px-4 pb-2 overflow-auto">
+    <slot />
+  </main>
   <footer>
     <slot name="footer"></slot>
   </footer>

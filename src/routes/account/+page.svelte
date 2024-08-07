@@ -80,10 +80,7 @@
 {:else if user === null}
   <form>
     <div class="group">
-      <label
-        for="email"
-        class="text-lg opacity-50 group-focus-within:opacity-100">email</label
-      >
+      <label for="email">email</label>
       <input
         type="email"
         name="email"
@@ -93,11 +90,7 @@
       />
     </div>
     <div class="group">
-      <label
-        for="password"
-        class="text-lg opacity-50 group-focus-within:opacity-100"
-        >password</label
-      >
+      <label for="password">password</label>
       <input
         type="password"
         name="password"
@@ -169,7 +162,7 @@
                 class="square bg-input"
                 on:click={async () => {
                   settings[i].state = "editing";
-                  await delay(100);
+                  await delay(10);
                   inputRefs[i].focus();
                 }}><i class="bx bx-pencil"></i></button
               >
@@ -198,6 +191,10 @@
 {/if}
 
 <style lang="postcss">
+  form label {
+    @apply text-lg opacity-50 group-focus-within:opacity-100;
+  }
+
   td {
     @apply flex-1 mx-4;
   }

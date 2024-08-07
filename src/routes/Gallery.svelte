@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { getFb } from "./fb";
-  import PreviewRecipe from "./PreviewRecipe.svelte";
+  import ViewRecipe from "./ViewRecipe.svelte";
   import type { Recipe } from "$lib/types";
   import type { Auth } from "firebase/auth";
   import type { Firestore } from "firebase/firestore";
@@ -11,6 +11,7 @@
   import LoaderText from "$lib/LoaderText.svelte";
   import {
     toBeCooked,
+    toBeEdited,
     toBePreviewed,
     toastWrap,
     updateRecipes,
@@ -69,7 +70,7 @@
 </div>
 {#if $toBePreviewed}
   <Dialog bind:show={showPreview} title="preview recipe">
-    <PreviewRecipe recipe={$toBePreviewed} />
+    <ViewRecipe recipe={$toBePreviewed} />
     <div slot="footer">
       <!-- <LoaderButton
         className="long bg-input"
@@ -85,6 +86,11 @@
       >
         <i class="bx bx-trash align-middle"></i> <span class="">delete</span>
       </LoaderButton> -->
+      <button
+        class="long bg-input"
+        on:click={() => toBeEdited.set($toBePreviewed)}
+        ><i class="bx bx-pencil"></i> edit</button
+      >
       <a
         href="/cook"
         class="long bg-button block text-center"

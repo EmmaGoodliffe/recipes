@@ -15,7 +15,7 @@
   let targetH = 0;
 
   afterUpdate(async () => {
-    await delay(1); // hacky
+    await delay(10); // hacky
     if (inner) {
       if (Math.abs(targetH - inner.clientHeight) > 0.01) {
         targetH = inner.clientHeight;
