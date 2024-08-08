@@ -1,8 +1,7 @@
 <script lang="ts">
   import RecipeStats from "./RecipeStats.svelte";
-  import type { Recipe } from "$lib/types";
+  import { isRecipe, type Recipe } from "$lib/types";
   import { dateToText, delay, toArray, toEditable } from "$lib/util";
-  import Dialog from "$lib/Dialog.svelte";
   import EditRecipe from "./EditRecipe.svelte";
   import JsonTable from "./JsonTable.svelte";
 
@@ -17,7 +16,7 @@
     // TODO: focus input
   };
 
-  $: recEdit = toEditable(recipe);
+  $: recEdit = toEditable(recipe, isRecipe);
   $: authors = toArray(recEdit.get("author"));
   $: authorNames = authors.length
     ? authors.map(a => a?.name ?? "?").join(", ")
@@ -48,11 +47,13 @@
     </div>
   </header>
   {#if recEdit.get("image")?.url}
-    <img
-      src={recEdit.get("image")?.url}
-      alt={recEdit.get("name")}
-      class="max-w-[75%] mx-auto pb-4 rounded"
-    />
+    <div class="max-w-2xl mx-auto">
+      <img
+        src={recEdit.get("image")?.url}
+        alt={recEdit.get("name")}
+        class="max-w-[75%] mx-auto pb-4 rounded"
+      />
+    </div>
   {/if}
   <div class="flex justify-center items-center">
     {#if pub}
@@ -104,23 +105,29 @@
       {/each}
     </ul>
   </div>
-  <!-- TODO: unread properties -->
-  <p>...</p>
-  <!-- <JsonTable
+  <JsonTable
     obj={recEdit.getUnread()}
-    editing={{ enabled: editable }}
+    {editable}
     onClick={p => {
       // TODO: handle
       console.log("table click!", p);
     }}
-  /> -->
+  />
 </article>
 <EditRecipe
   show={editable && editKey !== undefined}
   {recEdit}
   key={editKey ?? "name"}
-  onEdit={() => {
-    // TODO: handle edit
+  onClose={() => editKey = undefined}
+  onEdit={edit => {
+    if (edit.mode === "overwrite") {
+      console.log('setting', edit);
+      recEdit.setByPath(edit.path, edit.value);
+      console.log(recEdit);
+    } else {
+      // TODO: handle other edit modes
+      throw new Error(`unknown edit mode ${edit.mode}`);
+    }
     editKey = undefined;
   }}
 />
