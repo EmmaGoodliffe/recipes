@@ -5,16 +5,20 @@
   import ViewRecipe from "./ViewRecipe.svelte";
   import { initAll, recipes, toBeEdited, toBePreviewed } from "$lib/stores";
 
+  $: title = $toBeEdited ? "edit recipe | recipes" : "recipes";
+  $: header = $toBeEdited ? "edit recipe" : "recipes";
+
   onMount(initAll);
 </script>
 
 <svelte:head>
-  <title>recipes</title>
+  <title>{title}</title>
   <meta name="description" content="recipes" />
 </svelte:head>
 
-<h1>recipes</h1>
+<h1>{header}</h1>
 {#if $toBeEdited}
+  <p class="-mt-4 mb-6 text-center opacity-50 font-semibold">Tap on a part of the recipe to change it.</p>
   <ViewRecipe recipe={$toBeEdited} editable={true} />
 {:else}
   <AddRecipe />

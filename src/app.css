@@ -32,18 +32,40 @@ i {
   @apply text-text;
 }
 
-.enforced-rounded {
-  @apply rounded;
-  overflow: hidden;
-  display: inline-block;
-}
-
 ul {
   @apply list-inside;
 }
 
 ul li::marker {
   content: "  →  ";
+}
+
+@layer utilities {
+  .enforced-rounded {
+    @apply rounded;
+    overflow: hidden;
+    display: inline-block;
+  }
+}
+
+/* TODO: consider nesting options */
+
+table.json {
+  @apply my-4 enforced-rounded font-mono border-input border-2;
+}
+
+table.json tr:not(:last-child) {
+  @apply border-b-2 border-input;
+}
+
+table.json td:first-child {
+  @apply px-2 border-r-2 border-input;
+}
+
+table.json td:last-child {
+  @apply px-2;
+  /* TODO: consider other wrap options */
+  overflow-wrap: anywhere;
 }
 
 /* Scroller width */

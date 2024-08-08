@@ -103,27 +103,19 @@
       {/each}
     </ul>
   </div>
-  <table class="my-4 enforced-rounded font-mono border-input border-2">
+  <table class="json">
     <tbody>
-      {#each Array.from(recEdit.unread).filter(k => k[0] !== "@") as key}
-        <tr class="border-input">
-          <td class="px-2 border-r-2 border-input">{key}</td>
-          <td class="px-2 json">{JSON.stringify(recEdit.get(key), null, 2)}</td>
+      {#each Array.from(recEdit.unread).filter(k => !k.startsWith("@")) as key}
+        <tr>
+          <td>{key}</td>
+          <td>{JSON.stringify(recEdit.get(key), null, 2)}</td>
         </tr>
       {/each}
     </tbody>
   </table>
 </article>
-<Dialog show={editable && editKey !== undefined}>
-  <EditRecipe {recEdit} key={editKey ?? "name"} />
-</Dialog>
-
-<style lang="postcss">
-  .json {
-    overflow-wrap: anywhere;
-  }
-
-  tr:not(:last-child) {
-    @apply border-b-2;
-  }
-</style>
+<EditRecipe
+  show={editable && editKey !== undefined}
+  {recEdit}
+  key={editKey ?? "name"}
+/>

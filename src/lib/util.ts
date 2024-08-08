@@ -8,7 +8,7 @@ export const getKeys = <T extends object>(obj: T) =>
   Object.keys(obj) as (keyof T)[];
 
 export const toEditable = <T extends object>(obj: T) => ({
- initial: obj,
+  initial: obj,
   data: { ...obj },
   get<K extends string & keyof T>(key: K) {
     this.unread.delete(key);
