@@ -4,6 +4,7 @@
   import { dateToText, delay, toArray, toEditable } from "$lib/util";
   import Dialog from "$lib/Dialog.svelte";
   import EditRecipe from "./EditRecipe.svelte";
+  import JsonTable from "./JsonTable.svelte";
 
   export let recipe: Recipe;
   export let editable = false;
@@ -103,19 +104,14 @@
       {/each}
     </ul>
   </div>
-  <table class="json">
-    <tbody>
-      {#each Array.from(recEdit.unread).filter(k => !k.startsWith("@")) as key}
-        <tr>
-          <td>{key}</td>
-          <td>{JSON.stringify(recEdit.get(key), null, 2)}</td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+  <JsonTable obj={recipe} />
 </article>
 <EditRecipe
   show={editable && editKey !== undefined}
   {recEdit}
   key={editKey ?? "name"}
+  onEdit={() => {
+    // TODO: handle edit
+    editKey = undefined;
+  }}
 />

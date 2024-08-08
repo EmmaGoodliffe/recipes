@@ -1,7 +1,7 @@
 <script lang="ts">
   export let show = false;
   export let title = "";
-  export let onBlur: () => void = () => {};
+  export let onClose: () => void = () => {};
 
   let dialog: HTMLDialogElement | undefined = undefined;
 
@@ -14,7 +14,7 @@
   const onClick = (e: MouseEvent) => {
     if ((e.target as HTMLElement).tagName === "DIALOG") {
       show = false;
-      onBlur();
+      onClose();
     }
   };
 </script>
@@ -32,7 +32,10 @@
       aria-label="Close"
       title="Close"
       class="square self-start bg-transparent"
-      on:click={() => (show = false)}><i class="bx bx-x"></i></button
+      on:click={() => {
+        show = false;
+        onClose();
+      }}><i class="bx bx-x"></i></button
     >
   </header>
   <main class="max-h-[60vh] px-4 pb-2 overflow-auto">

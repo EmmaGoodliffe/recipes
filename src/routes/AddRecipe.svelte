@@ -29,7 +29,7 @@
 <button class="long bg-button" on:click={() => (show = true)}
   ><i class="bx bx-plus align-middle"></i> <span class="">recipe</span></button
 >
-<Dialog bind:show title="add recipe" onBlur={onCancel}>
+<Dialog bind:show title="add recipe" onClose={onCancel}>
   <div class="px-4">
     <select name="method" class="long" bind:value={method}>
       <option value="by-url">by URL</option>

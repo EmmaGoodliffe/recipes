@@ -7,6 +7,11 @@ export const toArray = <T>(x: T | T[] | undefined | null) =>
 export const getKeys = <T extends object>(obj: T) =>
   Object.keys(obj) as (keyof T)[];
 
+export const isKey = <T extends object>(
+  obj: T,
+  key: string,
+): key is string & keyof T => Object.keys(obj).includes(key);
+
 export const toEditable = <T extends object>(obj: T) => ({
   initial: obj,
   data: { ...obj },

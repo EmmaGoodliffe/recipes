@@ -1,4 +1,4 @@
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, type User } from "firebase/auth";
 import { writable } from "svelte/store";
 import { getFb } from "../routes/fb";
 import { getRecipes } from "./db";
@@ -44,14 +44,19 @@ export const updateRecipes = async () => {
   recipes.set((await getRecipes(auth, db)) ?? []);
 };
 
-const initRecipes = () => {
-  updateRecipes();
-  return onAuthStateChanged(getFb().auth, updateRecipes);
-};
+export const user = writable<User | null>(null);
 
 export const initAll = () => {
-  const ends = [initRecipes(), initToasts()];
-  return () => ends.map(f => f());
+  updateRecipes(); // not awaited
+  const ends = [
+    initToasts(),
+    onAuthStateChanged(getFb().auth, async u => {
+      user.set(u);
+      await updateRecipes();
+    }),
+  ];
+  const endAll = () => ends.map(f => f());
+  return endAll;
 };
 
 export const toBePreviewed = writable<Recipe | undefined>(undefined);

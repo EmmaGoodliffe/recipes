@@ -2,7 +2,6 @@
   import { FirebaseError } from "firebase/app";
   import {
     createUserWithEmailAndPassword,
-    onAuthStateChanged,
     signInWithEmailAndPassword,
     signOut,
     updateProfile,
@@ -12,11 +11,10 @@
   import type { Auth, User } from "firebase/auth";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
-  import { initAll, toast } from "$lib/stores";
+  import { initAll, toast, user } from "$lib/stores";
   import { delay } from "$lib/util";
 
   let auth: Auth;
-  let user: User | null = null;
   let email = "";
   let password = "";
   let downloading = true;
@@ -35,23 +33,19 @@
       state: "static",
       value: u => u?.displayName ?? null,
       update(x) {
-        if (!user) {
+        if (!$user) {
           toast("you can't change your name because you're not logged in");
           return;
         }
-        return updateProfile(user, { displayName: x });
+        return updateProfile($user, { displayName: x });
       },
     },
   ];
-  let inputValues: string[] = settings.map(() => "");
+  $: inputValues = settings.map(s => s.value($user) ?? "");
   const inputRefs: HTMLInputElement[] = [];
 
   onMount(() => {
     auth = getFb().auth;
-    onAuthStateChanged(auth, u => {
-      user = u;
-      inputValues = settings.map(s => s.value(user) ?? "");
-    });
     downloading = false;
     return initAll();
   });
@@ -77,7 +71,7 @@
 <h1>account</h1>
 {#if downloading}
   <LoaderText text="authenticating..." />
-{:else if user === null}
+{:else if $user === null}
   <form>
     <div class="group">
       <label for="email">email</label>
@@ -142,9 +136,9 @@
             <div
               class="px-2 py-1"
               class:hidden={set.state !== "static"}
-              class:font-mono={set.value(user) === null}
+              class:font-mono={set.value($user) === null}
             >
-              {set.value(user) ?? "none"}
+              {set.value($user) ?? "none"}
             </div>
             <input
               type="text"
