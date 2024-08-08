@@ -5,16 +5,25 @@ export const toArray = <T>(x: T | T[] | undefined | null) =>
   x === undefined || x === null ? [] : Array.isArray(x) ? x : [x];
 
 export const getKeys = <T extends object>(obj: T) =>
-  Object.keys(obj) as (keyof T)[];
+  Object.keys(obj) as (string & keyof T)[];
 
 export const isKey = <T extends object>(
   obj: T,
   key: string,
 ): key is string & keyof T => Object.keys(obj).includes(key);
 
+const keyValuesToObj = <K extends string, V>(keys: K[], values: V[]) => {
+  const result: Partial<Record<K, V>> = {};
+  for (const i in keys) {
+    result[keys[i]] = values[i];
+  }
+  return result;
+};
+
 export const toEditable = <T extends object>(obj: T) => ({
   initial: obj,
   data: { ...obj },
+  unread: new Set(getKeys(obj)),
   get<K extends string & keyof T>(key: K) {
     this.unread.delete(key);
     return this.data[key];
@@ -23,7 +32,13 @@ export const toEditable = <T extends object>(obj: T) => ({
     this.data[key] = value;
     return this.data;
   },
-  unread: new Set(getKeys(obj)),
+  getUnread() {
+    const keys = Array.from(this.unread);
+    return keyValuesToObj(
+      keys,
+      keys.map(k => this.data[k]),
+    );
+  },
 });
 
 const overwrite = (x: string, overs: Record<string, string>) =>

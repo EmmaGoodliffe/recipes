@@ -104,7 +104,16 @@
       {/each}
     </ul>
   </div>
-  <JsonTable obj={recipe} />
+  <!-- TODO: unread properties -->
+  <p>...</p>
+  <!-- <JsonTable
+    obj={recEdit.getUnread()}
+    editing={{ enabled: editable }}
+    onClick={p => {
+      // TODO: handle
+      console.log("table click!", p);
+    }}
+  /> -->
 </article>
 <EditRecipe
   show={editable && editKey !== undefined}

@@ -40,6 +40,11 @@ ul li::marker {
   content: "  →  ";
 }
 
+label.focal {
+  @apply text-lg opacity-50 group-focus-within:opacity-100;
+}
+
+
 @layer utilities {
   .enforced-rounded {
     @apply rounded;

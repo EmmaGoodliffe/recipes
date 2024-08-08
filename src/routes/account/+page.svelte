@@ -74,7 +74,7 @@
 {:else if $user === null}
   <form>
     <div class="group">
-      <label for="email">email</label>
+      <label for="email" class="focal">email</label>
       <input
         type="email"
         name="email"
@@ -84,7 +84,7 @@
       />
     </div>
     <div class="group">
-      <label for="password">password</label>
+      <label for="password" class="focal">password</label>
       <input
         type="password"
         name="password"
@@ -186,10 +186,6 @@
 {/if}
 
 <style lang="postcss">
-  form label {
-    @apply text-lg opacity-50 group-focus-within:opacity-100;
-  }
-
   td {
     @apply flex-1 mx-4;
   }

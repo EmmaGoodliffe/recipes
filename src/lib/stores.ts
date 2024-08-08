@@ -44,7 +44,7 @@ export const updateRecipes = async () => {
   recipes.set((await getRecipes(auth, db)) ?? []);
 };
 
-export const user = writable<User | null>(null);
+export const user = writable<User | null | undefined>(undefined);
 
 export const initAll = () => {
   updateRecipes(); // not awaited

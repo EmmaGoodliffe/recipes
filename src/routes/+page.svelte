@@ -3,6 +3,7 @@
   import AddRecipe from "./AddRecipe.svelte";
   import Gallery from "./Gallery.svelte";
   import ViewRecipe from "./ViewRecipe.svelte";
+  import LoaderText from "$lib/LoaderText.svelte";
   import {
     initAll,
     recipes,
@@ -23,7 +24,9 @@
 </svelte:head>
 
 <h1>{header}</h1>
-{#if $user === null}
+{#if $user === undefined}
+  <LoaderText text="authenticating..." />
+{:else if $user === null}
   <a href="/account" class="text-center hover:underline">Log in &rarr;</a>
 {:else if $toBeEdited}
   <p class="-mt-4 mb-6 text-center opacity-50 font-semibold">

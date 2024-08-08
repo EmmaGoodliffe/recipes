@@ -2,19 +2,34 @@
   import { getKeys } from "$lib/util";
 
   export let obj: unknown;
+  export let editable: boolean;
+  export let pathPrefix = "";
+  export let onClick: (path: string) => void = () => {};
 </script>
 
-{#if obj === undefined || obj === null}
-  <span>{obj}</span>
-{:else if typeof obj === "string"}
-  <span>{obj}</span>
+{#if obj === undefined || obj === null || typeof obj === "string"}
+  <button disabled={!editable} on:click={() => onClick(pathPrefix)}
+    >{obj}</button
+  >
 {:else if typeof obj === "object"}
   <table class="json">
     <tbody>
       {#each getKeys(obj) as key}
         <tr>
-          <td>{key}</td>
-          <td><svelte:self obj={obj[key]}></svelte:self></td>
+          <td
+            ><button
+              disabled={!editable}
+              on:click={() => onClick(`${pathPrefix}.${key}`)}>{key}</button
+            ></td
+          >
+          <td
+            ><svelte:self
+              obj={obj[key]}
+              {editable}
+              pathPrefix="{pathPrefix}.{key}"
+              {onClick}
+            ></svelte:self></td
+          >
         </tr>
       {/each}
     </tbody>

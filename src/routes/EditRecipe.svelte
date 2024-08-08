@@ -28,17 +28,28 @@
 </script>
 
 <Dialog {show} title="edit {key}" onClose={() => onEdit()}>
-  <form on:submit={() => console.log({ obj, path, valueAtPath })}>
-    <div>
-      selected path: <span class="font-mono">{JSON.stringify(path)}</span>
-    </div>
-    <p>current value:</p>
-    <JsonTable {obj} />
-    {#if path !== undefined}
-      <p>new value:</p>
-      <!-- TODO: handle numbers etc. -->
-      <input type="text" bind:value={valueAtPath} />
-      <button type="submit" class="long bg-button">confirm edit</button>
-    {/if}
-  </form>
+  <p class="text-center opacity-50 font-semibold">
+    Tap on a property to change it.
+  </p>
+  {#if typeof obj === "object"}
+    <JsonTable {obj} editable={true} onClick={p => (path = p.slice(1))} />
+  {/if}
+  {#if path !== undefined}
+    <form>
+      <div class="group">
+        <label for="edit" class="focal">
+          new value for <span class="font-mono"
+            >{JSON.stringify(path ? `${key}.${path}` : key)}</span
+          >
+        </label>
+        <!-- TODO: handle numbers etc. -->
+        <input
+          type="text"
+          class="long font-mono"
+          id="edit"
+          bind:value={valueAtPath}
+        />
+      </div>
+    </form>
+  {/if}
 </Dialog>
