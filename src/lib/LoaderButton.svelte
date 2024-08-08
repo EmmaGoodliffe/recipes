@@ -6,6 +6,7 @@
   export let className = "long bg-button";
   export let loading = false;
   export let onClick: (e: Event) => void = () => {};
+  export let buttonType: "button" | "submit" = "button";
 
   const x = tweened<number>(-1, { duration: 1000, easing: sineInOut });
 
@@ -23,6 +24,7 @@
 </script>
 
 <button
+  type={buttonType}
   class={className}
   disabled={loading}
   on:click={e => {

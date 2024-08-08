@@ -75,7 +75,7 @@
           value="https://www.bbcgoodfood.com/recipes/courgette-curry"
           class="long font-mono"
         />
-        <LoaderButton {loading}>go</LoaderButton>
+        <LoaderButton buttonType="submit" {loading}>go</LoaderButton>
       </form>
     {/if}
   {:else}

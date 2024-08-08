@@ -100,6 +100,7 @@
       />
     </div>
     <LoaderButton
+      buttonType="submit"
       loading={uploading}
       onClick={async () => {
         uploading = true;

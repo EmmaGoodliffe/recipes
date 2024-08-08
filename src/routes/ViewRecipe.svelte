@@ -1,24 +1,19 @@
 <script lang="ts">
-  // import EditableText from "./EditableText.svelte";
   import RecipeStats from "./RecipeStats.svelte";
   import type { Recipe } from "$lib/types";
   import { dateToText, delay, toArray, toEditable } from "$lib/util";
   import Dialog from "$lib/Dialog.svelte";
-  import EditValue from "./EditValue.svelte";
+  import EditRecipe from "./EditRecipe.svelte";
 
   export let recipe: Recipe;
   export let editable = false;
 
-  let newValue = "";
-  let input: HTMLInputElement | undefined;
-  let editing:
-    | { key: string; title: string; previousValue?: Recipe[keyof Recipe] }
-    | undefined;
+  let editKey: (string & keyof Recipe) | undefined;
 
-  const edit = async (key: string & keyof Recipe, title = key) => {
-    editing = { key, title, previousValue: recEdit.get(key) };
+  const edit = async (key: string & keyof Recipe) => {
+    editKey = key;
     await delay(10);
-    input?.focus();
+    // TODO: focus input
   };
 
   $: recEdit = toEditable(recipe);
@@ -33,7 +28,6 @@
   <header class="mx-2 py-4 text-center">
     <div class="text-lg">
       <!-- <span class="font-bold">{recEdit.get("name")}</span> -->
-      <!-- <EditableText value={name} disabled={!editable}></EditableText> -->
       <button
         class="font-bold"
         disabled={!editable}
@@ -120,8 +114,8 @@
     </tbody>
   </table>
 </article>
-<Dialog show={editing !== undefined} title={editing?.title}>
-  <EditValue value={editing?.previousValue} />
+<Dialog show={editable && editKey !== undefined}>
+  <EditRecipe {recEdit} key={editKey ?? "name"} />
 </Dialog>
 
 <style lang="postcss">
