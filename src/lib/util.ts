@@ -4,7 +4,6 @@ export const delay = (ms: number): Promise<void> =>
 export const toArray = <T>(x: T | T[] | undefined | null) =>
   x === undefined || x === null ? [] : Array.isArray(x) ? x : [x];
 
-
 export const getKeys = <T extends object>(obj: T) =>
   Object.keys(obj) as (string & keyof T)[];
 
@@ -15,7 +14,6 @@ export const keyValuesToObj = <K extends string, V>(keys: K[], values: V[]) => {
   }
   return result;
 };
-
 
 const overwrite = (x: string, overs: Record<string, string>) =>
   getKeys(overs).includes(x) ? overs[x] : x;

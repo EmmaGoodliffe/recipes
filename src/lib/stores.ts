@@ -2,8 +2,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { writable } from "svelte/store";
 import { getFb } from "../routes/fb";
 import { getRecipes } from "./db";
+import { isRecord } from "./types";
 import { getKeys, keyValuesToObj } from "./util";
-import type {Func, Recipe} from "./types";
+import type { Func, Recipe } from "./types";
 import type { User } from "firebase/auth";
 import type { Readable } from "svelte/store";
 
@@ -70,9 +71,6 @@ const isKey = <T extends object>(
   obj: T,
   key: string,
 ): key is string & keyof T => Object.keys(obj).includes(key);
-
-const isRecord = (x: unknown): x is Record<string, unknown> =>
-  !!x && typeof x === "object" && !Array.isArray(x);
 
 export const getByPath = (obj: unknown, path: string | undefined): unknown => {
   if (!path || !obj) {

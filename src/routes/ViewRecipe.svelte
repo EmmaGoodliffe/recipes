@@ -134,7 +134,7 @@
       }}
     >
       <div class="group">
-        <label for="edit-value" class="font-mono">{editKey}</label>
+        <label for="edit-value" class="focal font-mono">{editKey}</label>
         <input
           type="text"
           class="long"
@@ -147,21 +147,23 @@
     <p class="text-center opacity-50 font-semibold">
       Tap on a property to change it.
     </p>
-    <JsonTable
-      obj={editObj}
-      editable={true}
-      pathPrefix={editKey}
-      onEdit={edits => {
-        for (const edit of edits) {
-          if (edit.mode === "overwrite") {
-            rec.setByPath(edit.path, edit.value);
-          } else {
-            // TODO: handle other edit modes
-            throw new Error(`unknown edit mode ${edit.mode}`);
+    <div class="mx-auto">
+      <JsonTable
+        obj={editObj}
+        editable={true}
+        pathPrefix={editKey}
+        onEdit={edits => {
+          for (const edit of edits) {
+            if (edit.mode === "overwrite") {
+              rec.setByPath(edit.path, edit.value);
+            } else {
+              // TODO: handle other edit modes
+              throw new Error(`unknown edit mode ${edit.mode}`);
+            }
           }
-        }
-      }}
-    />
+        }}
+      />
+    </div>
   {:else}
     <p>Don't know how to edit type {typeof editObj}</p>
   {/if}

@@ -28,6 +28,7 @@
   <slot />
 </main>
 <Toast />
+<!-- place scrollbar behind footer -->
 <footer class="fixed bottom-0 w-full py-2 bg-dark-bg text-3xl">
   <nav class="flex justify-evenly">
     {#each pages as p}

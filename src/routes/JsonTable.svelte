@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { isRecord } from "$lib/types";
   import { getKeys } from "$lib/util";
 
   export let obj: unknown;
@@ -37,10 +38,10 @@
       editPath = pathPrefix;
     }}>{obj}</button
   >
-{:else if typeof obj === "object"}
+{:else if isRecord(obj) || Array.isArray(obj)}
   <table class="json">
     <tbody>
-      {#each getKeys(obj) as key}
+      {#each getKeys(obj).filter(k => !k.startsWith("@")) as key}
         <tr>
           <td>{key}</td>
           <td>

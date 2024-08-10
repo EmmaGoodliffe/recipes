@@ -4,6 +4,9 @@ import type { Call, Objects } from "hotscript";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Func<P extends unknown[] = any[], R = any> = (...args: P) => R;
 
+export const isRecord = (x: unknown): x is Record<string, unknown> =>
+  !!x && typeof x === "object" && !Array.isArray(x);
+
 export interface Recipe extends Call<Objects.PartialDeep, Rec> {
   "@context": "https://schema.org";
   "@id": string;

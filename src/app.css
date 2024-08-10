@@ -65,6 +65,7 @@ table.json tr:not(:last-child) {
 
 table.json td:first-child {
   @apply px-2 border-r-2 border-input;
+  overflow-wrap: normal;
 }
 
 table.json td:last-child {
