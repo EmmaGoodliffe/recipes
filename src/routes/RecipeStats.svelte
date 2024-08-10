@@ -1,26 +1,28 @@
 <script lang="ts">
+  import type { Recipe } from "$lib/types";
   import { durToText } from "$lib/util";
 
   export let prepTime: string | undefined;
   export let cookTime: string | undefined;
   export let totalTime: string | undefined;
   export let recipeYield: number | undefined;
+  export let edit: (key: string & keyof Recipe) => void;
 </script>
 
 <div class="stats">
   <div class="times">
-    <div class="stat">
+    <button class="stat" on:click={() => edit("prepTime")}>
       <span class="quantity">{durToText(prepTime) ?? "?"}</span>
       <span class="label">prep</span>
-    </div>
-    <div class="stat">
+    </button>
+    <button class="stat" on:click={() => edit("cookTime")}>
       <span class="quantity">{durToText(cookTime) ?? "?"}</span>
       <span class="label">cook</span>
-    </div>
-    <div class="stat">
+    </button>
+    <button class="stat" on:click={() => edit("totalTime")}>
       <span class="quantity">{durToText(totalTime) ?? "?"}</span>
       <span class="label">total</span>
-    </div>
+    </button>
   </div>
   <div class="serves">
     <div class="stat">

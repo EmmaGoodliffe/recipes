@@ -1,7 +1,15 @@
 <script lang="ts">
   import RecipeStats from "./RecipeStats.svelte";
-  import { isRecipe, type Recipe } from "$lib/types";
-  import { dateToText, delay, fetchImage, toArray } from "$lib/util";
+  import { isRecipe, type ExtractEndsWith, type Recipe } from "$lib/types";
+  import {
+    dateToText,
+    delay,
+    doesEndWith,
+    fetchImage,
+    parseDur,
+    toArray,
+    toDur,
+  } from "$lib/util";
   import JsonTable from "./JsonTable.svelte";
   import Dialog from "$lib/Dialog.svelte";
   import { Editable } from "$lib/stores";
@@ -12,13 +20,18 @@
   let editKey: (string & keyof Recipe) | undefined;
   let input: HTMLInputElement | HTMLTextAreaElement | undefined;
   let inputValue = "";
+  let secondInputValue = "";
   let longInput = false;
 
   const edit = async (key: string & keyof Recipe) => {
-    if (editKey === "image") {
+    if (key === "image") {
       inputValue = $rec("image")?.url ?? "";
+    } else if (doesEndWith(key, "Time")) {
+      const dur = parseDur($rec(key) ?? "");
+      inputValue = dur.get("time", "h").toString();
+      secondInputValue = dur.get("time", "m").toString();
     }
-    longInput = key === "description";
+    longInput = ["description"].includes(key);
     editKey = key;
     await delay(10);
     input?.focus();
@@ -106,6 +119,7 @@
     cookTime={$rec("cookTime")}
     totalTime={$rec("totalTime")}
     recipeYield={$rec("recipeYield")}
+    {edit}
   />
   <div class="px-2">
     <div class="pt-4 pb-1 font-bold">Ingredients</div>
@@ -140,7 +154,38 @@
   title="edit {editKey ?? ''}"
   onClose={() => (editKey = undefined)}
 >
-  {#if typeof editObj === "string" || editKey === "image"}
+  {#if editKey?.endsWith("Time")}
+    <form
+      on:submit={() => {
+        console.log(toDur(parseInt(inputValue), parseInt(secondInputValue)));
+      }}
+    >
+      <div class="flex justify-center">
+        <div class="mx-2 flex flex-col items-center">
+          <input
+            type="number"
+            class="w-48 px-2 py-1 text-2xl text-center font-mono rounded"
+            id="hours"
+            min="0"
+            max="100"
+            bind:value={inputValue}
+          />
+          <label for="hours" class="text-sm italic">hours</label>
+        </div>
+        <div class="mx-2 flex flex-col items-center">
+          <input
+            type="number"
+            class="w-48 px-2 py-1 text-2xl text-center font-mono rounded"
+            id="mins"
+            min="0"
+            max="60"
+            bind:value={secondInputValue}
+          />
+          <label for="mins" class="text-sm italic">minutes</label>
+        </div>
+      </div>
+    </form>
+  {:else if typeof editObj === "string" || editKey === "image"}
     <form
       on:submit={async () => {
         if (editKey === "image") {

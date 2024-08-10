@@ -1,3 +1,5 @@
+import type { ExtractEndsWith } from "./types";
+
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
 
@@ -33,6 +35,29 @@ export const uniqueByKey = <
 
 export const overlap = <T>(a: T[], b: T[]) => a.filter(x => b.includes(x));
 
+export const parseDur = (dur: string) => {
+  const [period, time] = dur
+    .toLowerCase()
+    .split("t")
+    .map(x =>
+      Array.from(x.matchAll(/(\d+)([a-z,A-Z]+)/g)).map(m => ({
+        num: parseInt(m[1]),
+        label: m[2],
+      })),
+    );
+  return {
+    period,
+    time,
+    get: (
+      quantity: "period" | "time",
+      label: "y" | "m" | "d" | "h" | "m" | "s",
+    ) =>
+      (quantity === "period" ? period : time).filter(
+        x => x.label.toLowerCase() === label.toLowerCase(),
+      )[0]?.num ?? 0,
+  };
+};
+
 /**
  * Convert ISO durations to a concise readable form
  * @param dur [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) e.g. `P3Y6M4DT12H30M5S`
@@ -42,19 +67,16 @@ export const durToText = (dur: string | undefined) => {
   if (!dur) {
     return null;
   }
-  const smallDur = dur.toLowerCase();
-  const [period, time] = smallDur.split("t").map(x =>
-    Array.from(x.matchAll(/(\d+)([a-z,A-Z]+)/g)).map(m => ({
-      num: parseInt(m[1]),
-      label: m[2],
-    })),
-  );
-  const pString = period
+  const { period, time } = parseDur(dur);
+  const pText = period
     .map(x => `${x.num}${overwrite(x.label, { p: "", m: "mo" })}`)
     .join(" ");
-  const tString = time.map(x => `${x.num}${x.label}`).join(" ");
-  return pString + tString;
+  const tText = time.map(x => `${x.num}${x.label}`).join(" ");
+  return pText + tText;
 };
+
+export const toDur = (hours: number, minutes: number) =>
+  `PT${hours}H${minutes}M`;
 
 /**
  * Convert ISO date to two readable forms
@@ -79,3 +101,8 @@ export const fetchImage = async (url: string): Promise<HTMLImageElement> =>
     image.onerror = error => reject(error);
     image.src = url;
   });
+
+export const doesEndWith = <T extends string, S extends string>(
+  text: T,
+  sub: S,
+): text is T & ExtractEndsWith<T, S> => text.endsWith(sub);
