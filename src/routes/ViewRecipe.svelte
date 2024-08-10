@@ -10,12 +10,7 @@
   export let editable = false;
 
   let editKey: (string & keyof Recipe) | undefined;
-
-  const edit = async (key: string & keyof Recipe) => {
-    editKey = key;
-    await delay(10);
-    // TODO: focus input
-  };
+  let inputValue = "";
 
   $: rec = new Editable(recipe, isRecipe);
   $: authors = toArray($rec("author"));
@@ -23,14 +18,24 @@
     ? authors.map(a => a?.name ?? "?").join(", ")
     : "?";
   $: pub = $rec("publisher");
-  // $: editObj = depend($rec(editKey ?? "name"), refresh);
   $: editObj = $rec(editKey ?? "name");
+
+  $: {
+    if (typeof editObj === "string") {
+      inputValue = editObj;
+    }
+  }
+
+  const edit = async (key: string & keyof Recipe) => {
+    editKey = key;
+    await delay(10);
+    // TODO: focus input
+  };
 </script>
 
 <article class="px-4 pb-4">
   <header class="mx-2 py-4 text-center">
     <div class="text-lg">
-      <!-- <span class="font-bold">{$rec("name")}</span> -->
       <button
         class="font-bold"
         disabled={!editable}
@@ -118,25 +123,46 @@
 </article>
 <Dialog
   show={editable && editKey !== undefined}
-  title="edit {editKey ?? 'name'}"
+  title="edit {editKey ?? ''}"
   onClose={() => (editKey = undefined)}
 >
-  <p class="text-center opacity-50 font-semibold">
-    Tap on a property to change it.
-  </p>
-  <JsonTable
-    obj={editObj}
-    editable={true}
-    pathPrefix={editKey}
-    onEdit={edits => {
-      for (const edit of edits) {
-        if (edit.mode === "overwrite") {
-          rec.setByPath(edit.path, edit.value);
-        } else {
-          // TODO: handle other edit modes
-          throw new Error(`unknown edit mode ${edit.mode}`);
+  {#if typeof editObj === "string"}
+    <form
+      on:submit={() => {
+        rec.setByPath(editKey ?? "", inputValue);
+        editKey = undefined;
+      }}
+    >
+      <div class="group">
+        <label for="edit-value" class="font-mono">{editKey}</label>
+        <input
+          type="text"
+          class="long"
+          id="edit-value"
+          bind:value={inputValue}
+        />
+      </div>
+    </form>
+  {:else if typeof editObj === "object"}
+    <p class="text-center opacity-50 font-semibold">
+      Tap on a property to change it.
+    </p>
+    <JsonTable
+      obj={editObj}
+      editable={true}
+      pathPrefix={editKey}
+      onEdit={edits => {
+        for (const edit of edits) {
+          if (edit.mode === "overwrite") {
+            rec.setByPath(edit.path, edit.value);
+          } else {
+            // TODO: handle other edit modes
+            throw new Error(`unknown edit mode ${edit.mode}`);
+          }
         }
-      }
-    }}
-  />
+      }}
+    />
+  {:else}
+    <p>Don't know how to edit type {typeof editObj}</p>
+  {/if}
 </Dialog>
