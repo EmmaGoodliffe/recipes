@@ -4,10 +4,11 @@ export const delay = (ms: number): Promise<void> =>
 export const toArray = <T>(x: T | T[] | undefined | null) =>
   x === undefined || x === null ? [] : Array.isArray(x) ? x : [x];
 
-const isRecord = (x: unknown): x is Record<string, unknown> =>
-  !!x && typeof x === "object" && !Array.isArray(x);
 
-const keyValuesToObj = <K extends string, V>(keys: K[], values: V[]) => {
+export const getKeys = <T extends object>(obj: T) =>
+  Object.keys(obj) as (string & keyof T)[];
+
+export const keyValuesToObj = <K extends string, V>(keys: K[], values: V[]) => {
   const result: Partial<Record<K, V>> = {};
   for (const i in keys) {
     result[keys[i]] = values[i];
@@ -15,82 +16,6 @@ const keyValuesToObj = <K extends string, V>(keys: K[], values: V[]) => {
   return result;
 };
 
-export const getKeys = <T extends object>(obj: T) =>
-  Object.keys(obj) as (string & keyof T)[];
-
-const isKey = <T extends object>(
-  obj: T,
-  key: string,
-): key is string & keyof T => Object.keys(obj).includes(key);
-
-export const getByPath = (obj: unknown, path: string | undefined): unknown => {
-  if (!path || !obj) {
-    return obj;
-  }
-  const [parentPath, ...childPaths] = path.split(".");
-  if (typeof obj === "object" && isKey(obj, parentPath)) {
-    return getByPath(obj[parentPath], childPaths.join("."));
-  }
-  throw new Error(`tried to get path ${path} of object with keys ${Object.keys(obj)}`);
-};
-
-const setByPath = (obj_: unknown, path: string, value: unknown): unknown => {
-  if (!path || !obj_) {
-    return value;
-  }
-  if (typeof obj_ !== "object") {
-    throw new Error(`cannot set path ${path} of object ${obj_} to ${value}`);
-  }
-  const [parentPath, ...childPaths] = path.split(".");
-  if (Array.isArray(obj_)) {
-    const obj = [...obj_];
-    const i = parseInt(parentPath);
-    if (isNaN(i)) {
-      throw new Error(
-        `expected ${parentPath} to be a number because it indexes an array`,
-      );
-    }
-    obj[i] = setByPath(obj[i], childPaths.join("."), value);
-    return [...obj];
-  }
-  const obj: Record<string, unknown> = { ...obj_ };
-  return {
-    ...obj,
-    [parentPath]: setByPath(obj[parentPath], childPaths.join("."), value),
-  };
-};
-
-export const toEditable = <T extends object>(
-  obj: T,
-  isT: (x: unknown) => x is T,
-) => ({
-  initial: obj,
-  data: { ...obj },
-  unread: new Set(getKeys(obj)),
-  get<K extends string & keyof T>(key: K) {
-    this.unread.delete(key);
-    return this.data[key];
-  },
-  set<K extends string & keyof T>(key: K, value: T[K]) {
-    this.data[key] = value;
-    return this.data;
-  },
-  getUnread() {
-    const keys = Array.from(this.unread);
-    return keyValuesToObj(
-      keys,
-      keys.map(k => this.data[k]),
-    );
-  },
-  setByPath(path: string, value: unknown) {
-    const x = setByPath(this.data, path, value);
-    if (isRecord(x) && isT(x)) {
-      this.data = x;
-      return this.data;
-    }
-    throw new Error(`couldn't set data to ${x} of type ${typeof x}`);
-  },
-});
 
 const overwrite = (x: string, overs: Record<string, string>) =>
   getKeys(overs).includes(x) ? overs[x] : x;

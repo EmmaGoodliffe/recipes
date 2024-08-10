@@ -1,9 +1,10 @@
 <script lang="ts">
   import RecipeStats from "./RecipeStats.svelte";
   import { isRecipe, type Recipe } from "$lib/types";
-  import { dateToText, delay, toArray, toEditable } from "$lib/util";
-  import EditRecipe from "./EditRecipe.svelte";
+  import { dateToText, delay, toArray } from "$lib/util";
   import JsonTable from "./JsonTable.svelte";
+  import Dialog from "$lib/Dialog.svelte";
+  import { Editable } from "$lib/stores";
 
   export let recipe: Recipe;
   export let editable = false;
@@ -16,25 +17,27 @@
     // TODO: focus input
   };
 
-  $: recEdit = toEditable(recipe, isRecipe);
-  $: authors = toArray(recEdit.get("author"));
+  $: rec = new Editable(recipe, isRecipe);
+  $: authors = toArray($rec("author"));
   $: authorNames = authors.length
     ? authors.map(a => a?.name ?? "?").join(", ")
     : "?";
-  $: pub = recEdit.get("publisher");
+  $: pub = $rec("publisher");
+  // $: editObj = depend($rec(editKey ?? "name"), refresh);
+  $: editObj = $rec(editKey ?? "name");
 </script>
 
 <article class="px-4 pb-4">
   <header class="mx-2 py-4 text-center">
     <div class="text-lg">
-      <!-- <span class="font-bold">{recEdit.get("name")}</span> -->
+      <!-- <span class="font-bold">{$rec("name")}</span> -->
       <button
         class="font-bold"
         disabled={!editable}
-        on:click={() => edit("name")}>{recEdit.get("name")}</button
+        on:click={() => edit("name")}>{$rec("name")}</button
       >
-      {#if recEdit.get("url")}
-        <a href={recEdit.get("url")} class="hover:underline" target="_blank"
+      {#if $rec("url")}
+        <a href={$rec("url")} class="hover:underline" target="_blank"
           >(&nearr;)</a
         >
       {/if}
@@ -46,11 +49,11 @@
       >
     </div>
   </header>
-  {#if recEdit.get("image")?.url}
+  {#if $rec("image")?.url}
     <div class="max-w-2xl mx-auto">
       <img
-        src={recEdit.get("image")?.url}
-        alt={recEdit.get("name")}
+        src={$rec("image")?.url}
+        alt={$rec("name")}
         class="max-w-[75%] mx-auto pb-4 rounded"
       />
     </div>
@@ -66,68 +69,74 @@
         />
       </a>
     {/if}
-    {#if recEdit.get("dateModified")}
+    {#if $rec("dateModified")}
       <div class="mx-2 text-sm text-center opacity-50">
         <span class="italic">edited in</span>
         <abbr
-          title={dateToText(recEdit.get("dateModified"))?.full}
+          title={dateToText($rec("dateModified"))?.full}
           class="underline-offset-2"
-          >{dateToText(recEdit.get("dateModified"))?.month}</abbr
+          >{dateToText($rec("dateModified"))?.month}</abbr
         >
         <!-- TODO: version history -->
       </div>
     {/if}
   </div>
-  <p class="my-2 px-2 py-2">{recEdit.get("description") ?? ""}</p>
+  <p class="my-2 px-2 py-2">{$rec("description") ?? ""}</p>
   <RecipeStats
-    prepTime={recEdit.get("prepTime")}
-    cookTime={recEdit.get("cookTime")}
-    totalTime={recEdit.get("totalTime")}
-    recipeYield={recEdit.get("recipeYield")}
+    prepTime={$rec("prepTime")}
+    cookTime={$rec("cookTime")}
+    totalTime={$rec("totalTime")}
+    recipeYield={$rec("recipeYield")}
   />
   <div class="px-2">
     <div class="pt-4 pb-1 font-bold">Ingredients</div>
     <ul>
-      {#each toArray(recEdit.get("recipeIngredient")) as ing}
+      {#each toArray($rec("recipeIngredient")) as ing}
         <li>{ing}</li>
       {/each}
     </ul>
     <div class="pt-4 pb-1 font-bold">Instructions</div>
     <ol class="list-inside list-decimal">
-      {#each toArray(recEdit.get("recipeInstructions")) as step}
+      {#each toArray($rec("recipeInstructions")) as step}
         <li class="truncate">{step?.text ?? "?"}</li>
       {/each}
     </ol>
     <div class="pt-4 pb-1 font-bold">Nutrition info</div>
     <ul>
-      {#each Object.values(recEdit.get("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
+      {#each Object.values($rec("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
         <li>{info}</li>
       {/each}
     </ul>
   </div>
   <JsonTable
-    obj={recEdit.getUnread()}
+    obj={rec.getUnread()}
     {editable}
-    onClick={p => {
-      // TODO: handle
-      console.log("table click!", p);
+    onEdit={edits => {
+      // TODO: edit
     }}
   />
 </article>
-<EditRecipe
+<Dialog
   show={editable && editKey !== undefined}
-  {recEdit}
-  key={editKey ?? "name"}
-  onClose={() => editKey = undefined}
-  onEdit={edit => {
-    if (edit.mode === "overwrite") {
-      console.log('setting', edit);
-      recEdit.setByPath(edit.path, edit.value);
-      console.log(recEdit);
-    } else {
-      // TODO: handle other edit modes
-      throw new Error(`unknown edit mode ${edit.mode}`);
-    }
-    editKey = undefined;
-  }}
-/>
+  title="edit {editKey ?? 'name'}"
+  onClose={() => (editKey = undefined)}
+>
+  <p class="text-center opacity-50 font-semibold">
+    Tap on a property to change it.
+  </p>
+  <JsonTable
+    obj={editObj}
+    editable={true}
+    pathPrefix={editKey}
+    onEdit={edits => {
+      for (const edit of edits) {
+        if (edit.mode === "overwrite") {
+          rec.setByPath(edit.path, edit.value);
+        } else {
+          // TODO: handle other edit modes
+          throw new Error(`unknown edit mode ${edit.mode}`);
+        }
+      }
+    }}
+  />
+</Dialog>

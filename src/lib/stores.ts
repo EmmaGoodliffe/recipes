@@ -1,8 +1,11 @@
-import { onAuthStateChanged, type User } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { writable } from "svelte/store";
 import { getFb } from "../routes/fb";
 import { getRecipes } from "./db";
-import type { Func, Recipe } from "./types";
+import { getKeys, keyValuesToObj } from "./util";
+import type {Func, Recipe} from "./types";
+import type { User } from "firebase/auth";
+import type { Readable } from "svelte/store";
 
 const TOAST_TIME = 10 * 1000;
 
@@ -62,3 +65,102 @@ export const initAll = () => {
 export const toBePreviewed = writable<Recipe | undefined>(undefined);
 export const toBeCooked = writable<Recipe | undefined>(undefined);
 export const toBeEdited = writable<Recipe | undefined>(undefined);
+
+const isKey = <T extends object>(
+  obj: T,
+  key: string,
+): key is string & keyof T => Object.keys(obj).includes(key);
+
+const isRecord = (x: unknown): x is Record<string, unknown> =>
+  !!x && typeof x === "object" && !Array.isArray(x);
+
+export const getByPath = (obj: unknown, path: string | undefined): unknown => {
+  if (!path || !obj) {
+    return obj;
+  }
+  const [parentPath, ...childPaths] = path.split(".");
+  if (typeof obj === "object" && isKey(obj, parentPath)) {
+    return getByPath(obj[parentPath], childPaths.join("."));
+  }
+  throw new Error(
+    `tried to get path ${path} of object with keys ${Object.keys(obj)}`,
+  );
+};
+
+const setByPath = (obj_: unknown, path: string, value: unknown): unknown => {
+  if (!path || !obj_) {
+    return value;
+  }
+  if (typeof obj_ !== "object") {
+    throw new Error(`cannot set path ${path} of object ${obj_} to ${value}`);
+  }
+  const [parentPath, ...childPaths] = path.split(".");
+  if (Array.isArray(obj_)) {
+    const obj = [...obj_];
+    const i = parseInt(parentPath);
+    if (isNaN(i)) {
+      throw new Error(
+        `expected ${parentPath} to be a number because it indexes an array`,
+      );
+    }
+    obj[i] = setByPath(obj[i], childPaths.join("."), value);
+    return obj;
+  }
+  const obj: Record<string, unknown> = { ...obj_ };
+  return {
+    ...obj,
+    [parentPath]: setByPath(obj[parentPath], childPaths.join("."), value),
+  };
+};
+
+type Get<T extends object> = <K extends string & keyof T>(key: K) => T[K];
+
+export class Editable<T extends object> implements Readable<Get<T>> {
+  initial: T;
+  data: T;
+  isT: (x: unknown) => x is T;
+  unread: Set<string & keyof T>;
+  subscribers: ((value: Get<T>) => void)[];
+  constructor(obj: T, isT: (x: unknown) => x is T) {
+    this.initial = obj;
+    this.data = { ...obj };
+    this.isT = isT;
+    this.unread = new Set(getKeys(obj));
+    this.subscribers = [];
+  }
+  get<K extends string & keyof T>(key: K) {
+    this.unread.delete(key);
+    return this.data[key];
+  }
+  set<K extends string & keyof T>(key: K, value: T[K]) {
+    this.data[key] = value;
+    this.subscribers.forEach(s => s(k => this.get(k)));
+    return this.data;
+  }
+  getUnread() {
+    const keys = Array.from(this.unread);
+    return keyValuesToObj(
+      keys,
+      keys.map(k => this.data[k]),
+    );
+  }
+  setByPath(path: string, value: unknown) {
+    const x = setByPath(this.data, path, value);
+    if (isRecord(x) && this.isT(x)) {
+      this.data = x;
+      this.subscribers.forEach(s => s(k => this.get(k)));
+      return this.data;
+    }
+    throw new Error(`couldn't set data to ${x} of type ${typeof x}`);
+  }
+  subscribe(run: (value: Get<T>) => void): () => void {
+    console.log("sub", this.subscribers.length);
+    run(k => this.get(k));
+    this.subscribers.push(run);
+    const i = this.subscribers.length - 1;
+    return () => {
+      console.log("unsub", i);
+      this.subscribers[i] = () => {};
+    };
+  }
+}
