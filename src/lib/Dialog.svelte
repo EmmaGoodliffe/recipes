@@ -25,6 +25,7 @@
   class="w-11/12 sm:w-3/4 max-w-4xl bg-light-bg text-inherit rounded border-bg border-2"
   bind:this={dialog}
   on:click={onClick}
+  on:close={onClose}
 >
   <header class="px-4 py-2 flex justify-between items-start mb-4 text-lg">
     <span class="font-bold pr-6">{title}</span>

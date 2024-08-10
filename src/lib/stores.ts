@@ -111,6 +111,23 @@ const setByPath = (obj_: unknown, path: string, value: unknown): unknown => {
   };
 };
 
+ const addByPath = (obj: unknown, path: string, value: unknown) => {
+  const paths = path.split(".");
+  const parentPath = paths.slice(0, -1).join(".");
+  const childPath = paths.slice(-1)[0];
+  const x = getByPath(obj, parentPath);
+  const i = parseInt(childPath);
+  if (Array.isArray(x) && !isNaN(i)) {
+    const before = x.slice(0, i + 1);
+    const after = x.slice(i + 1);
+    return setByPath(obj, parentPath, [...before, value, ...after]);
+  } else {
+    throw new Error(
+      `can't add ${value} after index ${i} of ${x} at path ${path} of ${obj}`,
+    );
+  }
+};
+
 type Get<T extends object> = <K extends string & keyof T>(key: K) => T[K];
 
 export class Editable<T extends object> implements Readable<Get<T>> {
@@ -151,13 +168,20 @@ export class Editable<T extends object> implements Readable<Get<T>> {
     }
     throw new Error(`couldn't set data to ${x} of type ${typeof x}`);
   }
+  addByPath(path: string, value: unknown) {
+    const x = addByPath(this.data, path, value)
+    if (isRecord(x) && this.isT(x)) {
+      this.data = x;
+      this.subscribers.forEach(s => s(k => this.get(k)));
+      return this.data;
+    }
+    throw new Error(`couldn't set data to ${x} of type ${typeof x}`);
+  }
   subscribe(run: (value: Get<T>) => void): () => void {
-    console.log("sub", this.subscribers.length);
     run(k => this.get(k));
     this.subscribers.push(run);
     const i = this.subscribers.length - 1;
     return () => {
-      console.log("unsub", i);
       this.subscribers[i] = () => {};
     };
   }

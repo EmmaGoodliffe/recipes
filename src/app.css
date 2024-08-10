@@ -7,7 +7,7 @@ h1 {
 }
 
 button.square {
-  @apply w-8 h-8 rounded;
+  @apply w-8 h-8 rounded inline-flex justify-center items-center;
 }
 
 .long {
@@ -44,11 +44,9 @@ label.focal {
   @apply text-lg opacity-50 group-focus-within:opacity-100;
 }
 
-
 @layer utilities {
   .enforced-rounded {
     @apply rounded;
-    overflow: hidden;
     display: inline-block;
   }
 }
@@ -56,7 +54,11 @@ label.focal {
 /* TODO: consider nesting options */
 
 table.json {
-  @apply my-4 enforced-rounded font-mono border-input border-2;
+  @apply my-4 enforced-rounded overflow-y-visible font-mono border-input border-2;
+}
+
+table.json tbody {
+  @apply w-full inline-table;
 }
 
 table.json tr:not(:last-child) {
@@ -69,7 +71,7 @@ table.json td:first-child {
 }
 
 table.json td:last-child {
-  @apply px-2;
+  @apply w-full px-2;
   /* TODO: consider other wrap options */
   overflow-wrap: anywhere;
 }

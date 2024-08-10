@@ -10,7 +10,14 @@
   export let editable = false;
 
   let editKey: (string & keyof Recipe) | undefined;
+  let input: HTMLInputElement | undefined;
   let inputValue = "";
+
+  const edit = async (key: string & keyof Recipe) => {
+    editKey = key;
+    await delay(10);
+    input?.focus();
+  };
 
   $: rec = new Editable(recipe, isRecipe);
   $: authors = toArray($rec("author"));
@@ -25,12 +32,6 @@
       inputValue = editObj;
     }
   }
-
-  const edit = async (key: string & keyof Recipe) => {
-    editKey = key;
-    await delay(10);
-    // TODO: focus input
-  };
 </script>
 
 <article class="px-4 pb-4">
@@ -140,6 +141,7 @@
           class="long"
           id="edit-value"
           bind:value={inputValue}
+          bind:this={input}
         />
       </div>
     </form>
@@ -147,7 +149,7 @@
     <p class="text-center opacity-50 font-semibold">
       Tap on a property to change it.
     </p>
-    <div class="mx-auto">
+    <div class="w-[fit-content] mx-auto">
       <JsonTable
         obj={editObj}
         editable={true}
@@ -156,8 +158,9 @@
           for (const edit of edits) {
             if (edit.mode === "overwrite") {
               rec.setByPath(edit.path, edit.value);
+            } else if (edit.mode === "add") {
+              console.log(rec.addByPath(edit.path, edit.value));
             } else {
-              // TODO: handle other edit modes
               throw new Error(`unknown edit mode ${edit.mode}`);
             }
           }
