@@ -1,7 +1,7 @@
 <script lang="ts">
   import RecipeStats from "./RecipeStats.svelte";
   import { isRecipe, type Recipe } from "$lib/types";
-  import { dateToText, delay, toArray } from "$lib/util";
+  import { dateToText, delay, fetchImage, toArray } from "$lib/util";
   import JsonTable from "./JsonTable.svelte";
   import Dialog from "$lib/Dialog.svelte";
   import { Editable } from "$lib/stores";
@@ -14,9 +14,12 @@
   let inputValue = "";
   let longInput = false;
 
-  const edit = async (key: string & keyof Recipe, long = false) => {
+  const edit = async (key: string & keyof Recipe) => {
+    if (editKey === "image") {
+      inputValue = $rec("image")?.url ?? "";
+    }
+    longInput = key === "description";
     editKey = key;
-    longInput = long;
     await delay(10);
     input?.focus();
   };
@@ -95,9 +98,7 @@
       </div>
     {/if}
   </div>
-  <button
-    class="my-2 px-2 py-2 text-left"
-    on:click={() => edit("description", true)}
+  <button class="my-2 px-2 py-2 text-left" on:click={() => edit("description")}
     >{$rec("description") ?? ""}</button
   >
   <RecipeStats
@@ -139,10 +140,19 @@
   title="edit {editKey ?? ''}"
   onClose={() => (editKey = undefined)}
 >
-  {#if typeof editObj === "string"}
+  {#if typeof editObj === "string" || editKey === "image"}
     <form
-      on:submit={() => {
-        rec.setByPath(editKey ?? "", inputValue);
+      on:submit={async () => {
+        if (editKey === "image") {
+          const image = await fetchImage(inputValue);
+          rec.set("image", {
+            url: inputValue,
+            width: image.width,
+            height: image.height,
+          });
+        } else {
+          rec.setByPath(editKey ?? "", inputValue);
+        }
         editKey = undefined;
       }}
     >
@@ -161,6 +171,7 @@
           <input
             type="text"
             class="long"
+            class:font-mono={editKey === "image"}
             id="edit-value"
             bind:value={inputValue}
             bind:this={input}

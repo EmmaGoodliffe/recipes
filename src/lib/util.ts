@@ -71,3 +71,11 @@ export const dateToText = (date: string | undefined) => {
     full: `${d.toLocaleTimeString()} ${d.toLocaleDateString()}`,
   };
 };
+
+export const fetchImage = async (url: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = error => reject(error);
+    image.src = url;
+  });
