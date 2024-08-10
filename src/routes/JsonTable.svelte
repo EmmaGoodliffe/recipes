@@ -26,17 +26,26 @@
 
 {#if pathPrefix === editPath}
   <div class="flex">
-    <input
-      type="text"
-      bind:value
-      on:keypress={e => e.key === "Enter" && submitValue()}
-    />
+    {#if typeof obj === "number"}
+      <input
+        type="number"
+        bind:value
+        on:keypress={e => e.key === "Enter" && submitValue()}
+      />
+    {:else if typeof obj === "string"}
+      <input
+        type="text"
+        bind:value
+        on:keypress={e => e.key === "Enter" && submitValue()}
+      />
+    {/if}
     <button class="mx-2 square bg-button" on:click={submitValue}
       ><i class="bx bx-check"></i></button
     >
   </div>
-{:else if obj === undefined || obj === null || typeof obj === "string"}
+{:else if obj === undefined || obj === null || typeof obj === "string" || typeof obj === "number"}
   <button
+    class="text-left"
     disabled={!editable}
     on:click={() => {
       editPath = pathPrefix;

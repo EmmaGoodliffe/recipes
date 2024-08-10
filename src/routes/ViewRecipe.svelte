@@ -10,11 +10,13 @@
   export let editable = false;
 
   let editKey: (string & keyof Recipe) | undefined;
-  let input: HTMLInputElement | undefined;
+  let input: HTMLInputElement | HTMLTextAreaElement | undefined;
   let inputValue = "";
+  let longInput = false;
 
-  const edit = async (key: string & keyof Recipe) => {
+  const edit = async (key: string & keyof Recipe, long = false) => {
     editKey = key;
+    longInput = long;
     await delay(10);
     input?.focus();
   };
@@ -57,11 +59,17 @@
   </header>
   {#if $rec("image")?.url}
     <div class="max-w-2xl mx-auto">
-      <img
-        src={$rec("image")?.url}
-        alt={$rec("name")}
-        class="max-w-[75%] mx-auto pb-4 rounded"
-      />
+      <button
+        class="mx-auto block"
+        disabled={!editable}
+        on:click={() => edit("image")}
+      >
+        <img
+          src={$rec("image")?.url}
+          alt={$rec("name")}
+          class="max-w-[75%] mx-auto pb-4 rounded"
+        />
+      </button>
     </div>
   {/if}
   <div class="flex justify-center items-center">
@@ -87,7 +95,11 @@
       </div>
     {/if}
   </div>
-  <p class="my-2 px-2 py-2">{$rec("description") ?? ""}</p>
+  <button
+    class="my-2 px-2 py-2 text-left"
+    on:click={() => edit("description", true)}
+    >{$rec("description") ?? ""}</button
+  >
   <RecipeStats
     prepTime={$rec("prepTime")}
     cookTime={$rec("cookTime")}
@@ -136,13 +148,24 @@
     >
       <div class="group">
         <label for="edit-value" class="focal font-mono">{editKey}</label>
-        <input
-          type="text"
-          class="long"
-          id="edit-value"
-          bind:value={inputValue}
-          bind:this={input}
-        />
+        {#if longInput}
+          <div>
+            <textarea
+              class="w-full h-36 px-2 py-1 bg-input rounded"
+              id="edit-value"
+              bind:value={inputValue}
+              bind:this={input}
+            ></textarea>
+          </div>
+        {:else}
+          <input
+            type="text"
+            class="long"
+            id="edit-value"
+            bind:value={inputValue}
+            bind:this={input}
+          />
+        {/if}
       </div>
     </form>
   {:else if typeof editObj === "object"}
