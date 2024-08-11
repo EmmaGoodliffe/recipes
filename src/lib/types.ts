@@ -18,6 +18,8 @@ export interface Recipe extends Call<Objects.PartialDeep, Rec> {
   "@type": "Recipe";
 }
 
+export type RecipeVersions = { original: Recipe; edited?: Recipe };
+
 export const isRecipe = (x: unknown): x is Recipe => {
   if (typeof x === "object") {
     const y = x as Recipe;

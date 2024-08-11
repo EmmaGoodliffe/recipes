@@ -3,7 +3,7 @@
   import { getFb } from "./fb";
   import JsonTable from "./JsonTable.svelte";
   import RecipeStats from "./RecipeStats.svelte";
-  import type { Recipe } from "$lib/types";
+  import type { Recipe, RecipeVersions } from "$lib/types";
   import { saveEditedRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
@@ -21,7 +21,7 @@
   } from "$lib/util";
   import { scaleIngredients } from "$lib/nlp";
 
-  export let recipe: Recipe;
+  export let recipeVersions: RecipeVersions;
   export let editable = false;
 
   let editKey: (string & keyof Recipe) | undefined;
@@ -33,6 +33,7 @@
   let longInput = false;
   let loading = false;
   let scale = true;
+  let version: "original" | "edited" = "edited";
 
   const edit = async (key: string & keyof Recipe) => {
     if (key === "image") {
@@ -62,7 +63,10 @@
     }
   };
 
-  $: rec = new Editable(recipe, isRecipe);
+  $: rec = new Editable(
+    recipeVersions[version] ?? recipeVersions.original,
+    isRecipe,
+  );
   $: authors = toArray($rec("author"));
   $: authorNames = authors.length
     ? authors.map(a => a?.name ?? "?").join(", ")

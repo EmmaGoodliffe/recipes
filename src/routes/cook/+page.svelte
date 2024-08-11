@@ -29,9 +29,10 @@
     return result;
   };
 
-  $: instructions = toArray($toBeCooked?.recipeInstructions);
+  $: rec = $toBeCooked?.original;
+  $: instructions = toArray(rec?.recipeInstructions);
   $: instructionText = instructions[instructionIndex]?.text;
-  $: ingredients = toArray($toBeCooked?.recipeIngredient).filter(
+  $: ingredients = toArray(rec?.recipeIngredient).filter(
     i => i !== undefined,
   );
   $: matches = searchInstructionForIngredients(instructionText, ingredients);
@@ -51,18 +52,18 @@
 {#if !$toBeCooked}
   <Gallery recipes={$recipes?.slice(0, 4)} selectStores={[toBeCooked]} />
 {:else}
-  <h1>{$toBeCooked.name}</h1>
+  <h1>{rec?.name}</h1>
   <RecipeStats
-    prepTime={$toBeCooked.prepTime}
-    cookTime={$toBeCooked.cookTime}
-    totalTime={$toBeCooked.totalTime}
-    recipeYield={$toBeCooked.recipeYield}
+    prepTime={rec?.prepTime}
+    cookTime={rec?.cookTime}
+    totalTime={rec?.totalTime}
+    recipeYield={rec?.recipeYield}
     editing={{
       timeEditable: false,
       timeEdit: () => {},
       yieldEditable: true,
       yieldEdit: async () => {
-        scaleValue = $toBeCooked.recipeYield ?? 0;
+        scaleValue = rec?.recipeYield ?? 0;
         scaleShow = true;
         await delay(10);
         scaleInput?.focus();
@@ -90,7 +91,7 @@
       >
       <button
         disabled={instructionIndex >=
-          toArray($toBeCooked.recipeInstructions).length - 1}
+          toArray(rec?.recipeInstructions).length - 1}
         on:click={async () => {
           direction = "r";
           await delay(50);
@@ -124,13 +125,13 @@
   <form
     on:submit={e => {
       e.preventDefault();
-      const prevYield = $toBeCooked?.recipeYield;
+      const prevYield = rec?.recipeYield;
       const newYield = scaleValue;
       if (!prevYield) {
         throw new Error(`can't scale from ${prevYield} to ${newYield}`);
       }
       const scaling = newYield / prevYield;
-      const ingredients = toArray($toBeCooked?.recipeIngredient).filter(
+      const ingredients = toArray(rec?.recipeIngredient).filter(
         ing => ing !== undefined,
       );
       const scaledIngredients = scaleIngredients(ingredients, scaling);

@@ -30,7 +30,7 @@
   <p class="-mt-4 mb-6 text-center opacity-50 font-semibold">
     Tap on a part of the recipe to change it.
   </p>
-  <ViewRecipe recipe={$toBeEdited} editable={true} />
+  <ViewRecipe recipeVersions={$toBeEdited} editable={true} />
 {:else}
   <AddRecipe />
   <Gallery recipes={$recipes} selectStores={[toBePreviewed]} />

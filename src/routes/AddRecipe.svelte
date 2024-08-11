@@ -79,7 +79,7 @@
       </form>
     {/if}
   {:else}
-    <ViewRecipe {recipe} />
+    <ViewRecipe recipeVersions={{ original: recipe }} />
   {/if}
   <div slot="footer">
     {#if recipe !== undefined}

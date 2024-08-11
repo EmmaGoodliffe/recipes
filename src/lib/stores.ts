@@ -4,7 +4,7 @@ import { getFb } from "../routes/fb";
 import { getRecipes } from "./db";
 import { isRecord } from "./types";
 import { getKeys, keyValuesToObj } from "./util";
-import type { Func, Recipe } from "./types";
+import type { Func, Recipe, RecipeVersions } from "./types";
 import type { User } from "firebase/auth";
 import type { Readable } from "svelte/store";
 
@@ -65,9 +65,9 @@ export const initAll = () => {
   return endAll;
 };
 
-export const toBePreviewed = writable<Recipe | undefined>(undefined);
-export const toBeCooked = writable<Recipe | undefined>(undefined);
-export const toBeEdited = writable<Recipe | undefined>(undefined);
+export const toBePreviewed = writable<RecipeVersions | undefined>(undefined);
+export const toBeCooked = writable<RecipeVersions | undefined>(undefined);
+export const toBeEdited = writable<RecipeVersions | undefined>(undefined);
 
 const isKey = <T extends object>(
   obj: T,

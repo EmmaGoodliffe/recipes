@@ -1,15 +1,15 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
   import ViewRecipe from "./ViewRecipe.svelte";
-  import type { Recipe } from "$lib/types";
+  import type { Recipe, RecipeVersions } from "$lib/types";
   import type { Writable } from "svelte/store";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
   import { toBeCooked, toBeEdited, toBePreviewed } from "$lib/stores";
   import { toArray } from "$lib/util";
 
-  export let recipes: { original: Recipe; edited?: Recipe }[] | undefined;
-  export let selectStores: Writable<Recipe | undefined>[];
+  export let recipes: RecipeVersions[] | undefined;
+  export let selectStores: Writable<RecipeVersions | undefined>[];
 
   let showPreview = false;
 </script>
@@ -24,11 +24,12 @@
       <p>No recipes.</p>
     {/if}
     <!-- TODO: handle edited version -->
-    {#each recipes.map(r => r.edited ? r.edited : r.original) as rec}
+    {#each recipes as recipe}
+      {@const rec = recipe.edited ? recipe.edited : recipe.original}
       <button
         class="card enforced-rounded"
         on:click={() => {
-          selectStores.map(s => s.set(rec));
+          selectStores.map(s => s.set(recipe));
           showPreview = true;
         }}
         transition:fly={{ y: 20 }}
@@ -55,7 +56,7 @@
 </div>
 {#if $toBePreviewed}
   <Dialog bind:show={showPreview} title="preview recipe">
-    <ViewRecipe recipe={$toBePreviewed} />
+    <ViewRecipe recipeVersions={$toBePreviewed} />
     <div slot="footer">
       <!-- <LoaderButton
         className="long bg-input"
