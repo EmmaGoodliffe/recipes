@@ -157,10 +157,12 @@
   {#if editKey?.endsWith("Time")}
     <form
       on:submit={() => {
-        console.log(toDur(parseInt(inputValue), parseInt(secondInputValue)));
+        const dur = toDur(parseInt(inputValue), parseInt(secondInputValue));
+        rec.setByPath(editKey ?? "", dur);
+        editKey = undefined;
       }}
     >
-      <div class="flex justify-center">
+      <div class="mb-4 flex justify-center">
         <div class="mx-2 flex flex-col items-center">
           <input
             type="number"
@@ -169,6 +171,7 @@
             min="0"
             max="100"
             bind:value={inputValue}
+            bind:this={input}
           />
           <label for="hours" class="text-sm italic">hours</label>
         </div>
@@ -184,6 +187,9 @@
           <label for="mins" class="text-sm italic">minutes</label>
         </div>
       </div>
+      <button type="submit" class="long bg-button"
+        ><i class="bx bx-check"></i> confirm edits</button
+      >
     </form>
   {:else if typeof editObj === "string" || editKey === "image"}
     <form
@@ -201,7 +207,7 @@
         editKey = undefined;
       }}
     >
-      <div class="group">
+      <div class="mb-4 group">
         <label for="edit-value" class="focal font-mono">{editKey}</label>
         {#if longInput}
           <div>
@@ -223,6 +229,9 @@
           />
         {/if}
       </div>
+      <button type="submit" class="long bg-button"
+        ><i class="bx bx-check"></i> confirm edits</button
+      >
     </form>
   {:else if typeof editObj === "object"}
     <p class="text-center opacity-50 font-semibold">

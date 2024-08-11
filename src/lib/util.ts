@@ -75,8 +75,11 @@ export const durToText = (dur: string | undefined) => {
   return pText + tText;
 };
 
-export const toDur = (hours: number, minutes: number) =>
-  `PT${hours}H${minutes}M`;
+export const toDur = (hours: number, minutes: number) => {
+  const h = hours ? `${hours}H` : "";
+  const m = minutes ? `${minutes}M` : "";
+  return "PT" + h + m;
+};
 
 /**
  * Convert ISO date to two readable forms
