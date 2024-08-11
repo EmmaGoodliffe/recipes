@@ -11,6 +11,7 @@
     toBePreviewed,
     user,
   } from "$lib/stores";
+  import { fly } from "svelte/transition";
 
   onMount(initAll);
 </script>
@@ -20,7 +21,11 @@
   <meta name="description" content="recipes" />
 </svelte:head>
 
-<h1>{$toBeEdited ? "edit recipe" : "recipes"}</h1>
+{#if $toBeEdited}
+  <h1>edit recipe</h1>
+{:else}
+  <h1>recipes</h1>
+{/if}
 {#if $user === undefined}
   <LoaderText text="authenticating..." />
 {:else if $user === null}

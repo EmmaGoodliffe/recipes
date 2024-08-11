@@ -18,8 +18,9 @@
   } from "$lib/stores";
   import { toArray } from "$lib/util";
   import type { Writable } from "svelte/store";
+  import { fly } from "svelte/transition";
 
-  export let recipes: {original: Recipe; edited?: Recipe}[] | undefined;
+  export let recipes: { original: Recipe; edited?: Recipe }[] | undefined;
   export let selectStores: Writable<Recipe | undefined>[];
 
   let auth: Auth | undefined;
@@ -51,6 +52,7 @@
           selectStores.map(s => s.set(rec));
           showPreview = true;
         }}
+        transition:fly={{ y: 20 }}
       >
         {#if rec.image?.url}
           <img src={rec.image.url} alt={rec.name} class="object-fit" />
