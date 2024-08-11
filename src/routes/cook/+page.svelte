@@ -5,15 +5,20 @@
   import RecipeStats from "../RecipeStats.svelte";
   import { searchInstructionForIngredients } from "$lib/nlp";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
+  import Dialog from "$lib/Dialog.svelte";
   import { toBeCooked } from "$lib/stores";
   import { initAll, recipes } from "$lib/stores";
   import { delay, toArray, uniqueByKey } from "$lib/util";
-
-  onMount(initAll);
+  import { scaleIngredients } from "$lib/nlp";
 
   // let truncateIngredients = true;
   let direction: "l" | "r" = "r";
   let instructionIndex = 0;
+  let scaleShow = false;
+  let scaleValue = 0;
+  let scaleInput: HTMLInputElement | undefined;
+
+  onMount(initAll);
 
   const bolden = (text: string, words: string[]) => {
     let result = text;
@@ -52,7 +57,17 @@
     cookTime={$toBeCooked.cookTime}
     totalTime={$toBeCooked.totalTime}
     recipeYield={$toBeCooked.recipeYield}
-    editing={{ enabled: false, edit: () => {} }}
+    editing={{
+      timeEditable: false,
+      timeEdit: () => {},
+      yieldEditable: true,
+      yieldEdit: async () => {
+        scaleValue = $toBeCooked.recipeYield ?? 0;
+        scaleShow = true;
+        await delay(10);
+        scaleInput?.focus();
+      },
+    }}
   />
   <div class="instruction">
     <SmoothHeight>
@@ -105,6 +120,39 @@
     {/if} -->
   </div>
 {/if}
+<Dialog title="scale recipe" show={scaleShow}>
+  <form
+    on:submit={e => {
+      e.preventDefault();
+      const prevYield = $toBeCooked?.recipeYield;
+      const newYield = scaleValue;
+      if (!prevYield) {
+        throw new Error(`can't scale from ${prevYield} to ${newYield}`);
+      }
+      const scaling = newYield / prevYield;
+      const ingredients = toArray($toBeCooked?.recipeIngredient).filter(
+        ing => ing !== undefined,
+      );
+      const scaledIngredients = scaleIngredients(ingredients, scaling);
+      toBeCooked.update(rec =>
+        rec ? { ...rec, recipeIngredient: scaledIngredients } : undefined,
+      );
+      scaleShow = false;
+    }}
+  >
+    <div class="group">
+      <label for="scaler" class="focal">serves</label>
+      <input
+        type="number"
+        class="long"
+        id="scaler"
+        bind:value={scaleValue}
+        bind:this={scaleInput}
+      />
+    </div>
+    <button type="submit" class="long bg-button"><i class="bx bx-math align-middle"></i> scale</button>
+  </form>
+</Dialog>
 
 <style lang="postcss">
   /* .v-truncate {

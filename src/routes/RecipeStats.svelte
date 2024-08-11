@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Recipe } from "$lib/types";
   import { durToText } from "$lib/util";
 
   export let prepTime: string | undefined;
@@ -7,8 +6,10 @@
   export let totalTime: string | undefined;
   export let recipeYield: number | undefined;
   export let editing: {
-    enabled: boolean;
-    edit: (key: string & keyof Recipe) => void;
+    timeEditable: boolean;
+    timeEdit: (key: "prepTime" | "cookTime") => void;
+    yieldEditable: boolean;
+    yieldEdit: () => void;
   };
 </script>
 
@@ -16,16 +17,16 @@
   <div class="times">
     <button
       class="stat"
-      disabled={!editing.enabled}
-      on:click={() => editing.edit("prepTime")}
+      disabled={!editing.timeEditable}
+      on:click={() => editing.timeEdit("prepTime")}
     >
       <span class="quantity">{durToText(prepTime) ?? "?"}</span>
       <span class="label">prep</span>
     </button>
     <button
       class="stat"
-      disabled={!editing.enabled}
-      on:click={() => editing.edit("cookTime")}
+      disabled={!editing.timeEditable}
+      on:click={() => editing.timeEdit("cookTime")}
     >
       <span class="quantity">{durToText(cookTime) ?? "?"}</span>
       <span class="label">cook</span>
@@ -38,8 +39,8 @@
   <div class="serves">
     <button
       class="stat"
-      disabled={!editing.enabled}
-      on:click={() => editing.edit("recipeYield")}
+      disabled={!editing.yieldEditable}
+      on:click={() => editing.yieldEdit()}
     >
       <span class="label">serves</span>
       <span class="quantity">{recipeYield ?? "?"}</span>

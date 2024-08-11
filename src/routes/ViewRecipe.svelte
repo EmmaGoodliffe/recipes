@@ -164,7 +164,18 @@
     cookTime={$rec("cookTime")}
     totalTime={$rec("totalTime")}
     recipeYield={$rec("recipeYield")}
-    editing={{ enabled: editable, edit }}
+    editing={{
+      timeEditable: editable,
+      timeEdit: edit,
+      yieldEditable: editable,
+      yieldEdit: () => {
+        if (editable) {
+          edit("recipeYield");
+        } else {
+          console.log("editing yield");
+        }
+      },
+    }}
   />
   <div class="px-2">
     <div class="pt-4 pb-1 font-bold">
