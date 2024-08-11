@@ -111,7 +111,7 @@ const setByPath = (obj_: unknown, path: string, value: unknown): unknown => {
   };
 };
 
- const addByPath = (obj: unknown, path: string, value: unknown) => {
+const addByPath = (obj: unknown, path: string, value: unknown) => {
   const paths = path.split(".");
   const parentPath = paths.slice(0, -1).join(".");
   const childPath = paths.slice(-1)[0];
@@ -169,7 +169,7 @@ export class Editable<T extends object> implements Readable<Get<T>> {
     throw new Error(`couldn't set data to ${x} of type ${typeof x}`);
   }
   addByPath(path: string, value: unknown) {
-    const x = addByPath(this.data, path, value)
+    const x = addByPath(this.data, path, value);
     if (isRecord(x) && this.isT(x)) {
       this.data = x;
       this.subscribers.forEach(s => s(k => this.get(k)));
@@ -182,6 +182,7 @@ export class Editable<T extends object> implements Readable<Get<T>> {
     this.subscribers.push(run);
     const i = this.subscribers.length - 1;
     return () => {
+      console.log(this.subscribers.length, 'sub');
       this.subscribers[i] = () => {};
     };
   }

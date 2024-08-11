@@ -22,22 +22,26 @@
     onEdit([{ mode: "overwrite", path: editPath ?? "", value }]);
     editPath = undefined;
   };
+
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      submitValue();
+    } else if (e.key === "Escape") {
+      editPath = undefined;
+    }
+  };
 </script>
 
 {#if pathPrefix === editPath}
   <div class="flex">
     {#if typeof obj === "number"}
-      <input
-        type="number"
-        bind:value
-        on:keypress={e => e.key === "Enter" && submitValue()}
-      />
+      <input type="number" bind:value on:keyup={onKey} />
     {:else if typeof obj === "string"}
-      <input
-        type="text"
-        bind:value
-        on:keypress={e => e.key === "Enter" && submitValue()}
-      />
+      {#if pathPrefix.endsWith(".text")}
+        <textarea bind:value />
+      {:else}
+        <input type="text" bind:value on:keyup={onKey} />
+      {/if}
     {/if}
     <button class="mx-2 square bg-button" on:click={submitValue}
       ><i class="bx bx-check"></i></button
@@ -54,7 +58,7 @@
 {:else if isRecord(obj) || Array.isArray(obj)}
   <table class="json">
     <tbody>
-      {#each getKeys(obj).filter(k => !k.startsWith("@")) as key}
+      {#each getKeys(obj).filter(k => !k.startsWith("@")) as key (key)}
         <tr class="group">
           <td>{key}</td>
           <td class="flex flex-col">
@@ -66,6 +70,7 @@
               {onEdit}
             ></svelte:self>
             {#if Array.isArray(obj)}
+              <!-- TODO: allow reordering of arrays -->
               <button
                 class="-my-6 square bg-button self-center z-10 opacity-0 group-hover:opacity-100 transition-all"
                 on:click={() => (addPath = `${pathPrefix}.${key}`)}
@@ -75,15 +80,20 @@
                 {#if typeof obj[0] === "string"}
                   <input
                     type="text"
+                    style="margin-top: 1rem;"
                     bind:value
-                    on:keypress={e =>
-                      e.key === "Enter" &&
-                      console.log(
-                        "added string",
-                        e.currentTarget.value,
-                        "to",
-                        addPath,
-                      )}
+                    on:keypress={e => {
+                      if (e.key === "Enter") {
+                        onEdit([
+                          {
+                            mode: "add",
+                            path: addPath ?? "",
+                            value: e.currentTarget.value,
+                          },
+                        ]);
+                        addPath = undefined;
+                      }
+                    }}
                   />
                 {:else if isRecord(obj[0])}
                   <div class="flex items-center">

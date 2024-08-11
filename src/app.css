@@ -28,6 +28,10 @@ input::placeholder {
   @apply text-text opacity-50;
 }
 
+textarea {
+  @apply w-full h-36 px-2 py-1 bg-input rounded;
+}
+
 i {
   @apply text-text;
 }

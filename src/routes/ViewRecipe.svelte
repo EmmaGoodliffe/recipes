@@ -13,6 +13,7 @@
   import JsonTable from "./JsonTable.svelte";
   import Dialog from "$lib/Dialog.svelte";
   import { Editable } from "$lib/stores";
+  import { onMount } from "svelte";
 
   export let recipe: Recipe;
   export let editable = false;
@@ -37,7 +38,22 @@
     input?.focus();
   };
 
+  const onEdit = (
+    edits: { mode: "overwrite" | "add"; path: string; value: unknown }[],
+  ) => {
+    for (const edit of edits) {
+      if (edit.mode === "overwrite") {
+        rec.setByPath(edit.path, edit.value);
+      } else if (edit.mode === "add") {
+        rec.addByPath(edit.path, edit.value);
+      } else {
+        throw new Error(`unknown edit mode ${edit.mode}`);
+      }
+    }
+  };
+
   $: rec = new Editable(recipe, isRecipe);
+  $: unread = rec.getUnread();
   $: authors = toArray($rec("author"));
   $: authorNames = authors.length
     ? authors.map(a => a?.name ?? "?").join(", ")
@@ -50,6 +66,12 @@
       inputValue = editObj;
     }
   }
+
+  onMount(() =>
+    rec.subscribe(() => {
+      unread = rec.getUnread();
+    }),
+  );
 </script>
 
 <article class="px-4 pb-4">
@@ -122,19 +144,42 @@
     {edit}
   />
   <div class="px-2">
-    <div class="pt-4 pb-1 font-bold">Ingredients</div>
+    <div class="pt-4 pb-1 font-bold">
+      Ingredients <button
+        class="mx-2 square bg-input"
+        class:hidden={!editable}
+        disabled={!editable}
+        on:click={() => edit("recipeIngredient")}
+        ><i class="bx bx-pencil"></i></button
+      >
+    </div>
     <ul>
       {#each toArray($rec("recipeIngredient")) as ing}
         <li>{ing}</li>
       {/each}
     </ul>
-    <div class="pt-4 pb-1 font-bold">Instructions</div>
+    <div class="pt-4 pb-1 font-bold">
+      Instructions <button
+        class="mx-2 square bg-input"
+        class:hidden={!editable}
+        disabled={!editable}
+        on:click={() => edit("recipeInstructions")}
+        ><i class="bx bx-pencil"></i></button
+      >
+    </div>
     <ol class="list-inside list-decimal">
       {#each toArray($rec("recipeInstructions")) as step}
         <li class="truncate">{step?.text ?? "?"}</li>
       {/each}
     </ol>
-    <div class="pt-4 pb-1 font-bold">Nutrition info</div>
+    <div class="pt-4 pb-1 font-bold">
+      Nutrition info <button
+        class="mx-2 square bg-input"
+        class:hidden={!editable}
+        disabled={!editable}
+        on:click={() => edit("nutrition")}><i class="bx bx-pencil"></i></button
+      >
+    </div>
     <ul>
       {#each Object.values($rec("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
         <li>{info}</li>
@@ -142,11 +187,15 @@
     </ul>
   </div>
   <JsonTable
-    obj={rec.getUnread()}
+    obj={unread}
     {editable}
-    onEdit={edits => {
-      // TODO: edit
-    }}
+    onEdit={edits =>
+      onEdit(
+        edits.map(e => ({
+          ...e,
+          path: e.path.slice(1), // remove leading dot
+        })),
+      )}
   />
 </article>
 <Dialog
@@ -212,13 +261,12 @@
         {#if longInput}
           <div>
             <textarea
-              class="w-full h-36 px-2 py-1 bg-input rounded"
               id="edit-value"
               bind:value={inputValue}
               bind:this={input}
-            ></textarea>
+            />
           </div>
-        {:else if editKey === "recipeYield"}
+        {:else if typeof editObj === "number"}
           <input
             type="number"
             class="long font-mono"
@@ -246,22 +294,7 @@
       Tap on a property to change it.
     </p>
     <div class="w-[fit-content] mx-auto">
-      <JsonTable
-        obj={editObj}
-        editable={true}
-        pathPrefix={editKey}
-        onEdit={edits => {
-          for (const edit of edits) {
-            if (edit.mode === "overwrite") {
-              rec.setByPath(edit.path, edit.value);
-            } else if (edit.mode === "add") {
-              console.log(rec.addByPath(edit.path, edit.value));
-            } else {
-              throw new Error(`unknown edit mode ${edit.mode}`);
-            }
-          }
-        }}
-      />
+      <JsonTable obj={editObj} editable={true} pathPrefix={editKey} {onEdit} />
     </div>
   {:else}
     <p>Don't know how to edit type {typeof editObj}</p>
