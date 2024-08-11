@@ -24,7 +24,7 @@
     id: string;
     description: string;
     state: "static" | "editing" | "updating";
-    value: (user: User | null) => string | null;
+    value: (user: User | null | undefined) => string | null;
     update: (x: string) => void | Promise<void>;
   }[] = [
     {
@@ -68,7 +68,6 @@
   <meta name="description" content="account" />
 </svelte:head>
 
-<h1>account</h1>
 {#if downloading}
   <LoaderText text="authenticating..." />
 {:else if $user === null}

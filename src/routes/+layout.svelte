@@ -6,36 +6,58 @@
   import emptyFlask from "$lib/images/empty-flask.svg";
   import { toBeEdited } from "$lib/stores";
   import { fly } from "svelte/transition";
+  import { beforeNavigate } from "$app/navigation";
 
-  const pageIcons: { url: string; icon: string; emptySvg?: string }[] = [
+  const pageIcons = [
     { url: "/", icon: "home" },
     { url: "/cook", icon: "flask", emptySvg: emptyFlask },
     { url: "/account", icon: "user" },
   ];
   const pages = Object.values(pageIcons);
   let selectedPage = "";
+  let direction: "left" | "right" = "right";
+
+  const isAlreadySorted = (arr: number[]) =>
+    arr.join(",") === [...arr].sort().join(",");
+
+  const navToDirection = (
+    fromRoute: string | null | undefined,
+    toRoute: string | null | undefined,
+  ) => {
+    const [fromIndex] = pageIcons
+      .map((p, i) => ({ ...p, i }))
+      .filter(p => p.url === fromRoute);
+    const [toIndex] = pageIcons
+      .map((p, i) => ({ ...p, i }))
+      .filter(p => p.url === toRoute);
+    if (!fromIndex || !toIndex) {
+      throw new Error(`don't know the routes ${fromRoute} -> ${toRoute}`);
+    }
+    return isAlreadySorted([fromIndex.i, toIndex.i]) ? "right" : "left";
+  };
 
   onMount(() => {
     selectedPage = window.location.pathname;
   });
 
-  $: {
-    if ($navigating?.to?.route.id) {
-      selectedPage = $navigating.to.route.id;
+  beforeNavigate(nav => {
+    if (nav.to?.route.id) {
+      selectedPage = nav.to.route.id;
     }
-  }
+    direction = navToDirection(nav.from?.route.id, nav.to?.route.id);
+  });
 </script>
 
 <!-- TODO: fix direction -->
 <div class="overflow-x-hidden">
   {#if selectedPage === "/" && $toBeEdited}
-    <h1 in:fly={{ x: 100 }}>edit recipe</h1>
+    <h1 in:fly={{ x: direction === "left" ? -50 : 50 }}>edit recipe</h1>
   {:else if selectedPage === "/"}
-    <h1 in:fly={{ x: 100 }}>recipes</h1>
+    <h1 in:fly={{ x: direction === "left" ? -50 : 50 }}>recipes</h1>
   {:else if selectedPage === "/cook"}
-    <h1 in:fly={{ x: 100 }}>cook</h1>
+    <h1 in:fly={{ x: direction === "left" ? -50 : 50 }}>cook</h1>
   {:else if selectedPage === "/account"}
-    <h1 in:fly={{ x: 100 }}>account</h1>
+    <h1 in:fly={{ x: direction === "left" ? -50 : 50 }}>account</h1>
   {/if}
 </div>
 <main class="w-11/12 max-w-5xl mx-auto pb-12 flex flex-col text-text">

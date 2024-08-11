@@ -44,7 +44,6 @@
 </svelte:head>
 
 {#if !$toBeCooked}
-  <h1>cook</h1>
   <Gallery recipes={$recipes?.slice(0, 4)} selectStores={[toBeCooked]} />
 {:else}
   <h1>{$toBeCooked.name}</h1>

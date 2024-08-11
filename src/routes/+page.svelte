@@ -21,11 +21,6 @@
   <meta name="description" content="recipes" />
 </svelte:head>
 
-{#if $toBeEdited}
-  <h1>edit recipe</h1>
-{:else}
-  <h1>recipes</h1>
-{/if}
 {#if $user === undefined}
   <LoaderText text="authenticating..." />
 {:else if $user === null}
