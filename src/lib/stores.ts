@@ -184,7 +184,6 @@ export class Editable<T extends object> implements Readable<Get<T>> {
     this.subscribers.push(run);
     const i = this.subscribers.length - 1;
     return () => {
-      console.log(this.subscribers.length, "sub");
       this.subscribers[i] = () => {};
     };
   }

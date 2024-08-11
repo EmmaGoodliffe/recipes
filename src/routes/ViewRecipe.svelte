@@ -18,6 +18,7 @@
     toArray,
     toDur,
   } from "$lib/util";
+  import { scaleIngredients } from "$lib/nlp";
 
   export let recipe: Recipe;
   export let editable = false;
@@ -28,6 +29,7 @@
   let secondInputValue = "";
   let longInput = false;
   let loading = false;
+  let scale = true;
 
   const edit = async (key: string & keyof Recipe) => {
     if (key === "image") {
@@ -67,8 +69,8 @@
   $: editObj = $rec(editKey ?? "name");
 
   $: {
-    if (typeof editObj === "string") {
-      inputValue = editObj;
+    if (typeof editObj === "number" || typeof editObj === "string") {
+      inputValue = `${editObj}`;
     }
   }
 
@@ -166,7 +168,7 @@
     <div class="pt-4 pb-1 font-bold">
       Ingredients <button
         class="mx-2 square bg-input"
-        class:hidden={!editable}
+        class:invisible={!editable}
         disabled={!editable}
         on:click={() => edit("recipeIngredient")}
         ><i class="bx bx-pencil"></i></button
@@ -180,7 +182,7 @@
     <div class="pt-4 pb-1 font-bold">
       Instructions <button
         class="mx-2 square bg-input"
-        class:hidden={!editable}
+        class:invisible={!editable}
         disabled={!editable}
         on:click={() => edit("recipeInstructions")}
         ><i class="bx bx-pencil"></i></button
@@ -194,7 +196,7 @@
     <div class="pt-4 pb-1 font-bold">
       Nutrition info <button
         class="mx-2 square bg-input"
-        class:hidden={!editable}
+        class:invisible={!editable}
         disabled={!editable}
         on:click={() => edit("nutrition")}><i class="bx bx-pencil"></i></button
       >
@@ -224,7 +226,8 @@
 >
   {#if editKey?.endsWith("Time")}
     <form
-      on:submit={() => {
+      on:submit={e => {
+        e.preventDefault();
         const dur = toDur(parseInt(inputValue), parseInt(secondInputValue));
         rec.setByPath(editKey ?? "", dur);
         editKey = undefined;
@@ -261,7 +264,8 @@
     </form>
   {:else if typeof editObj === "string" || typeof editObj === "number" || editKey === "image"}
     <form
-      on:submit={async () => {
+      on:submit={async e => {
+        e.preventDefault();
         if (editKey === "image") {
           const image = await fetchImage(inputValue);
           rec.set("image", {
@@ -269,6 +273,19 @@
             width: image.width,
             height: image.height,
           });
+        } else if (editKey === "recipeYield" && scale) {
+          const prevYield = rec.get("recipeYield");
+          const newYield = parseFloat(inputValue);
+          if (!prevYield) {
+            throw new Error(`can't scale yield ${prevYield}`);
+          }
+          const scaling = newYield / prevYield;
+          const ingredients = toArray(rec.get("recipeIngredient")).filter(
+            ing => ing !== undefined,
+          );
+          const scaledIngredients = scaleIngredients(ingredients, scaling);
+          rec.set("recipeYield", newYield);
+          rec.set("recipeIngredient", scaledIngredients);
         } else {
           rec.setByPath(editKey ?? "", inputValue);
         }
@@ -293,6 +310,16 @@
             bind:value={inputValue}
             bind:this={input}
           />
+          <div class="flex align-items">
+            <input
+              type="checkbox"
+              name="scale"
+              class="mr-2"
+              id="scale"
+              bind:checked={scale}
+            />
+            <label for="scale">scale the ingredients too</label>
+          </div>
         {:else}
           <input
             type="text"

@@ -26,6 +26,9 @@ type Token = ReturnType<typeof nlpTokens>[number];
 const lemmas = (tokens: Token[]) =>
   unique(tokens.filter(t => t.pos === "NOUN").map(t => t.lemma));
 
+const doesInclude = <T extends string[]>(arr: T, x: string): x is T[number] =>
+  arr.includes(x);
+
 const getQuantity = (tokens: Token[]) => {
   const number =
     tokens[0].pos === "NUM" && tokens.filter(t => t.pos === "NUM").length === 1
@@ -34,7 +37,7 @@ const getQuantity = (tokens: Token[]) => {
   const unit =
     number !== null &&
     tokens[1].pos === "NOUN" &&
-    ["g", "tbsp", "tsp"].includes(tokens[1].value)
+    doesInclude(["g", "tbsp", "tsp"] as const, tokens[1].value)
       ? tokens[1].value
       : null;
   const i = number === null ? 0 : unit === null ? 1 : 2;
@@ -121,3 +124,52 @@ export const searchInstructionForIngredients = (
   );
   return { ingredientMatches, instructionMatches };
 };
+
+const decimalToString = (x: number) => {
+  const regular = x.toString();
+  const precise = x.toFixed(2);
+  return regular.length < precise.length ? regular : precise;
+};
+
+const scale = (x: string | null, scaling: number) => {
+  if (x === null) {
+    return null;
+  }
+  const justNumber = parseFloat(x).toString() === x;
+  if (justNumber) {
+    return decimalToString(scaling * parseFloat(x));
+  }
+  const matches = x.match(/([.\d]+)-([.\d]+)/);
+  if (matches === null) {
+    throw new Error(`don't know how to scale ${x}`);
+  }
+  const [, min, max] = matches;
+  const [scaledMin, scaledMax] = [min, max].map(n =>
+    decimalToString(scaling * parseFloat(n)),
+  );
+  return `${scaledMin}-${scaledMax}`;
+};
+
+const toIngredient = ({
+  number,
+  unit,
+  item,
+  description,
+}: Pick<
+  ReturnType<typeof parseIngredient>,
+  "number" | "unit" | "item" | "description"
+>) => {
+  const n = number ?? "";
+  const spaceBeforeUnit = unit === "g" ? "" : " ";
+  const u = unit ? spaceBeforeUnit + unit + " " : " ";
+  const i = item.map(({ value }) => value).join(" ");
+  const desc = description.map(({ value }) => value).join(" ");
+  const d = desc ? `, ${desc}` : "";
+  return (n + u + i + d).trim();
+};
+
+export const scaleIngredients = (ingredients: string[], scaling: number) =>
+  ingredients
+    .map(parseIngredient)
+    .map(ing => ({ ...ing, number: scale(ing.number, scaling) }))
+    .map(toIngredient);
