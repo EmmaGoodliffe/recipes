@@ -7,6 +7,7 @@ A simple and free app for collecting recipes and generating shopping lists.
 - Features
   - ~~Import recipes~~
   - ~~Cook recipes~~
+  - ~~Scale recipes~~
   - Edit recipes
   - Tag recipes
   - Shopping list

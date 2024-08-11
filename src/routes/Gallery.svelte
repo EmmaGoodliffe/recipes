@@ -24,7 +24,7 @@
       <p>No recipes.</p>
     {/if}
     <!-- TODO: handle edited version -->
-    {#each recipes.map(r => r.original) as rec}
+    {#each recipes.map(r => r.edited ? r.edited : r.original) as rec}
       <button
         class="card enforced-rounded"
         on:click={() => {

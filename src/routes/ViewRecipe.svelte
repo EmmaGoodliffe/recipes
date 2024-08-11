@@ -25,6 +25,7 @@
   export let editable = false;
 
   let editKey: (string & keyof Recipe) | undefined;
+  let unread: Partial<Recipe> = {};
   let input: HTMLInputElement | HTMLTextAreaElement | undefined;
   let inputValue = "";
   let hValue = "";
@@ -62,7 +63,6 @@
   };
 
   $: rec = new Editable(recipe, isRecipe);
-  $: unread = rec.getUnread();
   $: authors = toArray($rec("author"));
   $: authorNames = authors.length
     ? authors.map(a => a?.name ?? "?").join(", ")

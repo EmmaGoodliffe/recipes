@@ -159,7 +159,7 @@ export class Editable<T extends object> implements Readable<Get<T>> {
     return keyValuesToObj(
       keys,
       keys.map(k => this.data[k]),
-    );
+    ) as Partial<T>;
   }
   setByPath(path: string, value: unknown) {
     const x = setByPath(this.data, path, value);
