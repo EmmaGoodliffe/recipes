@@ -6,26 +6,45 @@
   export let cookTime: string | undefined;
   export let totalTime: string | undefined;
   export let recipeYield: number | undefined;
-  export let edit: (key: string & keyof Recipe) => void;
+  export let editing: {
+    enabled: boolean;
+    edit: (key: string & keyof Recipe) => void;
+  };
 </script>
 
 <div class="stats">
   <div class="times">
-    <button class="stat" on:click={() => edit("prepTime")}>
+    <button
+      class="stat"
+      disabled={!editing.enabled}
+      on:click={() => editing.edit("prepTime")}
+    >
       <span class="quantity">{durToText(prepTime) ?? "?"}</span>
       <span class="label">prep</span>
     </button>
-    <button class="stat" on:click={() => edit("cookTime")}>
+    <button
+      class="stat"
+      disabled={!editing.enabled}
+      on:click={() => editing.edit("cookTime")}
+    >
       <span class="quantity">{durToText(cookTime) ?? "?"}</span>
       <span class="label">cook</span>
     </button>
-    <button class="stat" on:click={() => edit("totalTime")}>
+    <button
+      class="stat"
+      disabled={!editing.enabled}
+      on:click={() => editing.edit("totalTime")}
+    >
       <span class="quantity">{durToText(totalTime) ?? "?"}</span>
       <span class="label">total</span>
     </button>
   </div>
   <div class="serves">
-    <button class="stat" on:click={() => edit("recipeYield")}>
+    <button
+      class="stat"
+      disabled={!editing.enabled}
+      on:click={() => editing.edit("recipeYield")}
+    >
       <span class="label">serves</span>
       <span class="quantity">{recipeYield ?? "?"}</span>
     </button>

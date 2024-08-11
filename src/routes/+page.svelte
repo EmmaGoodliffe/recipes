@@ -13,21 +13,20 @@
   } from "$lib/stores";
 
   onMount(initAll);
-
-  $: title = $toBeEdited ? "edit recipe | recipes" : "recipes";
-  $: header = $toBeEdited ? "edit recipe" : "recipes";
 </script>
 
 <svelte:head>
-  <title>{title}</title>
+  <title>{$toBeEdited ? "edit recipe | recipes" : "recipes"}</title>
   <meta name="description" content="recipes" />
 </svelte:head>
 
-<h1>{header}</h1>
+<h1>{$toBeEdited ? "edit recipe" : "recipes"}</h1>
 {#if $user === undefined}
   <LoaderText text="authenticating..." />
 {:else if $user === null}
-  <a href="/account" class="text-center hover:underline">Log in &rarr;</a>
+  <a href="/account" class="long bg-button text-center"
+    ><i class="bx bx-user"></i> log in</a
+  >
 {:else if $toBeEdited}
   <p class="-mt-4 mb-6 text-center opacity-50 font-semibold">
     Tap on a part of the recipe to change it.

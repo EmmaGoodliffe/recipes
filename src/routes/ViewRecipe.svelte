@@ -12,7 +12,7 @@
   } from "$lib/util";
   import JsonTable from "./JsonTable.svelte";
   import Dialog from "$lib/Dialog.svelte";
-  import { Editable, toastWrap } from "$lib/stores";
+  import { Editable, toastWrap, toBeEdited } from "$lib/stores";
   import { onMount } from "svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { getFb } from "./fb";
@@ -79,6 +79,9 @@
 </script>
 
 {#if editable}
+  <button class="long bg-input" on:click={() => toBeEdited.set(undefined)}
+    ><i class="bx bx-chevron-left align-middle"></i> cancel</button
+  >
   <LoaderButton
     {loading}
     onClick={async () => {
@@ -156,7 +159,7 @@
     cookTime={$rec("cookTime")}
     totalTime={$rec("totalTime")}
     recipeYield={$rec("recipeYield")}
-    {edit}
+    editing={{ enabled: editable, edit }}
   />
   <div class="px-2">
     <div class="pt-4 pb-1 font-bold">

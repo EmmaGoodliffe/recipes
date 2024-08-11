@@ -53,6 +53,7 @@
     cookTime={$toBeCooked.cookTime}
     totalTime={$toBeCooked.totalTime}
     recipeYield={$toBeCooked.recipeYield}
+    editing={{ enabled: false, edit: () => {} }}
   />
   <div class="instruction">
     <SmoothHeight>
@@ -71,7 +72,7 @@
           direction = "l";
           await delay(50);
           instructionIndex--;
-        }}>&larr;</button
+        }}><i class="bx bx-chevron-left"></i></button
       >
       <button
         disabled={instructionIndex >=
@@ -80,7 +81,7 @@
           direction = "r";
           await delay(50);
           instructionIndex++;
-        }}>&rarr;</button
+        }}><i class="bx bx-chevron-right"></i></button
       >
       <!-- TODO: allow swipes -->
     </div>
