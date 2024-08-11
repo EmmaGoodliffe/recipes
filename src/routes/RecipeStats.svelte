@@ -30,11 +30,7 @@
       <span class="quantity">{durToText(cookTime) ?? "?"}</span>
       <span class="label">cook</span>
     </button>
-    <button
-      class="stat"
-      disabled={!editing.enabled}
-      on:click={() => editing.edit("totalTime")}
-    >
+    <button class="stat" disabled={true}>
       <span class="quantity">{durToText(totalTime) ?? "?"}</span>
       <span class="label">total</span>
     </button>

@@ -10,6 +10,7 @@
   import { Editable, toastWrap, toBeEdited } from "$lib/stores";
   import { isRecipe } from "$lib/types";
   import {
+    addDurations,
     dateToText,
     delay,
     doesEndWith,
@@ -26,7 +27,8 @@
   let editKey: (string & keyof Recipe) | undefined;
   let input: HTMLInputElement | HTMLTextAreaElement | undefined;
   let inputValue = "";
-  let secondInputValue = "";
+  let hValue = "";
+  let mValue = "";
   let longInput = false;
   let loading = false;
   let scale = true;
@@ -36,8 +38,8 @@
       inputValue = $rec("image")?.url ?? "";
     } else if (doesEndWith(key, "Time")) {
       const dur = parseDur($rec(key) ?? "");
-      inputValue = dur.get("time", "h").toString();
-      secondInputValue = dur.get("time", "m").toString();
+      hValue = dur.get("h").toString();
+      mValue = dur.get("m").toString();
     }
     longInput = ["description"].includes(key);
     editKey = key;
@@ -228,8 +230,13 @@
     <form
       on:submit={e => {
         e.preventDefault();
-        const dur = toDur(parseInt(inputValue), parseInt(secondInputValue));
+        const dur = toDur({ h: parseInt(hValue), m: parseInt(mValue) });
+        const prepTime = editKey === "prepTime" ? dur : rec.get("prepTime");
+        const cookTime = editKey === "cookTime" ? dur : rec.get("cookTime");
+        const totalDur = addDurations([prepTime, cookTime]);
+        console.log([prepTime, cookTime, totalDur]);
         rec.setByPath(editKey ?? "", dur);
+        rec.set("totalTime", totalDur);
         editKey = undefined;
       }}
     >
@@ -241,7 +248,7 @@
             id="hours"
             min="0"
             max="100"
-            bind:value={inputValue}
+            bind:value={hValue}
             bind:this={input}
           />
           <label for="hours" class="text-sm italic">hours</label>
@@ -253,7 +260,7 @@
             id="mins"
             min="0"
             max="60"
-            bind:value={secondInputValue}
+            bind:value={mValue}
           />
           <label for="mins" class="text-sm italic">minutes</label>
         </div>

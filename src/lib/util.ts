@@ -9,12 +9,15 @@ export const toArray = <T>(x: T | T[] | undefined | null) =>
 export const getKeys = <T extends object>(obj: T) =>
   Object.keys(obj) as (string & keyof T)[];
 
-export const keyValuesToObj = <K extends string, V>(keys: K[], values: V[]) => {
+export const keyValuesToObj = <K extends string, V>(
+  keys: readonly K[],
+  values: V[],
+) => {
   const result: Partial<Record<K, V>> = {};
   for (const i in keys) {
     result[keys[i]] = values[i];
   }
-  return result;
+  return result as Record<K, V>;
 };
 
 const overwrite = (x: string, overs: Record<string, string>) =>
@@ -35,6 +38,8 @@ export const uniqueByKey = <
 
 export const overlap = <T>(a: T[], b: T[]) => a.filter(x => b.includes(x));
 
+const MY_TIME_PERIODS = ["y", "mo", "d", "h", "m", "s"] as const;
+
 export const parseDur = (dur: string) => {
   const [period, time] = dur
     .toLowerCase()
@@ -48,20 +53,22 @@ export const parseDur = (dur: string) => {
   return {
     period,
     time,
-    get: (
-      quantity: "period" | "time",
-      label: "y" | "m" | "d" | "h" | "m" | "s",
-    ) =>
-      (quantity === "period" ? period : time).filter(
-        x => x.label.toLowerCase() === label.toLowerCase(),
-      )[0]?.num ?? 0,
+    get: (label: (typeof MY_TIME_PERIODS)[number]) => {
+      const quantity = ["h", "m", "s"].includes(label) ? time : period;
+      const realLabel = overwrite(label, { mo: "m" });
+      return (
+        quantity.filter(
+          x => x.label.toLowerCase() === realLabel.toLowerCase(),
+        )[0]?.num ?? 0
+      );
+    },
   };
 };
 
 /**
  * Convert ISO durations to a concise readable form
- * @param dur [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) e.g. `P3Y6M4DT12H30M5S`
- * @returns e.g.`3y 6mo 4d 12h 30m 5s`
+ * @param dur [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) e.g. `"P3Y6M4DT12H30M5S"`
+ * @returns e.g.`"3y 6mo 4d 12h 30m 5s"`
  */
 export const durToText = (dur: string | undefined) => {
   if (!dur) {
@@ -75,16 +82,57 @@ export const durToText = (dur: string | undefined) => {
   return pText + tText;
 };
 
-export const toDur = (hours: number, minutes: number) => {
-  const h = hours ? `${hours}H` : "";
-  const m = minutes ? `${minutes}M` : "";
-  return "PT" + h + m;
+export const toDur = (
+  x: Partial<Record<(typeof MY_TIME_PERIODS)[number], number>>,
+) => {
+  const y = x.y ? `${x.y}Y` : "";
+  const mo = x.mo ? `${x.mo}M` : "";
+  const d = x.d ? `${x.d}D` : "";
+  const h = x.h ? `${x.h}H` : "";
+  const m = x.m ? `${x.m}M` : "";
+  const s = x.s ? `${x.s}S` : "";
+  return "P" + y + mo + d + "T" + h + m + s;
+};
+
+const quotientAndRemainder = (
+  numerator: number,
+  denominator: number,
+): [number, number] => [
+  Math.floor(numerator / denominator),
+  numerator % denominator,
+];
+
+const rollover = (x: Record<(typeof MY_TIME_PERIODS)[number], number>) => {
+  const [mFromS, s] = quotientAndRemainder(x.s, 60);
+  const [hFromM, m] = quotientAndRemainder(x.m + mFromS, 60);
+  const [dFromH, h] = quotientAndRemainder(x.h + hFromM, 24);
+  const d = x.d + dFromH;
+  return { y: x.y, mo: x.mo, d, h, m, s };
+};
+
+const transpose = (x: number[][]) => x[0].map((_, i) => x.map(row => row[i]));
+
+const sum = (x: number[]) => x.reduce((a, b) => a + b);
+
+/**
+ * Add arrays like rows on a spread sheet
+ * @param rows the rows, e.g. `[[1,2,3], [0,6,1]]`
+ * @returns the sums, e.g. `[1,8,4]`
+ */
+const addRows = (rows: number[][]) => transpose(rows).map(sum);
+
+export const addDurations = (durations: (string | undefined)[]) => {
+  const rows = durations.map(d =>
+    MY_TIME_PERIODS.map(x => parseDur(d ?? "").get(x)),
+  );
+  const sums = addRows(rows);
+  return toDur(rollover(keyValuesToObj(MY_TIME_PERIODS, sums)));
 };
 
 /**
  * Convert ISO date to two readable forms
- * @param date [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) e.g. `2001-02-03T01:02:03+01:00`
- * @returns both the `month` of the date, e.g. `Feb 2001`, and the more `full` date-time string in current locale format, e.g. `00:02:03 03/02/2001`
+ * @param date [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) e.g. `"2001-02-03T01:02:03+01:00"`
+ * @returns both the `month` of the date, e.g. `"Feb 2001"`, and the more `full` date-time string in current locale format, e.g. `"00:02:03 03/02/2001"`
  */
 export const dateToText = (date: string | undefined) => {
   if (!date) {
