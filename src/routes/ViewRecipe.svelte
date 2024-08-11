@@ -191,7 +191,7 @@
         ><i class="bx bx-check"></i> confirm edits</button
       >
     </form>
-  {:else if typeof editObj === "string" || editKey === "image"}
+  {:else if typeof editObj === "string" || typeof editObj === "number" || editKey === "image"}
     <form
       on:submit={async () => {
         if (editKey === "image") {
@@ -218,6 +218,14 @@
               bind:this={input}
             ></textarea>
           </div>
+        {:else if editKey === "recipeYield"}
+          <input
+            type="number"
+            class="long font-mono"
+            id="edit-value"
+            bind:value={inputValue}
+            bind:this={input}
+          />
         {:else}
           <input
             type="text"

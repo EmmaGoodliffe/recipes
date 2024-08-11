@@ -25,16 +25,16 @@
     </button>
   </div>
   <div class="serves">
-    <div class="stat">
+    <button class="stat" on:click={() => edit("recipeYield")}>
       <span class="label">serves</span>
       <span class="quantity">{recipeYield ?? "?"}</span>
-    </div>
+    </button>
   </div>
 </div>
 
 <style lang="postcss">
   .stats {
-    @apply w-5/6 max-w-80 flex justify-between mx-auto;
+    @apply w-5/6 max-w-sm flex justify-between mx-auto;
   }
 
   .times {
