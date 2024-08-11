@@ -5,7 +5,7 @@
   import type { Recipe } from "$lib/types";
   import type { Auth } from "firebase/auth";
   import type { Firestore } from "firebase/firestore";
-  import { deleteRecipe } from "$lib/db";
+  import { deleteWholeRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
@@ -19,7 +19,7 @@
   import { toArray } from "$lib/util";
   import type { Writable } from "svelte/store";
 
-  export let recipes: Recipe[] | undefined;
+  export let recipes: {original: Recipe; edited?: Recipe}[] | undefined;
   export let selectStores: Writable<Recipe | undefined>[];
 
   let auth: Auth | undefined;
@@ -40,7 +40,11 @@
   {#if recipes === undefined}
     <LoaderText text="fetching recipes..." />
   {:else}
-    {#each recipes as rec}
+    {#if recipes.length === 0}
+      <p>No recipes.</p>
+    {/if}
+    <!-- TODO: handle edited version -->
+    {#each recipes.map(r => r.original) as rec}
       <button
         class="card enforced-rounded"
         on:click={() => {

@@ -12,8 +12,11 @@
   } from "$lib/util";
   import JsonTable from "./JsonTable.svelte";
   import Dialog from "$lib/Dialog.svelte";
-  import { Editable } from "$lib/stores";
+  import { Editable, toastWrap } from "$lib/stores";
   import { onMount } from "svelte";
+  import LoaderButton from "$lib/LoaderButton.svelte";
+  import { getFb } from "./fb";
+  import { saveEditedRecipe } from "$lib/db";
 
   export let recipe: Recipe;
   export let editable = false;
@@ -23,6 +26,7 @@
   let inputValue = "";
   let secondInputValue = "";
   let longInput = false;
+  let loading = false;
 
   const edit = async (key: string & keyof Recipe) => {
     if (key === "image") {
@@ -74,6 +78,17 @@
   );
 </script>
 
+{#if editable}
+  <LoaderButton
+    {loading}
+    onClick={async () => {
+      loading = true;
+      const { auth, db } = getFb();
+      await toastWrap(saveEditedRecipe)(auth, db, rec.data["@id"], rec.data);
+      loading = false;
+    }}><i class="bx bx-save align-middle"></i> save</LoaderButton
+  >
+{/if}
 <article class="px-4 pb-4">
   <header class="mx-2 py-4 text-center">
     <div class="text-lg">

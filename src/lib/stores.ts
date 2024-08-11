@@ -41,7 +41,9 @@ export const toastWrap = <T extends Func>(func: T) => {
   };
 };
 
-export const recipes = writable<Recipe[] | undefined>(undefined);
+export const recipes = writable<
+  { original: Recipe; edited?: Recipe }[] | undefined
+>(undefined);
 
 export const updateRecipes = async () => {
   const { auth, db } = getFb();
@@ -182,7 +184,7 @@ export class Editable<T extends object> implements Readable<Get<T>> {
     this.subscribers.push(run);
     const i = this.subscribers.length - 1;
     return () => {
-      console.log(this.subscribers.length, 'sub');
+      console.log(this.subscribers.length, "sub");
       this.subscribers[i] = () => {};
     };
   }

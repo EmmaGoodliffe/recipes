@@ -12,10 +12,10 @@
     user,
   } from "$lib/stores";
 
+  onMount(initAll);
+
   $: title = $toBeEdited ? "edit recipe | recipes" : "recipes";
   $: header = $toBeEdited ? "edit recipe" : "recipes";
-
-  onMount(initAll);
 </script>
 
 <svelte:head>

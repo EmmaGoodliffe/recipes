@@ -6,9 +6,7 @@ export type Func<P extends unknown[] = any[], R = any> = (...args: P) => R;
 
 export type ExtractEndsWith<T extends string, S extends string> = Pipe<
   T,
-  [
-    Unions.ToTuple, Tuples.Filter<Strings.EndsWith<S>>, Tuples.ToUnion
-  ]
+  [Unions.ToTuple, Tuples.Filter<Strings.EndsWith<S>>, Tuples.ToUnion]
 >;
 
 export const isRecord = (x: unknown): x is Record<string, unknown> =>
