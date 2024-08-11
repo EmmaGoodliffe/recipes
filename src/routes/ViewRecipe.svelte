@@ -1,6 +1,14 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { getFb } from "./fb";
+  import JsonTable from "./JsonTable.svelte";
   import RecipeStats from "./RecipeStats.svelte";
-  import { isRecipe, type ExtractEndsWith, type Recipe } from "$lib/types";
+  import type { Recipe } from "$lib/types";
+  import { saveEditedRecipe } from "$lib/db";
+  import Dialog from "$lib/Dialog.svelte";
+  import LoaderButton from "$lib/LoaderButton.svelte";
+  import { Editable, toastWrap, toBeEdited } from "$lib/stores";
+  import { isRecipe } from "$lib/types";
   import {
     dateToText,
     delay,
@@ -10,13 +18,6 @@
     toArray,
     toDur,
   } from "$lib/util";
-  import JsonTable from "./JsonTable.svelte";
-  import Dialog from "$lib/Dialog.svelte";
-  import { Editable, toastWrap, toBeEdited } from "$lib/stores";
-  import { onMount } from "svelte";
-  import LoaderButton from "$lib/LoaderButton.svelte";
-  import { getFb } from "./fb";
-  import { saveEditedRecipe } from "$lib/db";
 
   export let recipe: Recipe;
   export let editable = false;

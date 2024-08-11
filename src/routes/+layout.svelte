@@ -1,12 +1,11 @@
 <script lang="ts">
   import "../app.css";
   import { onMount } from "svelte";
+  import { fly } from "svelte/transition";
   import Toast from "./Toast.svelte";
-  import { navigating } from "$app/stores";
+  import { beforeNavigate } from "$app/navigation";
   import emptyFlask from "$lib/images/empty-flask.svg";
   import { toBeEdited } from "$lib/stores";
-  import { fly } from "svelte/transition";
-  import { beforeNavigate } from "$app/navigation";
 
   const pageIcons = [
     { url: "/", icon: "home" },

@@ -11,7 +11,6 @@
     toBePreviewed,
     user,
   } from "$lib/stores";
-  import { fly } from "svelte/transition";
 
   onMount(initAll);
 </script>

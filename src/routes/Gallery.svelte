@@ -1,38 +1,17 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { getFb } from "./fb";
+  import { fly } from "svelte/transition";
   import ViewRecipe from "./ViewRecipe.svelte";
   import type { Recipe } from "$lib/types";
-  import type { Auth } from "firebase/auth";
-  import type { Firestore } from "firebase/firestore";
-  import { deleteWholeRecipe } from "$lib/db";
-  import Dialog from "$lib/Dialog.svelte";
-  import LoaderButton from "$lib/LoaderButton.svelte";
-  import LoaderText from "$lib/LoaderText.svelte";
-  import {
-    toBeCooked,
-    toBeEdited,
-    toBePreviewed,
-    toastWrap,
-    updateRecipes,
-  } from "$lib/stores";
-  import { toArray } from "$lib/util";
   import type { Writable } from "svelte/store";
-  import { fly } from "svelte/transition";
+  import Dialog from "$lib/Dialog.svelte";
+  import LoaderText from "$lib/LoaderText.svelte";
+  import { toBeCooked, toBeEdited, toBePreviewed } from "$lib/stores";
+  import { toArray } from "$lib/util";
 
   export let recipes: { original: Recipe; edited?: Recipe }[] | undefined;
   export let selectStores: Writable<Recipe | undefined>[];
 
-  let auth: Auth | undefined;
-  let db: Firestore | undefined;
   let showPreview = false;
-  let loading = false;
-
-  onMount(async () => {
-    const fb = getFb();
-    auth = fb.auth;
-    db = fb.db;
-  });
 </script>
 
 <div
