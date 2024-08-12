@@ -161,11 +161,11 @@
                 }}><i class="bx bx-pencil"></i></button
               >
             {:else if set.state === "editing"}
-              <button class="square bg-button" on:click={() => updateSetting(i)}
+              <button class="square bg-cook" on:click={() => updateSetting(i)}
                 ><i class="bx bx-check"></i></button
               >
             {:else}
-              <button class="square bg-button" disabled
+              <button class="square bg-cook" disabled
                 ><i class="bx bx-loader-alt animate-spin"></i></button
               >
             {/if}

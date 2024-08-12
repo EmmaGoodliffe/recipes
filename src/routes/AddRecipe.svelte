@@ -26,7 +26,7 @@
   });
 </script>
 
-<button class="long bg-button" on:click={() => (show = true)}
+<button class="long bg-file" on:click={() => (show = true)}
   ><i class="bx bx-plus align-middle"></i> <span class="">recipe</span></button
 >
 <Dialog bind:show title="add recipe" onClose={onCancel}>

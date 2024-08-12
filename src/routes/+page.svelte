@@ -23,7 +23,7 @@
 {#if $user === undefined}
   <LoaderText text="authenticating..." />
 {:else if $user === null}
-  <a href="/account" class="long bg-button text-center"
+  <a href="/account" class="long bg-cook text-center"
     ><i class="bx bx-user"></i> log in</a
   >
 {:else if $toBeEdited}

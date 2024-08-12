@@ -360,7 +360,7 @@
           <label for="mins" class="text-sm italic">minutes</label>
         </div>
       </div>
-      <button type="submit" class="long bg-button"
+      <button type="submit" class="long bg-cook"
         ><i class="bx bx-file align-middle"></i> commit edits</button
       >
     </form>
@@ -434,7 +434,7 @@
           />
         {/if}
       </div>
-      <button type="submit" class="long bg-button"
+      <button type="submit" class="long bg-cook"
         ><i class="bx bx-file align-middle"></i> commit edits</button
       >
     </form>

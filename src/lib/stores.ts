@@ -56,6 +56,8 @@ export const updateRecipes = async () => {
 
 export const user = writable<User | null | undefined>(undefined);
 
+export const shoppingList = writable<{ value: string; bought: boolean }[]>([]);
+
 export const initAll = () => {
   updateRecipes(); // not awaited
   const ends = [

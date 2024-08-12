@@ -37,8 +37,11 @@ export default {
         "light-bg": palette.asparagus.grey[1],
         "dark-bg": palette.asparagus.black,
         text: palette.mustard.white,
+        "dark-text": palette.asparagus[2],
         input: palette.asparagus.grey[0],
-        button: palette.asparagus[1],
+        file: palette.asparagus[1],
+        cook: palette.asparagus[0],
+        shop: palette.mustard[1],
       },
       screens: {
         xs: "320px",

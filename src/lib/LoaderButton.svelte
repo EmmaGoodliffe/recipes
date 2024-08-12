@@ -3,7 +3,7 @@
   import { sineInOut } from "svelte/easing";
   import { tweened } from "svelte/motion";
 
-  export let className = "long bg-button";
+  export let className = "long bg-file";
   export let loading = false;
   export let disabled = false;
   export let onClick: (e: Event) => void = () => {};

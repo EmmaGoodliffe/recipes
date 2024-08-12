@@ -5,7 +5,12 @@
   import type { Writable } from "svelte/store";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
-  import { toBeCooked, toBeEdited, toBePreviewed } from "$lib/stores";
+  import {
+    shoppingList,
+    toBeCooked,
+    toBeEdited,
+    toBePreviewed,
+  } from "$lib/stores";
   import { toArray } from "$lib/util";
 
   export let recipes: RecipeVersions[] | undefined;
@@ -58,30 +63,27 @@
   <Dialog bind:show={showPreview} title="preview recipe">
     <ViewRecipe recipeVersions={$toBePreviewed} concise={true} />
     <div slot="footer">
-      <!-- <LoaderButton
-        className="long bg-input"
-        {loading}
-        onClick={async () => {
-          loading = true;
-          await toastWrap(deleteRecipe)(auth, db, $toBePreviewed?.["@id"]);
-          loading = false;
-          toBePreviewed.set(undefined);
-          showPreview = false;
-          return updateRecipes();
-        }}
-      >
-        <i class="bx bx-trash align-middle"></i> <span class="">delete</span>
-      </LoaderButton> -->
       <button
-        class="long bg-input"
+        class="long bg-input inline-block"
         on:click={() => toBeEdited.set($toBePreviewed)}
         ><i class="bx bx-pencil"></i> edit</button
       >
       <a
         href="/cook"
-        class="long bg-button block text-center"
+        class="long bg-cook inline-block text-center"
         on:click={() => toBeCooked.set($toBePreviewed)}
         ><i class="bx bxs-flask"></i> cook</a
+      >
+      <a
+        href="/shop"
+        class="long bg-shop inline-block text-center"
+        on:click={() =>
+          shoppingList.update(list => [
+            ...list,
+            ...toArray($toBePreviewed.edited?.recipeIngredient)
+              .map(ing => (ing ? { value: ing, bought: false } : undefined))
+              .filter(ing => ing !== undefined),
+          ])}><i class="bx bxs-basket"></i> shop</a
       >
     </div>
   </Dialog>
