@@ -150,9 +150,17 @@
         ing => ing !== undefined,
       );
       const scaledIngredients = scaleIngredients(ingredients, scaling);
-      toBeCooked.update(rec =>
-        rec ? { ...rec, recipeIngredient: scaledIngredients } : undefined,
-      );
+      toBeCooked.update(rec => {
+        const original = rec?.original;
+        if (!original) {
+          return rec;
+        }
+        const edited = rec?.edited ?? original;
+        return {
+          original,
+          edited: { ...edited, recipeIngredient: scaledIngredients },
+        };
+      });
       scaleShow = false;
     }}
   >
