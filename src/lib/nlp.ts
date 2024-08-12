@@ -68,7 +68,7 @@ const splitCommas = (tokens: Token[]) => {
   return result;
 };
 
-const parseIngredient = (ing: string | undefined) => {
+export const parseIngredient = (ing: string | undefined) => {
   if (!ing) {
     return {
       number: null,
@@ -150,21 +150,24 @@ const scale = (x: string | null, scaling: number) => {
   return `${scaledMin}-${scaledMax}`;
 };
 
-const toIngredient = ({
-  number,
-  unit,
-  item,
-  description,
-}: Pick<
-  ReturnType<typeof parseIngredient>,
-  "number" | "unit" | "item" | "description"
->) => {
+export const toIngredient = (
+  {
+    number,
+    unit,
+    item,
+    description,
+  }: Pick<
+    ReturnType<typeof parseIngredient>,
+    "number" | "unit" | "item" | "description"
+  >,
+  includeDescription = true,
+) => {
   const n = number ?? "";
   const spaceBeforeUnit = unit === "g" ? "" : " ";
   const u = unit ? spaceBeforeUnit + unit + " " : " ";
   const i = item.map(({ value }) => value).join(" ");
   const desc = description.map(({ value }) => value).join(" ");
-  const d = desc ? `, ${desc}` : "";
+  const d = includeDescription && desc ? `, ${desc}` : "";
   return (n + u + i + d).trim();
 };
 
@@ -172,4 +175,4 @@ export const scaleIngredients = (ingredients: string[], scaling: number) =>
   ingredients
     .map(parseIngredient)
     .map(ing => ({ ...ing, number: scale(ing.number, scaling) }))
-    .map(toIngredient);
+    .map(ing => toIngredient(ing));

@@ -10,6 +10,7 @@
     toBeCooked,
     toBeEdited,
     toBePreviewed,
+    type ShoppingListItem,
   } from "$lib/stores";
   import { toArray } from "$lib/util";
 
@@ -17,6 +18,14 @@
   export let selectStores: Writable<RecipeVersions | undefined>[];
 
   let showPreview = false;
+
+  const ingredientToShoppingListItem = (ing: string | undefined) => {
+    const id = $toBePreviewed?.original["@id"];
+    const source: ShoppingListItem["source"] = id
+      ? { type: "recipe", id }
+      : { type: "unknown" };
+    return ing ? { value: ing, bought: false, source } : undefined;
+  };
 </script>
 
 <div
@@ -81,7 +90,7 @@
           shoppingList.update(list => [
             ...list,
             ...toArray($toBePreviewed.edited?.recipeIngredient)
-              .map(ing => (ing ? { value: ing, bought: false } : undefined))
+              .map(ingredientToShoppingListItem)
               .filter(ing => ing !== undefined),
           ])}><i class="bx bxs-basket"></i> shop</a
       >
