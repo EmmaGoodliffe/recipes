@@ -130,6 +130,23 @@ const addByPath = (obj: unknown, path: string, value: unknown) => {
   }
 };
 
+const deleteByPath = (obj: unknown, path: string) => {
+  const paths = path.split(".");
+  const parentPath = paths.slice(0, -1).join(".");
+  const childPath = paths.slice(-1)[0];
+  const x = getByPath(obj, parentPath);
+  const i = parseInt(childPath);
+  if (Array.isArray(x) && !isNaN(i)) {
+    const before = x.slice(0, i);
+    const after = x.slice(i + 1);
+    return setByPath(obj, parentPath, [...before, ...after]);
+  } else {
+    throw new Error(
+      `can't delete index ${i} of ${x} at path ${path} of ${obj}`,
+    );
+  }
+};
+
 type Get<T extends object> = <K extends string & keyof T>(key: K) => T[K];
 
 export class Editable<T extends object> implements Readable<Get<T>> {
@@ -161,8 +178,7 @@ export class Editable<T extends object> implements Readable<Get<T>> {
       keys.map(k => this.data[k]),
     ) as Partial<T>;
   }
-  setByPath(path: string, value: unknown) {
-    const x = setByPath(this.data, path, value);
+  setWhole(x: unknown) {
     if (isRecord(x) && this.isT(x)) {
       this.data = x;
       this.subscribers.forEach(s => s(k => this.get(k)));
@@ -170,14 +186,14 @@ export class Editable<T extends object> implements Readable<Get<T>> {
     }
     throw new Error(`couldn't set data to ${x} of type ${typeof x}`);
   }
+  setByPath(path: string, value: unknown) {
+    return this.setWhole(setByPath(this.data, path, value));
+  }
   addByPath(path: string, value: unknown) {
-    const x = addByPath(this.data, path, value);
-    if (isRecord(x) && this.isT(x)) {
-      this.data = x;
-      this.subscribers.forEach(s => s(k => this.get(k)));
-      return this.data;
-    }
-    throw new Error(`couldn't set data to ${x} of type ${typeof x}`);
+    return this.setWhole(addByPath(this.data, path, value));
+  }
+  deleteByPath(path: string) {
+    return this.setWhole(deleteByPath(this.data, path));
   }
   subscribe(run: (value: Get<T>) => void): () => void {
     run(k => this.get(k));

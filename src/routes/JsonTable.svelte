@@ -7,11 +7,17 @@
   export let pathPrefix = "";
   export let editPath: string | undefined = undefined;
   export let onEdit: (
-    edits: {
-      mode: "overwrite" | "add";
-      path: string;
-      value: unknown;
-    }[],
+    edits: (
+      | {
+          mode: "overwrite" | "add";
+          path: string;
+          value: unknown;
+        }
+      | {
+          mode: "delete";
+          path: string;
+        }
+    )[],
   ) => void;
 
   let value = Array.isArray(obj) ? "" : `${obj}`;
@@ -71,11 +77,19 @@
             ></svelte:self>
             {#if Array.isArray(obj)}
               <!-- TODO: allow reordering of arrays -->
-              <button
-                class="-my-6 square bg-button self-center z-10 opacity-0 group-hover:opacity-100 transition-all"
-                on:click={() => (addPath = `${pathPrefix}.${key}`)}
-                ><i class="bx bx-plus align-middle"></i></button
-              >
+              <div class="flex self-center z-10">
+                <button
+                  class="mx-2 -my-6 square bg-input opacity-0 group-hover:opacity-100 transition-all"
+                  on:click={() =>
+                    onEdit([{ mode: "delete", path: `${pathPrefix}.${key}` }])}
+                  ><i class="bx bx-trash align-middle"></i></button
+                >
+                <button
+                  class="mx-2 -my-6 square bg-button opacity-0 group-hover:opacity-100 transition-all"
+                  on:click={() => (addPath = `${pathPrefix}.${key}`)}
+                  ><i class="bx bx-plus align-middle"></i></button
+                >
+              </div>
               {#if `${pathPrefix}.${key}` === addPath}
                 {#if typeof obj[0] === "string"}
                   <input

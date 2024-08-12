@@ -61,13 +61,18 @@
   };
 
   const onEdit = (
-    edits: { mode: "overwrite" | "add"; path: string; value: unknown }[],
+    edits: (
+      | { mode: "overwrite" | "add"; path: string; value: unknown }
+      | { mode: "delete"; path: string }
+    )[],
   ) => {
     for (const edit of edits) {
       if (edit.mode === "overwrite") {
         rec.setByPath(edit.path, edit.value);
       } else if (edit.mode === "add") {
         rec.addByPath(edit.path, edit.value);
+      } else if (edit.mode === "delete") {
+        rec.deleteByPath(edit.path);
       } else {
         throw new Error(`unknown edit mode ${edit.mode}`);
       }
