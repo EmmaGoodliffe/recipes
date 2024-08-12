@@ -49,6 +49,7 @@
 </svelte:head>
 
 {#if !$toBeCooked}
+  <h2>Select a recipe to cook it.</h2>
   <Gallery recipes={$recipes?.slice(0, 4)} selectStores={[toBeCooked]} />
 {:else}
   {#if $toBeCooked.edited !== undefined}

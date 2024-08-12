@@ -6,6 +6,10 @@ h1 {
   @apply my-6 text-2xl text-text text-center font-bold tracking-wide;
 }
 
+h2 {
+  @apply -mt-4 mb-6 text-center opacity-50 font-semibold;
+}
+
 button.square {
   @apply w-8 h-8 rounded inline-flex justify-center items-center;
 }

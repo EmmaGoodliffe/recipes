@@ -27,9 +27,7 @@
     ><i class="bx bx-user"></i> log in</a
   >
 {:else if $toBeEdited}
-  <p class="-mt-4 mb-6 text-center opacity-50 font-semibold">
-    Tap on a part of the recipe to change it.
-  </p>
+  <h2>Tap on a part of the recipe to change it.</h2>
   <ViewRecipe recipeVersions={$toBeEdited} editable={true} />
 {:else}
   <AddRecipe />

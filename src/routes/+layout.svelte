@@ -8,13 +8,14 @@
   import { toBeEdited } from "$lib/stores";
 
   const pageIcons = [
-    { url: "/", icon: "home" },
+    { url: "/", icon: "home", onClick: () => toBeEdited.set(undefined) },
     { url: "/cook", icon: "flask", emptySvg: emptyFlask },
+    { url: "/shop", icon: "basket" },
     { url: "/account", icon: "user" },
   ];
   const pages = Object.values(pageIcons);
   let selectedPage = "";
-  let direction: "left" | "right" = "right";
+  let direction: "l" | "r" = "r";
 
   const isAlreadySorted = (arr: number[]) =>
     arr.join(",") === [...arr].sort().join(",");
@@ -32,7 +33,7 @@
     if (!fromIndex || !toIndex) {
       throw new Error(`don't know the routes ${fromRoute} -> ${toRoute}`);
     }
-    return isAlreadySorted([fromIndex.i, toIndex.i]) ? "right" : "left";
+    return isAlreadySorted([fromIndex.i, toIndex.i]) ? "r" : "l";
   };
 
   onMount(() => {
@@ -50,13 +51,15 @@
 <!-- TODO: fix direction -->
 <div class="overflow-x-hidden">
   {#if selectedPage === "/" && $toBeEdited}
-    <h1 in:fly={{ x: direction === "left" ? -50 : 50 }}>edit recipe</h1>
+    <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>edit recipe</h1>
   {:else if selectedPage === "/"}
-    <h1 in:fly={{ x: direction === "left" ? -50 : 50 }}>recipes</h1>
+    <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>recipes</h1>
   {:else if selectedPage === "/cook"}
-    <h1 in:fly={{ x: direction === "left" ? -50 : 50 }}>cook</h1>
+    <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>cook</h1>
+  {:else if selectedPage === "/shop"}
+    <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>shop</h1>
   {:else if selectedPage === "/account"}
-    <h1 in:fly={{ x: direction === "left" ? -50 : 50 }}>account</h1>
+    <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>account</h1>
   {/if}
 </div>
 <main class="w-11/12 max-w-5xl mx-auto pb-12 flex flex-col text-text">
@@ -67,7 +70,7 @@
 <footer class="fixed bottom-0 w-full py-2 bg-dark-bg text-3xl">
   <nav class="flex justify-evenly">
     {#each pages as p}
-      <a href={p.url}>
+      <a href={p.url} on:click={p.onClick ?? (() => {})}>
         {#if p.url !== selectedPage && p.emptySvg}
           <img src={p.emptySvg} alt="flask" class="h-[30px] mt-[0.125rem]" />
         {:else}
