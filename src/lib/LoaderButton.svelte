@@ -5,6 +5,7 @@
 
   export let className = "long bg-button";
   export let loading = false;
+  export let disabled = false;
   export let onClick: (e: Event) => void = () => {};
   export let buttonType: "button" | "submit" = "button";
 
@@ -25,8 +26,8 @@
 
 <button
   type={buttonType}
-  class={className}
-  disabled={loading}
+  class="{className} disabled:opacity-50"
+  disabled={loading || disabled}
   on:click={e => {
     x.update(v => v + 1);
     onClick(e);

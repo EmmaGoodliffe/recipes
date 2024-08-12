@@ -4,7 +4,7 @@
   import JsonTable from "./JsonTable.svelte";
   import RecipeStats from "./RecipeStats.svelte";
   import type { Recipe, RecipeVersions } from "$lib/types";
-  import { saveEditedRecipe } from "$lib/db";
+  import { deleteEditedRecipe, saveEditedRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { Editable, toastWrap, toBeEdited } from "$lib/stores";
@@ -23,6 +23,7 @@
 
   export let recipeVersions: RecipeVersions;
   export let editable = false;
+  export let concise = false;
 
   let editKey: (string & keyof Recipe) | undefined;
   let unread: Partial<Recipe> = {};
@@ -31,7 +32,8 @@
   let hValue = "";
   let mValue = "";
   let longInput = false;
-  let loading = false;
+  let saveLoading = false;
+  let resetLoading = false;
   let scale = true;
   let version: "original" | "edited" = "edited";
 
@@ -87,34 +89,73 @@
   );
 </script>
 
+<!-- MENU -->
 {#if editable}
   <button class="long bg-input" on:click={() => toBeEdited.set(undefined)}
     ><i class="bx bx-chevron-left align-middle"></i> cancel</button
   >
   <LoaderButton
-    {loading}
+    loading={saveLoading}
+    disabled={version === "original" || resetLoading}
     onClick={async () => {
-      loading = true;
+      saveLoading = true;
       const { auth, db } = getFb();
-      await toastWrap(saveEditedRecipe)(auth, db, rec.data["@id"], rec.data);
-      loading = false;
+      await toastWrap(saveEditedRecipe)(
+        auth,
+        db,
+        recipeVersions.original["@id"],
+        rec.data,
+      );
+      // TODO: reload recipe
+      saveLoading = false;
     }}><i class="bx bx-save align-middle"></i> save</LoaderButton
   >
+  <LoaderButton
+    className="long bg-input"
+    loading={resetLoading}
+    disabled={version === "original" || saveLoading}
+    onClick={async () => {
+      resetLoading = true;
+      const { auth, db } = getFb();
+      await toastWrap(deleteEditedRecipe)(
+        auth,
+        db,
+        recipeVersions.original["@id"],
+      );
+      resetLoading = false;
+    }}
+    ><i class="bx bx-reset align-middle"></i> revert to original version</LoaderButton
+  >
+{/if}
+<!-- VERSION -->
+{#if recipeVersions.edited !== undefined}
+  <div class="group text-left">
+    <label for="version" class="focal">version</label>
+    <select name="version" class="long" id="version" bind:value={version}>
+      <option value="original">original</option>
+      <option value="edited" disabled={recipeVersions.edited === undefined}
+        >edited</option
+      >
+    </select>
+  </div>
 {/if}
 <article class="px-4 pb-4">
   <header class="mx-2 py-4 text-center">
     <div class="text-lg">
+      <!-- VIEW: name -->
       <button
         class="font-bold"
         disabled={!editable}
         on:click={() => edit("name")}>{$rec("name")}</button
       >
+      <!-- VIEW: url -->
       {#if $rec("url")}
         <a href={$rec("url")} class="hover:underline" target="_blank"
           >(&nearr;)</a
         >
       {/if}
     </div>
+    <!-- VIEW: author -->
     <div>
       <span class="opacity-50 italic">by</span>
       <button disabled={!editable} on:click={() => edit("author")}
@@ -122,6 +163,7 @@
       >
     </div>
   </header>
+  <!-- VIEW: image -->
   {#if $rec("image")?.url}
     <div class="max-w-2xl mx-auto">
       <button
@@ -137,6 +179,7 @@
       </button>
     </div>
   {/if}
+  <!-- VIEW: publisher -->
   <div class="flex justify-center items-center">
     {#if pub}
       <a href={pub.url} target="_blank">
@@ -148,6 +191,7 @@
         />
       </a>
     {/if}
+    <!-- VIEW: history -->
     {#if $rec("dateModified")}
       <div class="mx-2 text-sm text-center opacity-50">
         <span class="italic">edited in</span>
@@ -160,9 +204,13 @@
       </div>
     {/if}
   </div>
-  <button class="my-2 px-2 py-2 text-left" on:click={() => edit("description")}
-    >{$rec("description") ?? ""}</button
+  <!-- VIEW: description -->
+  <button
+    class="my-2 px-2 py-2 text-left"
+    disabled={!editable}
+    on:click={() => edit("description")}>{$rec("description") ?? ""}</button
   >
+  <!-- VIEW: stats -->
   <RecipeStats
     prepTime={$rec("prepTime")}
     cookTime={$rec("cookTime")}
@@ -181,60 +229,69 @@
       },
     }}
   />
-  <div class="px-2">
-    <div class="pt-4 pb-1 font-bold">
-      Ingredients <button
-        class="mx-2 square bg-input"
-        class:invisible={!editable}
-        disabled={!editable}
-        on:click={() => edit("recipeIngredient")}
-        ><i class="bx bx-pencil"></i></button
-      >
+  {#if !concise}
+    <!-- VIEW: ingredients -->
+    <div class="px-2">
+      <div class="pt-4 pb-1 font-bold">
+        Ingredients <button
+          class="mx-2 square bg-input"
+          class:invisible={!editable}
+          disabled={!editable}
+          on:click={() => edit("recipeIngredient")}
+          ><i class="bx bx-pencil"></i></button
+        >
+      </div>
+      <ul>
+        {#each toArray($rec("recipeIngredient")) as ing}
+          <li>{ing}</li>
+        {/each}
+      </ul>
+      <!-- VIEW: instructions -->
+      <div class="pt-4 pb-1 font-bold">
+        Instructions <button
+          class="mx-2 square bg-input"
+          class:invisible={!editable}
+          disabled={!editable}
+          on:click={() => edit("recipeInstructions")}
+          ><i class="bx bx-pencil"></i></button
+        >
+      </div>
+      <!-- VIEW: steps -->
+      <ol class="list-inside list-decimal">
+        {#each toArray($rec("recipeInstructions")) as step}
+          <li class="truncate">{step?.text ?? "?"}</li>
+        {/each}
+      </ol>
+      <!-- VIEW: nutrition -->
+      <div class="pt-4 pb-1 font-bold">
+        Nutrition info <button
+          class="mx-2 square bg-input"
+          class:invisible={!editable}
+          disabled={!editable}
+          on:click={() => edit("nutrition")}
+          ><i class="bx bx-pencil"></i></button
+        >
+        <!-- TODO: scale nutrition info -->
+      </div>
+      <ul>
+        {#each Object.values($rec("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
+          <li>{info}</li>
+        {/each}
+      </ul>
     </div>
-    <ul>
-      {#each toArray($rec("recipeIngredient")) as ing}
-        <li>{ing}</li>
-      {/each}
-    </ul>
-    <div class="pt-4 pb-1 font-bold">
-      Instructions <button
-        class="mx-2 square bg-input"
-        class:invisible={!editable}
-        disabled={!editable}
-        on:click={() => edit("recipeInstructions")}
-        ><i class="bx bx-pencil"></i></button
-      >
-    </div>
-    <ol class="list-inside list-decimal">
-      {#each toArray($rec("recipeInstructions")) as step}
-        <li class="truncate">{step?.text ?? "?"}</li>
-      {/each}
-    </ol>
-    <div class="pt-4 pb-1 font-bold">
-      Nutrition info <button
-        class="mx-2 square bg-input"
-        class:invisible={!editable}
-        disabled={!editable}
-        on:click={() => edit("nutrition")}><i class="bx bx-pencil"></i></button
-      >
-    </div>
-    <ul>
-      {#each Object.values($rec("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
-        <li>{info}</li>
-      {/each}
-    </ul>
-  </div>
-  <JsonTable
-    obj={unread}
-    {editable}
-    onEdit={edits =>
-      onEdit(
-        edits.map(e => ({
-          ...e,
-          path: e.path.slice(1), // remove leading dot
-        })),
-      )}
-  />
+    <!-- VIEW: other -->
+    <JsonTable
+      obj={unread}
+      {editable}
+      onEdit={edits =>
+        onEdit(
+          edits.map(e => ({
+            ...e,
+            path: e.path.slice(1), // remove leading dot
+          })),
+        )}
+    />
+  {/if}
 </article>
 <Dialog
   show={editable && editKey !== undefined}
@@ -242,6 +299,7 @@
   onClose={() => (editKey = undefined)}
 >
   {#if editKey?.endsWith("Time")}
+    <!-- EDIT: times -->
     <form
       on:submit={e => {
         e.preventDefault();
@@ -285,6 +343,7 @@
       >
     </form>
   {:else if typeof editObj === "string" || typeof editObj === "number" || editKey === "image"}
+    <!-- EDIT: values -->
     <form
       on:submit={async e => {
         e.preventDefault();
@@ -358,6 +417,7 @@
       >
     </form>
   {:else if typeof editObj === "object"}
+    <!-- EDIT: objects -->
     <p class="text-center opacity-50 font-semibold">
       Tap on a property to change it.
     </p>

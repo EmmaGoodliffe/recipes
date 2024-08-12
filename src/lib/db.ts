@@ -124,3 +124,20 @@ export const saveEditedRecipe = async (
     ),
   });
 };
+
+export const deleteEditedRecipe = async (
+  auth_: Auth | undefined,
+  db_: Firestore | undefined,
+  id: string,
+) => {
+  const { auth, db } = checkAuthAndDb(auth_, db_);
+  const uid = checkUid(auth);
+  const ref = doc(db, "users", uid);
+  const userDoc = await getDoc(ref);
+  const { recipes } = toUserData(userDoc.data() ?? {});
+  return safeUpdateDoc(ref, {
+    recipes: recipes.map(r =>
+      r.original["@id"] === id ? { ...r, edited: undefined } : r,
+    ),
+  });
+};

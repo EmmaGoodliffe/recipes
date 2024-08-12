@@ -56,7 +56,7 @@
 </div>
 {#if $toBePreviewed}
   <Dialog bind:show={showPreview} title="preview recipe">
-    <ViewRecipe recipeVersions={$toBePreviewed} />
+    <ViewRecipe recipeVersions={$toBePreviewed} concise={true} />
     <div slot="footer">
       <!-- <LoaderButton
         className="long bg-input"
