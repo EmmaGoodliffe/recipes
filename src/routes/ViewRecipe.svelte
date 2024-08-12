@@ -361,7 +361,7 @@
         </div>
       </div>
       <button type="submit" class="long bg-button"
-        ><i class="bx bx-check"></i> confirm edits</button
+        ><i class="bx bx-file align-middle"></i> commit edits</button
       >
     </form>
   {:else if typeof editObj === "string" || typeof editObj === "number" || editKey === "image"}
@@ -435,7 +435,7 @@
         {/if}
       </div>
       <button type="submit" class="long bg-button"
-        ><i class="bx bx-check"></i> confirm edits</button
+        ><i class="bx bx-file align-middle"></i> commit edits</button
       >
     </form>
   {:else if typeof editObj === "object"}
