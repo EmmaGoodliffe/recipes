@@ -7,7 +7,13 @@
   import { deleteEditedRecipe, saveEditedRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { Editable, toastWrap, toBeEdited, updateRecipes } from "$lib/stores";
+  import {
+    Editable,
+    toastWrap,
+    toBeEdited,
+    updateRecipes,
+    user,
+  } from "$lib/stores";
   import { isRecipe } from "$lib/types";
   import {
     addDurations,
@@ -18,6 +24,8 @@
     parseDur,
     toArray,
     toDur,
+    hasRequiredKeys,
+    deepUnique,
   } from "$lib/util";
   import { scaleIngredients } from "$lib/nlp";
 
@@ -36,6 +44,7 @@
   let resetLoading = false;
   let scale = true;
   let version: "original" | "edited" = "edited";
+  let authorCredit: { name: string; url?: string } | undefined;
 
   const edit = async (key: string & keyof Recipe) => {
     if (key === "image") {
@@ -70,6 +79,8 @@
     isRecipe,
   );
   $: disabled = !(editable && version === "edited");
+  $: name = $user?.displayName;
+  $: authorCredit = name ? { name } : undefined;
   $: authors = toArray($rec("author"));
   $: authorNames = authors.length
     ? authors.map(a => a?.name ?? "?").join(", ")
@@ -100,13 +111,21 @@
     disabled={version === "original" || resetLoading}
     onClick={async () => {
       saveLoading = true;
+      const existentAuthors = authors
+        .filter(a => a !== undefined)
+        .filter(a => hasRequiredKeys(a, ["name"]));
+      const data = {
+        ...rec.data,
+        dateModified: new Date().toISOString(),
+        author: deepUnique([...existentAuthors, ...toArray(authorCredit)]),
+      };
+      recipeVersions.edited = data;
       const { auth, db } = getFb();
-      recipeVersions.edited = rec.data;
       await toastWrap(saveEditedRecipe)(
         auth,
         db,
         recipeVersions.original["@id"],
-        rec.data,
+        data,
       );
       saveLoading = false;
       updateRecipes(); // not awaited
@@ -187,13 +206,18 @@
     <!-- VIEW: history -->
     {#if $rec("dateModified")}
       <div class="mx-2 text-sm text-center opacity-50">
-        <span class="italic">edited in</span>
+        <span class="italic">published in</span>
+        <abbr
+          title={dateToText($rec("datePublished"))?.full}
+          class="underline-offset-2"
+          >{dateToText($rec("datePublished"))?.month}</abbr
+        >
+        <span class="italic"> and edited in</span>
         <abbr
           title={dateToText($rec("dateModified"))?.full}
           class="underline-offset-2"
           >{dateToText($rec("dateModified"))?.month}</abbr
         >
-        <!-- TODO: version history -->
       </div>
     {/if}
   </div>
@@ -414,6 +438,11 @@
     <p class="text-center opacity-50 font-semibold">
       Tap on a property to change it.
     </p>
+    {#if editKey === "author"}
+      <p class="text-center opacity-50 font-semibold">
+        You will be credited as an author automatically when you save.
+      </p>
+    {/if}
     <div class="w-[fit-content] mx-auto">
       <JsonTable obj={editObj} editable={true} pathPrefix={editKey} {onEdit} />
     </div>

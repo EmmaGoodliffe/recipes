@@ -23,6 +23,16 @@ export const keyValuesToObj = <K extends string, V>(
 const overwrite = (x: string, overs: Record<string, string>) =>
   getKeys(overs).includes(x) ? overs[x] : x;
 
+const areDeepEqual = (a: unknown, b: unknown): boolean => {
+  if (a && typeof a === "object" && b && typeof b === "object") {
+    if (getKeys(a).length !== getKeys(b).length) {
+      return false;
+    }
+    return getKeys(a).every(k => areDeepEqual(a[k], b[k]));
+  }
+  return a === b;
+};
+
 export const unique = <T>(items: T[]) => Array.from(new Set(items));
 
 export const uniqueByKey = <
@@ -34,6 +44,16 @@ export const uniqueByKey = <
 ) => {
   const uniqueValues = unique(items.map(i => i[key]));
   return uniqueValues.map(v => items.filter(i => i[key] === v)[0]);
+};
+
+export const deepUnique = <T>(items: T[]) => {
+  const result: T[] = [];
+  for (const item of items) {
+    if (result.every(x => !areDeepEqual(x, item))) {
+      result.push(item);
+    }
+  }
+  return result;
 };
 
 export const overlap = <T>(a: T[], b: T[]) => a.filter(x => b.includes(x));
@@ -173,3 +193,8 @@ export const omit = <T extends object, K extends string & keyof T>(
   }
   return result as Omit<T, K>;
 };
+
+export const hasRequiredKeys = <T extends object, K extends string & keyof T>(
+  obj: T,
+  keys: K[],
+): obj is T & Required<Pick<T, K>> => keys.every(k => obj[k] !== undefined);
