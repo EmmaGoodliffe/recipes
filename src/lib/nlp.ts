@@ -26,8 +26,12 @@ type Token = ReturnType<typeof nlpTokens>[number];
 const lemmas = (tokens: Token[]) =>
   unique(tokens.filter(t => t.pos === "NOUN").map(t => t.lemma));
 
-const doesInclude = <T extends string[]>(arr: T, x: string): x is T[number] =>
-  arr.includes(x);
+const doesInclude = <T extends readonly string[]>(
+  arr: T,
+  x: string,
+): x is T[number] => arr.includes(x);
+
+export const UNITS = ["g", "tbsp", "tsp"] as const;
 
 const getQuantity = (tokens: Token[]) => {
   const number =
@@ -37,7 +41,7 @@ const getQuantity = (tokens: Token[]) => {
   const unit =
     number !== null &&
     tokens[1].pos === "NOUN" &&
-    doesInclude(["g", "tbsp", "tsp"] as const, tokens[1].value)
+    doesInclude(UNITS, tokens[1].value)
       ? tokens[1].value
       : null;
   const i = number === null ? 0 : unit === null ? 1 : 2;

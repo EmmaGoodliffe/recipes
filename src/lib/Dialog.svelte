@@ -31,7 +31,7 @@
 >
   {#if show}
     <div transition:fly={{ y: 20 }}>
-      <header class="px-4 py-2 flex justify-between items-start mb-4 text-lg">
+      <header class="sticky top-0 px-4 py-2 flex justify-between items-start mb-4 text-lg">
         <span class="font-bold pr-6">{title}</span>
         <button
           aria-label="Close"
@@ -46,7 +46,7 @@
       <main class="max-h-[60vh] px-4 pb-2 overflow-auto">
         <slot />
       </main>
-      <footer>
+      <footer class="sticky bottom-0">
         <slot name="footer"></slot>
       </footer>
     </div>

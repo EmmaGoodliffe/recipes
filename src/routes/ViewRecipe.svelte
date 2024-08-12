@@ -413,15 +413,14 @@
             bind:value={inputValue}
             bind:this={input}
           />
-          <div class="flex align-items">
+          <div class="flex">
             <input
               type="checkbox"
               name="scale"
-              class="mr-2"
               id="scale"
               bind:checked={scale}
             />
-            <label for="scale">scale the ingredients too</label>
+            <label for="scale" class="font-semibold">scale the ingredients too</label>
           </div>
         {:else}
           <input

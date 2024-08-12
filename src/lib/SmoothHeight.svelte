@@ -8,7 +8,6 @@
   export let ease = false;
   export let duration = ease ? 600 : 200;
 
-  let outer: HTMLDivElement | undefined;
   let inner: HTMLDivElement | undefined;
   const h = tweened(0, { duration, easing: ease ? cubicOut : undefined });
 
@@ -25,11 +24,7 @@
   });
 </script>
 
-<div
-  class="overflow-hidden"
-  style="height: {$h + padding}px;"
-  bind:this={outer}
->
+<div class="overflow-hidden" style="height: {$h + padding}px;">
   <div bind:this={inner}>
     <slot />
   </div>
