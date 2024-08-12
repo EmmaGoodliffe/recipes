@@ -14,6 +14,7 @@
   // let truncateIngredients = true;
   let direction: "l" | "r" = "r";
   let instructionIndex = 0;
+  let version: "original" | "edited" = "edited";
   let scaleShow = false;
   let scaleValue = 0;
   let scaleInput: HTMLInputElement | undefined;
@@ -29,12 +30,10 @@
     return result;
   };
 
-  $: rec = $toBeCooked?.original;
+  $: rec = $toBeCooked ? $toBeCooked[version] : undefined;
   $: instructions = toArray(rec?.recipeInstructions);
   $: instructionText = instructions[instructionIndex]?.text;
-  $: ingredients = toArray(rec?.recipeIngredient).filter(
-    i => i !== undefined,
-  );
+  $: ingredients = toArray(rec?.recipeIngredient).filter(i => i !== undefined);
   $: matches = searchInstructionForIngredients(instructionText, ingredients);
   $: matchedIngredients = uniqueByKey("value", matches.ingredientMatches);
   $: unmatchedIngredients = ingredients.filter(
@@ -52,6 +51,22 @@
 {#if !$toBeCooked}
   <Gallery recipes={$recipes?.slice(0, 4)} selectStores={[toBeCooked]} />
 {:else}
+  {#if $toBeCooked.edited !== undefined}
+    <div class="group">
+      <label for="cook-version" class="focal">version</label>
+      <select
+        name="cook-version"
+        class="long"
+        id="cook-version"
+        bind:value={version}
+      >
+        <option value="original">original</option>
+        <option value="edited" disabled={$toBeCooked.edited === undefined}
+          >edited</option
+        >
+      </select>
+    </div>
+  {/if}
   <h1>{rec?.name}</h1>
   <RecipeStats
     prepTime={rec?.prepTime}
@@ -151,7 +166,9 @@
         bind:this={scaleInput}
       />
     </div>
-    <button type="submit" class="long bg-button"><i class="bx bx-math align-middle"></i> scale</button>
+    <button type="submit" class="long bg-button"
+      ><i class="bx bx-math align-middle"></i> scale</button
+    >
   </form>
 </Dialog>
 

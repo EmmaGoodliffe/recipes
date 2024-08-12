@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { toast } from "./stores";
 import { isRecipe, isRecord } from "./types";
-import { toArray } from "./util";
+import { omit, toArray } from "./util";
 import type { Recipe } from "./types";
 import type { Auth } from "firebase/auth";
 import type { DocumentReference, Firestore } from "firebase/firestore";
@@ -137,7 +137,7 @@ export const deleteEditedRecipe = async (
   const { recipes } = toUserData(userDoc.data() ?? {});
   return safeUpdateDoc(ref, {
     recipes: recipes.map(r =>
-      r.original["@id"] === id ? { ...r, edited: undefined } : r,
+      r.original["@id"] === id ? omit(r, ["edited"]) : r,
     ),
   });
 };

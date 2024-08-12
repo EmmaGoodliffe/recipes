@@ -45,6 +45,10 @@ export const recipes = writable<
   { original: Recipe; edited?: Recipe }[] | undefined
 >(undefined);
 
+export const toBePreviewed = writable<RecipeVersions | undefined>(undefined);
+export const toBeCooked = writable<RecipeVersions | undefined>(undefined);
+export const toBeEdited = writable<RecipeVersions | undefined>(undefined);
+
 export const updateRecipes = async () => {
   const { auth, db } = getFb();
   recipes.set((await getRecipes(auth, db)) ?? []);
@@ -64,10 +68,6 @@ export const initAll = () => {
   const endAll = () => ends.map(f => f());
   return endAll;
 };
-
-export const toBePreviewed = writable<RecipeVersions | undefined>(undefined);
-export const toBeCooked = writable<RecipeVersions | undefined>(undefined);
-export const toBeEdited = writable<RecipeVersions | undefined>(undefined);
 
 const isKey = <T extends object>(
   obj: T,

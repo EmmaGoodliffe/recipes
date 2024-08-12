@@ -157,3 +157,19 @@ export const doesEndWith = <T extends string, S extends string>(
   text: T,
   sub: S,
 ): text is T & ExtractEndsWith<T, S> => text.endsWith(sub);
+
+const doesInclude = <S, T extends S>(arr: T[], x: S): x is T & S =>
+  arr.includes(x as T);
+
+export const omit = <T extends object, K extends string & keyof T>(
+  obj: T,
+  keys: K[],
+) => {
+  const result: Partial<T> = {};
+  for (const k of getKeys(obj)) {
+    if (!doesInclude(keys, k)) {
+      result[k] = obj[k];
+    }
+  }
+  return result as Omit<T, K>;
+};

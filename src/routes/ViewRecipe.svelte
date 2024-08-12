@@ -7,7 +7,7 @@
   import { deleteEditedRecipe, saveEditedRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { Editable, toastWrap, toBeEdited } from "$lib/stores";
+  import { Editable, toastWrap, toBeEdited, updateRecipes } from "$lib/stores";
   import { isRecipe } from "$lib/types";
   import {
     addDurations,
@@ -69,6 +69,7 @@
     recipeVersions[version] ?? recipeVersions.original,
     isRecipe,
   );
+  $: disabled = !(editable && version === "edited");
   $: authors = toArray($rec("author"));
   $: authorNames = authors.length
     ? authors.map(a => a?.name ?? "?").join(", ")
@@ -100,14 +101,15 @@
     onClick={async () => {
       saveLoading = true;
       const { auth, db } = getFb();
+      recipeVersions.edited = rec.data;
       await toastWrap(saveEditedRecipe)(
         auth,
         db,
         recipeVersions.original["@id"],
         rec.data,
       );
-      // TODO: reload recipe
       saveLoading = false;
+      updateRecipes(); // not awaited
     }}><i class="bx bx-save align-middle"></i> save</LoaderButton
   >
   <LoaderButton
@@ -117,25 +119,24 @@
     onClick={async () => {
       resetLoading = true;
       const { auth, db } = getFb();
+      recipeVersions.edited = { ...recipeVersions.original };
+      version = "original";
       await toastWrap(deleteEditedRecipe)(
         auth,
         db,
         recipeVersions.original["@id"],
       );
       resetLoading = false;
+      updateRecipes(); // not awaited
     }}
     ><i class="bx bx-reset align-middle"></i> revert to original version</LoaderButton
   >
-{/if}
-<!-- VERSION -->
-{#if recipeVersions.edited !== undefined}
+  <!-- VERSION -->
   <div class="group text-left">
     <label for="version" class="focal">version</label>
     <select name="version" class="long" id="version" bind:value={version}>
       <option value="original">original</option>
-      <option value="edited" disabled={recipeVersions.edited === undefined}
-        >edited</option
-      >
+      <option value="edited">edited</option>
     </select>
   </div>
 {/if}
@@ -143,10 +144,8 @@
   <header class="mx-2 py-4 text-center">
     <div class="text-lg">
       <!-- VIEW: name -->
-      <button
-        class="font-bold"
-        disabled={!editable}
-        on:click={() => edit("name")}>{$rec("name")}</button
+      <button class="font-bold" {disabled} on:click={() => edit("name")}
+        >{$rec("name")}</button
       >
       <!-- VIEW: url -->
       {#if $rec("url")}
@@ -158,19 +157,13 @@
     <!-- VIEW: author -->
     <div>
       <span class="opacity-50 italic">by</span>
-      <button disabled={!editable} on:click={() => edit("author")}
-        >{authorNames}</button
-      >
+      <button {disabled} on:click={() => edit("author")}>{authorNames}</button>
     </div>
   </header>
   <!-- VIEW: image -->
   {#if $rec("image")?.url}
     <div class="max-w-2xl mx-auto">
-      <button
-        class="mx-auto block"
-        disabled={!editable}
-        on:click={() => edit("image")}
-      >
+      <button class="mx-auto block" {disabled} on:click={() => edit("image")}>
         <img
           src={$rec("image")?.url}
           alt={$rec("name")}
@@ -207,7 +200,7 @@
   <!-- VIEW: description -->
   <button
     class="my-2 px-2 py-2 text-left"
-    disabled={!editable}
+    {disabled}
     on:click={() => edit("description")}>{$rec("description") ?? ""}</button
   >
   <!-- VIEW: stats -->
@@ -217,9 +210,9 @@
     totalTime={$rec("totalTime")}
     recipeYield={$rec("recipeYield")}
     editing={{
-      timeEditable: editable,
+      timeEditable: !disabled,
       timeEdit: edit,
-      yieldEditable: editable,
+      yieldEditable: !disabled,
       yieldEdit: () => {
         if (editable) {
           edit("recipeYield");
@@ -235,8 +228,8 @@
       <div class="pt-4 pb-1 font-bold">
         Ingredients <button
           class="mx-2 square bg-input"
-          class:invisible={!editable}
-          disabled={!editable}
+          class:invisible={disabled}
+          {disabled}
           on:click={() => edit("recipeIngredient")}
           ><i class="bx bx-pencil"></i></button
         >
@@ -250,8 +243,8 @@
       <div class="pt-4 pb-1 font-bold">
         Instructions <button
           class="mx-2 square bg-input"
-          class:invisible={!editable}
-          disabled={!editable}
+          class:invisible={disabled}
+          {disabled}
           on:click={() => edit("recipeInstructions")}
           ><i class="bx bx-pencil"></i></button
         >
@@ -266,7 +259,7 @@
       <div class="pt-4 pb-1 font-bold">
         Nutrition info <button
           class="mx-2 square bg-input"
-          class:invisible={!editable}
+          class:invisible={disabled}
           disabled={!editable}
           on:click={() => edit("nutrition")}
           ><i class="bx bx-pencil"></i></button
