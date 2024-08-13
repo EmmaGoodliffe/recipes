@@ -11,7 +11,7 @@
     Editable,
     toastWrap,
     toBeEdited,
-    updateRecipes,
+    updateData,
     user,
   } from "$lib/stores";
   import { isRecipe } from "$lib/types";
@@ -133,7 +133,7 @@
         data,
       );
       saveLoading = false;
-      updateRecipes(); // not awaited
+      updateData(); // not awaited
     }}><i class="bx bx-save"></i> save</LoaderButton
   >
   <LoaderButton
@@ -151,7 +151,7 @@
         recipeVersions.original["@id"],
       );
       resetLoading = false;
-      updateRecipes(); // not awaited
+      updateData(); // not awaited
     }}><i class="bx bx-reset"></i> revert to original version</LoaderButton
   >
   <!-- VERSION -->

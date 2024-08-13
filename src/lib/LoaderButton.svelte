@@ -33,7 +33,7 @@
     onClick(e);
   }}
 >
-  <div class="px-4 pt-2 pb-1" class:opacity-50={loading}>
+  <div class="px-4 pt-2 pb-1 inline-flex items-center" class:opacity-50={loading}>
     <slot />
   </div>
   <div

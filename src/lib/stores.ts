@@ -1,9 +1,9 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { writable } from "svelte/store";
 import { getFb } from "../routes/fb";
-import { getRecipes } from "./db";
+import { getUserData } from "./db";
 import { isRecord } from "./types";
-import { getKeys, keyValuesToObj } from "./util";
+import { deepUnique, getKeys, keyValuesToObj } from "./util";
 import type { Func, Recipe, RecipeVersions } from "./types";
 import type { User } from "firebase/auth";
 import type { Readable } from "svelte/store";
@@ -41,25 +41,16 @@ export const toastWrap = <T extends Func>(func: T) => {
   };
 };
 
+export const user = writable<User | null | undefined>(undefined);
+
 export const recipes = writable<
   { original: Recipe; edited?: Recipe }[] | undefined
 >(undefined);
 
-export const toBePreviewed = writable<RecipeVersions | undefined>(undefined);
-export const toBeCooked = writable<RecipeVersions | undefined>(undefined);
-export const toBeEdited = writable<RecipeVersions | undefined>(undefined);
-
-export const updateRecipes = async () => {
-  const { auth, db } = getFb();
-  recipes.set((await getRecipes(auth, db)) ?? []);
-};
-
-export const user = writable<User | null | undefined>(undefined);
-
 export type ShoppingListItem = {
   value: string;
   source:
-    | { type: "recipe"; recipe: Recipe }
+    | { type: "recipe"; id: string }
     | { type: "unknown" }
     | { type: "custom" };
   bought: boolean;
@@ -69,13 +60,25 @@ export type ShoppingListItem = {
 
 export const shoppingList = writable<ShoppingListItem[][]>([]);
 
+export const toBePreviewed = writable<RecipeVersions | undefined>(undefined);
+export const toBeCooked = writable<RecipeVersions | undefined>(undefined);
+export const toBeEdited = writable<RecipeVersions | undefined>(undefined);
+
+export const updateData = async () => {
+  const { auth, db } = getFb();
+  const data = await getUserData(auth, db);
+  const dbList = data?.shopping_list ?? [];
+  recipes.set(data?.recipes ?? []);
+  shoppingList.update(l => [deepUnique([...l.flat(), ...dbList])]);
+};
+
 export const initAll = () => {
-  updateRecipes(); // not awaited
+  updateData(); // not awaited
   const ends = [
     initToasts(),
     onAuthStateChanged(getFb().auth, async u => {
       user.set(u);
-      await updateRecipes();
+      await updateData();
     }),
   ];
   const endAll = () => ends.map(f => f());

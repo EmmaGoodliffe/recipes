@@ -2,6 +2,7 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { toast } from "./stores";
 import { isRecipe, isRecord } from "./types";
 import { omit, toArray } from "./util";
+import type { ShoppingListItem } from "./stores";
 import type { Recipe } from "./types";
 import type { Auth } from "firebase/auth";
 import type { DocumentReference, Firestore } from "firebase/firestore";
@@ -32,7 +33,10 @@ const checkData = <T extends object>(data: T | undefined, desc = "data") => {
   return data;
 };
 
-type UserData = { recipes: { original: Recipe; edited?: Recipe }[] };
+type UserData = {
+  recipes: { original: Recipe; edited?: Recipe }[];
+  shopping_list: ShoppingListItem[];
+};
 
 const toUserData = (x: Record<string, unknown>): UserData => ({
   recipes: toArray(x.recipes)
@@ -43,6 +47,29 @@ const toUserData = (x: Record<string, unknown>): UserData => ({
         : null,
     )
     .filter(r => !!r),
+  shopping_list: toArray(x.shopping_list)
+    .filter(isRecord)
+    .map(({ value, source, bought, selected, deleted }) => {
+      if (typeof value !== "string") {
+        return undefined;
+      }
+      const type = isRecord(source) ? source.type : undefined;
+      const id = isRecord(source) ? source.id : undefined;
+      const s: ShoppingListItem["source"] =
+        type === "recipe" && typeof id === "string"
+          ? { type, id }
+          : type === "custom"
+            ? { type }
+            : { type: "unknown" };
+      return {
+        value,
+        source: s,
+        bought: bought ? true : false,
+        selected: selected ? true : false,
+        deleted: deleted ? true : false,
+      };
+    })
+    .filter(x => !!x),
 });
 
 const safeSetDoc = <C extends "users">(
@@ -55,7 +82,7 @@ const safeUpdateDoc = <C extends "users">(
   data: C extends "users" ? Partial<UserData> : never,
 ) => updateDoc(ref, data);
 
-export const getRecipes = async (
+export const getUserData = async (
   auth_: Auth | undefined,
   db_: Firestore | undefined,
 ) => {
@@ -66,8 +93,7 @@ export const getRecipes = async (
   }
   const ref = doc(db, "users", uid);
   const userDoc = await getDoc(ref);
-  const { recipes } = toUserData(userDoc.data() ?? {});
-  return recipes;
+  return toUserData(userDoc.data() ?? {});
 };
 
 export const addRecipe = async (
@@ -81,7 +107,10 @@ export const addRecipe = async (
   const ref = doc(db, "users", uid);
   const userDoc = await getDoc(ref);
   if (!userDoc.exists()) {
-    return safeSetDoc<"users">(ref, { recipes: [{ original: recipe }] });
+    return safeSetDoc<"users">(ref, {
+      recipes: [{ original: recipe }],
+      shopping_list: [],
+    });
   } else {
     const { recipes } = toUserData(userDoc.data());
     const ids = recipes.map(r => r.original["@id"]);
@@ -139,5 +168,18 @@ export const deleteEditedRecipe = async (
     recipes: recipes.map(r =>
       r.original["@id"] === id ? omit(r, ["edited"]) : r,
     ),
+  });
+};
+
+export const saveShoppingList = async (
+  auth_: Auth | undefined,
+  db_: Firestore | undefined,
+  shoppingList: ShoppingListItem[],
+) => {
+  const { auth, db } = checkAuthAndDb(auth_, db_);
+  const uid = checkUid(auth);
+  const ref = doc(db, "users", uid);
+  return safeUpdateDoc(ref, {
+    shopping_list: shoppingList.filter(item => !item.deleted),
   });
 };

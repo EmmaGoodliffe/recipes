@@ -1,10 +1,20 @@
 <script lang="ts">
-  import { getByPath, shoppingList, type ShoppingListItem } from "$lib/stores";
+  import {
+    getByPath,
+    initAll,
+    shoppingList,
+    recipes,
+    type ShoppingListItem,
+    toastWrap,
+  } from "$lib/stores";
   import { parseIngredient, toIngredient, UNITS } from "$lib/nlp";
   import Dialog from "$lib/Dialog.svelte";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
-  import { delay, unique, areDeepEqual } from "$lib/util";
+  import { delay, unique, areDeepEqual, debounce } from "$lib/util";
   import { onMount } from "svelte";
+  import LoaderButton from "$lib/LoaderButton.svelte";
+  import { saveShoppingList } from "$lib/db";
+  import { getFb } from "../fb";
 
   let method: "alphabetical" | "source" = "alphabetical";
   let groups: { name: string }[] = [];
@@ -16,6 +26,7 @@
   let desc: string | null;
   let whole: string;
   let firstInput: HTMLInputElement | undefined;
+  let loading = false;
 
   const normaliseIngredient = (
     number: string | null | undefined,
@@ -53,16 +64,28 @@
     editIndex = undefined;
   };
 
+  const catchPath = <T,>(f: () => T) => {
+    try {
+      return f();
+    } catch (error) {
+      if (`${error}`.includes("tried to get path")) {
+        console.log("caught path problems");
+        return undefined;
+      }
+      throw error;
+    }
+  };
+
   const sortByPath = <T, S>(
     items: T[],
     path: string,
     transform: (x: unknown) => unknown = x => x,
   ) => {
-    const values = unique(items.map(x => transform(getByPath(x, path))));
+    const get = (x: unknown, path: string) =>
+      catchPath(() => transform(getByPath(x, path)));
+    const values = unique(items.map(x => get(x, path)));
     values.sort();
-    return values.map(v =>
-      items.filter(x => transform(getByPath(x, path)) === transform(v)),
-    );
+    return values.map(v => items.filter(x => get(x, path) === transform(v)));
   };
 
   const sort = (list: ShoppingListItem[][]) => {
@@ -77,27 +100,47 @@
       ];
       groups = [{ name: "all" }];
     } else if (method === "source") {
-      sorted = sortByPath(list.flat(), "source.recipe.@id");
+      sorted = sortByPath(list.flat(), "source.id");
       groups = sorted.map(section => {
         const source = section[0]?.source;
-        const name =
-          source && source.type === "recipe" ? source.recipe.name : "?";
-        return { name: name ?? "?" };
+        const versions =
+          source && source.type === "recipe"
+            ? $recipes?.filter(r => r.original["@id"] === source.id)[0]
+            : undefined;
+        const rec = versions?.edited ?? versions?.original;
+        const name = rec?.name ?? "?";
+        return { name };
       });
     }
     return sorted;
   };
 
+  const slowSave = debounce(5 * 1000, async () => {
+    const { auth, db } = getFb();
+    await toastWrap(saveShoppingList)(auth, db, $shoppingList.flat());
+  });
+
+  const save = async () => {
+    loading = true;
+    await slowSave();
+    loading = false;
+  };
+
   onMount(() => {
-    // sort($shoppingList);
-    return shoppingList.subscribe(l => {
+    const unsub = shoppingList.subscribe(async l => {
       const sorted = sort(l);
       if (!areDeepEqual(sorted, l)) {
         shoppingList.set(sorted);
       } else {
         console.log("already sorted");
       }
+      await save();
     });
+    const endAll = initAll();
+    return () => {
+      unsub();
+      endAll();
+    };
   });
 
   $: noneSelected = $shoppingList
@@ -109,6 +152,9 @@
   class="long bg-shop"
   on:click={() => edit({ i: $shoppingList.length, j: 0 })}
   ><i class="bx bx-plus"></i> item</button
+>
+<LoaderButton {loading} onClick={save}
+  ><i class="bx bx-save"></i> save</LoaderButton
 >
 {#if $shoppingList.length === 0}
   <p class="my-4">No items.</p>

@@ -198,3 +198,14 @@ export const hasRequiredKeys = <T extends object, K extends string & keyof T>(
   obj: T,
   keys: K[],
 ): obj is T & Required<Pick<T, K>> => keys.every(k => obj[k] !== undefined);
+
+export const debounce = (
+  time: number,
+  f: () => Promise<void>,
+): (() => Promise<void>) => {
+  let timeoutId: number = NaN;
+  return () => new Promise((resolve, reject) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => f().then(resolve).catch(reject), time);
+  });
+};

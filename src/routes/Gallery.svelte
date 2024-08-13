@@ -20,9 +20,9 @@
   let showPreview = false;
 
   const ingredientToShoppingListItem = (ing: string | undefined) => {
-    const recipe = $toBePreviewed?.edited ?? $toBePreviewed?.original;
-    const source: ShoppingListItem["source"] = recipe
-      ? { type: "recipe", recipe }
+    const id = $toBePreviewed?.original["@id"];
+    const source: ShoppingListItem["source"] = id
+      ? { type: "recipe", id }
       : { type: "unknown" };
     return ing
       ? { value: ing, source, bought: false, selected: false, deleted: false }

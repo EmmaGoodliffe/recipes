@@ -9,7 +9,7 @@
   import { addRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { toast, toastWrap, updateRecipes } from "$lib/stores";
+  import { toast, toastWrap, updateData } from "$lib/stores";
   import { isRecipe } from "$lib/types";
 
   let auth: Auth | undefined;
@@ -92,7 +92,7 @@
             console.error(res);
           } else {
             toast("added recipe");
-            return updateRecipes();
+            return updateData();
           }
         }}><i class="bx bx-save"></i> save</LoaderButton
       >
