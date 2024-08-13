@@ -58,11 +58,13 @@ export const user = writable<User | null | undefined>(undefined);
 
 export type ShoppingListItem = {
   value: string;
-  bought: boolean;
   source:
     | { type: "recipe"; id: string }
     | { type: "unknown" }
     | { type: "custom" };
+  bought: boolean;
+  selected: boolean;
+  deleted: boolean;
 };
 
 export const shoppingList = writable<ShoppingListItem[]>([]);

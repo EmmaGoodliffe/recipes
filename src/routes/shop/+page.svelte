@@ -24,13 +24,14 @@
       parseIngredient(`${number ?? ""} ${unit ?? ""} ${item}, ${desc ?? ""}`),
     );
 
-  const edit = async (i: number | undefined) => {
-    editIndex = i;
-    if (i !== undefined) {
-      number = list[i].parsed.number;
-      unit = list[i].parsed.unit;
-      item = list[i].parsed.item.map(({ value }) => value).join(" ");
-      desc = list[i].parsed.description.map(({ value }) => value).join(" ");
+  const edit = async (index: number | undefined) => {
+    editIndex = index;
+    if (index !== undefined) {
+      const parsed = parseIngredient($shoppingList[index]?.value ?? "");
+      number = parsed.number;
+      unit = parsed.unit;
+      item = parsed.item.map(({ value }) => value).join(" ");
+      desc = parsed.description.map(({ value }) => value).join(" ");
       whole = normaliseIngredient(number, unit, item, desc);
       await delay(10);
       firstInput?.focus();
@@ -38,51 +39,105 @@
   };
 
   const onEdit = (value: string) => {
-    shoppingList.update(list => {
-      list[editIndex ?? -1].value = value;
-      list[editIndex ?? -1].source.type = "custom";
-      return list;
+    shoppingList.update(l => {
+      l[editIndex ?? -1].value = value;
+      l[editIndex ?? -1].source.type = "custom";
+      return l;
     });
     editIndex = undefined;
   };
 
-  $: list = $shoppingList.map(i => {
-    const parsed = parseIngredient(i.value);
-    return { ...i, parsed, bulk: toIngredient(parsed, false) };
-  });
+  $: noneSelected = $shoppingList.every(item => item.deleted || !item.selected);
 </script>
 
-<button class="long bg-shop"
-  ><i class="bx bx-plus align-middle"></i> item</button
+<button class="long bg-shop" on:click={() => edit($shoppingList.length)}
+  ><i class="bx bx-plus"></i> item</button
 >
-{#if list.length === 0}
+{#if $shoppingList.length === 0}
   <p class="my-4">No items.</p>
-{/if}
-<div class="my-4 enforced-rounded border-2 border-input">
-  {#each list as item, i}
-    <div class="item justify-between">
-      <button
-        class="flex-1 text-left transition"
-        class:opacity-50={item.bought}
-        on:click={() =>
-          shoppingList.update(l => {
-            l[i].bought = !l[i].bought;
-            return l;
-          })}
-      >
-        <div class="font-semibold" class:line-through={item.bought}>
-          {item.bulk}
+{:else}
+  <div class="my-4">
+    <button
+      class="short bg-input"
+      on:click={() =>
+        shoppingList.update(l => {
+          const allSelected = l.every(item => item.deleted || item.selected);
+          return l.map(item => ({ ...item, selected: !allSelected }));
+        })}><i class="bx bx-select-multiple"></i> select all</button
+    >
+    <button
+      class="short bg-input"
+      on:click={() =>
+        shoppingList.update(l =>
+          l.map(item => ({ ...item, selected: !item.selected })),
+        )}><i class="bx bxs-x-square"></i> invert selection</button
+    >
+    <button
+      class="short bg-shop"
+      disabled={noneSelected}
+      on:click={() =>
+        shoppingList.update(l => {
+          const allBought = l.every(
+            item => item.deleted || !item.selected || item.bought,
+          );
+          return l.map(item => ({
+            ...item,
+            bought: item.selected ? !allBought : item.bought,
+          }));
+        })}><i class="bx bx-strikethrough"></i> bought</button
+    >
+    <button
+      class="short bg-danger"
+      disabled={noneSelected}
+      on:click={() =>
+        shoppingList.update(l =>
+          l.map(item => ({ ...item, deleted: item.deleted || item.selected })),
+        )}><i class="bx bx-trash"></i> delete</button
+    >
+  </div>
+  <div class="enforced-rounded border-2 border-input">
+    {#each $shoppingList as item, i}
+      {#if !item.deleted}
+        <div class="py-1 flex justify-between not-last-border">
+          <input
+            type="checkbox"
+            class="mx-3"
+            checked={item.selected}
+            on:change={e =>
+              shoppingList.update(l => {
+                l[i].selected = e.currentTarget.checked;
+                return l;
+              })}
+          />
+          <button
+            class="flex-1 text-left transition"
+            class:opacity-50={item.bought}
+            on:click={() =>
+              shoppingList.update(l => {
+                l[i].bought = !l[i].bought;
+                return l;
+              })}
+          >
+            <div class="font-semibold" class:line-through={item.bought}>
+              {toIngredient(parseIngredient(item.value), false)}
+            </div>
+            <p class="text-sm">
+              {parseIngredient(item.value)
+                .description.map(({ value }) => value)
+                .join(" ")}
+            </p>
+          </button>
+          <button
+            class="mx-3 square bg-input self-center"
+            on:click={() => edit(i)}
+          >
+            <i class="bx bx-pencil"></i>
+          </button>
         </div>
-        <p class="text-sm">
-          {item.parsed.description.map(({ value }) => value).join(" ")}
-        </p>
-      </button>
-      <button class="ml-4 square bg-input self-center" on:click={() => edit(i)}>
-        <i class="bx bx-pencil"></i>
-      </button>
-    </div>
-  {/each}
-</div>
+      {/if}
+    {/each}
+  </div>
+{/if}
 <Dialog
   show={editIndex !== undefined}
   title="edit shopping list item"
@@ -120,10 +175,10 @@
         <div class="group">
           <label for="unit" class="focal">unit</label>
           <select name="unit" class="long" id="unit" bind:value={unit}>
+            <option value={null} class="italic">none</option>
             {#each UNITS as u}
               <option value={u}>{u}</option>
             {/each}
-            <option value={null} class="italic">none</option>
           </select>
         </div>
         <div class="group">
@@ -135,7 +190,7 @@
           <input type="text" class="long" id="description" bind:value={desc} />
         </div>
         <button type="submit" class="long bg-shop"
-          ><i class="bx bx-list-check align-middle"></i> commit item</button
+          ><i class="bx bx-list-check"></i> commit item</button
         >
       </form>
     {:else}
@@ -151,7 +206,7 @@
           />
         </div>
         <button type="submit" class="long bg-shop"
-          ><i class="bx bx-list-check align-middle"></i> commit item</button
+          ><i class="bx bx-list-check"></i> commit item</button
         >
       </form>
     {/if}
@@ -159,11 +214,11 @@
 </Dialog>
 
 <style lang="postcss">
-  .item {
-    @apply px-2 py-1 flex;
+  button.short {
+    @apply min-w-max mr-2 disabled:opacity-50;
   }
 
-  .item:not(:last-child) {
+  .not-last-border:not(:last-child) {
     @apply border-b-2 border-input;
   }
 </style>

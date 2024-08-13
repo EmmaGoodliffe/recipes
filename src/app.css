@@ -14,8 +14,17 @@ button.square {
   @apply w-8 h-8 rounded inline-flex justify-center items-center;
 }
 
+button.short,
 .long {
-  @apply w-full my-1 px-4 py-2 rounded-lg text-lg font-semibold;
+  @apply my-1 px-4 py-2 rounded-lg text-lg font-semibold inline-flex justify-center items-center;
+
+  i {
+    @apply mr-2;
+  }
+}
+
+.long {
+  @apply w-full;
 }
 
 select.long {
@@ -37,7 +46,7 @@ textarea {
 }
 
 i {
-  @apply text-text;
+  @apply text-inherit;
 }
 
 ul {

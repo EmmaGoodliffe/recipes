@@ -62,12 +62,12 @@
     <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>account</h1>
   {/if}
 </div>
-<main class="w-11/12 max-w-5xl mx-auto pb-12 flex flex-col text-text">
+<main class="w-11/12 max-w-5xl mx-auto pb-16 flex flex-col text-text">
   <slot />
 </main>
 <Toast />
 <!-- TODO: place scrollbar behind footer -->
-<footer class="fixed bottom-0 w-full py-2 bg-dark-bg text-3xl">
+<footer class="fixed bottom-0 w-full py-2 bg-dark-bg text-text text-3xl">
   <nav class="flex justify-evenly">
     {#each pages as p}
       <a href={p.url} on:click={p.onClick ?? (() => {})}>

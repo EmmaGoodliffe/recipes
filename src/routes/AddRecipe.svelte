@@ -27,7 +27,7 @@
 </script>
 
 <button class="long bg-file" on:click={() => (show = true)}
-  ><i class="bx bx-plus align-middle"></i> <span class="">recipe</span></button
+  ><i class="bx bx-plus"></i> <span class="">recipe</span></button
 >
 <Dialog bind:show title="add recipe" onClose={onCancel}>
   <div class="px-4">
@@ -94,14 +94,14 @@
             toast("added recipe");
             return updateRecipes();
           }
-        }}><i class="bx bx-save align-middle"></i> save</LoaderButton
+        }}><i class="bx bx-save"></i> save</LoaderButton
       >
       <button
         class="long cancel"
         on:click={() => {
           show = false;
           recipe = undefined;
-        }}><i class="bx bx-x align-middle"></i> cancel</button
+        }}><i class="bx bx-x"></i> cancel</button
       >
     {/if}
   </div>

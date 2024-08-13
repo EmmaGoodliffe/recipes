@@ -24,7 +24,9 @@
     const source: ShoppingListItem["source"] = id
       ? { type: "recipe", id }
       : { type: "unknown" };
-    return ing ? { value: ing, bought: false, source } : undefined;
+    return ing
+      ? { value: ing, source, bought: false, selected: false, deleted: false }
+      : undefined;
   };
 </script>
 

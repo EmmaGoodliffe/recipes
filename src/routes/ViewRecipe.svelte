@@ -109,7 +109,7 @@
 <!-- MENU -->
 {#if editable}
   <button class="long bg-input" on:click={() => toBeEdited.set(undefined)}
-    ><i class="bx bx-chevron-left align-middle"></i> cancel</button
+    ><i class="bx bx-chevron-left"></i> cancel</button
   >
   <LoaderButton
     loading={saveLoading}
@@ -134,7 +134,7 @@
       );
       saveLoading = false;
       updateRecipes(); // not awaited
-    }}><i class="bx bx-save align-middle"></i> save</LoaderButton
+    }}><i class="bx bx-save"></i> save</LoaderButton
   >
   <LoaderButton
     className="long bg-input"
@@ -152,8 +152,7 @@
       );
       resetLoading = false;
       updateRecipes(); // not awaited
-    }}
-    ><i class="bx bx-reset align-middle"></i> revert to original version</LoaderButton
+    }}><i class="bx bx-reset"></i> revert to original version</LoaderButton
   >
   <!-- VERSION -->
   <div class="group text-left">
@@ -361,7 +360,7 @@
         </div>
       </div>
       <button type="submit" class="long bg-cook"
-        ><i class="bx bx-file align-middle"></i> commit edits</button
+        ><i class="bx bx-file"></i> commit edits</button
       >
     </form>
   {:else if typeof editObj === "string" || typeof editObj === "number" || editKey === "image"}
@@ -434,7 +433,7 @@
         {/if}
       </div>
       <button type="submit" class="long bg-cook"
-        ><i class="bx bx-file align-middle"></i> commit edits</button
+        ><i class="bx bx-file"></i> commit edits</button
       >
     </form>
   {:else if typeof editObj === "object"}

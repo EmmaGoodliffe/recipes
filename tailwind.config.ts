@@ -42,6 +42,8 @@ export default {
         file: palette.asparagus[1],
         cook: palette.asparagus[0],
         shop: palette.mustard[1],
+        "light-danger": palette.ketchup[0],
+        danger: palette.ketchup[1],
       },
       screens: {
         xs: "320px",

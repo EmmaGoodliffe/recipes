@@ -82,12 +82,12 @@
                   class="mx-2 -my-6 square bg-input opacity-0 group-hover:opacity-100 transition-all"
                   on:click={() =>
                     onEdit([{ mode: "delete", path: `${pathPrefix}.${key}` }])}
-                  ><i class="bx bx-trash align-middle"></i></button
+                  ><i class="bx bx-trash"></i></button
                 >
                 <button
                   class="mx-2 -my-6 square bg-file opacity-0 group-hover:opacity-100 transition-all"
                   on:click={() => (addPath = `${pathPrefix}.${key}`)}
-                  ><i class="bx bx-plus align-middle"></i></button
+                  ><i class="bx bx-plus"></i></button
                 >
               </div>
               {#if `${pathPrefix}.${key}` === addPath}
