@@ -1,0 +1,19 @@
+{
+  "name": "recipes",
+  "short_name": "recipes",
+  "start_url": "https://recipes-7ef89.web.app/",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "big-favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "display": "standalone",
+  "theme_color": "#B1E067"
+}
