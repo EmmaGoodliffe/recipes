@@ -11,7 +11,15 @@ A simple and free app for collecting recipes and generating shopping lists.
   - ~~Edit recipes~~
   - Tag recipes
   - ~~Shopping list~~
-  - PWA
+- PWA
+  - Hosting
+  - Service worker
+  - Caching
+  - `manifest.json`
+  - ~~https~~
+  - Shell layouts
+  - ~~Responsive CSS~~
+  - `beforeinstallprompt`
 - Compatibility
   - [x] www.bbcgoodfood.com
 - Aesthetics
