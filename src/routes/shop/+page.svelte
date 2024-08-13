@@ -40,8 +40,11 @@
 
   const onEdit = (value: string) => {
     shoppingList.update(l => {
-      l[editIndex ?? -1].value = value;
-      l[editIndex ?? -1].source.type = "custom";
+      l[editIndex ?? -1] = {
+        ...l[editIndex ?? -1],
+        value,
+        source: { type: "custom" },
+      };
       return l;
     });
     editIndex = undefined;

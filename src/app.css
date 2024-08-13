@@ -14,7 +14,7 @@ button.square {
   @apply w-8 h-8 rounded inline-flex justify-center items-center;
 }
 
-button.short,
+.short,
 .long {
   @apply my-1 px-4 py-2 rounded-lg text-lg font-semibold inline-flex justify-center items-center;
 
