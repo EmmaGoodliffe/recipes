@@ -57,8 +57,12 @@ label.focal {
   @apply text-dark-text;
 }
 
+.check:has(input[type="checkbox"]) {
+  @apply flex items-center;
+}
+
 input[type="checkbox"] {
-  @apply mt-1 mr-2;
+  @apply w-4 h-4 mr-2;
 }
 
 @layer utilities {

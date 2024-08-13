@@ -175,7 +175,7 @@
         bind:this={scaleInput}
       />
     </div>
-    <button type="submit" class="long bg-cook"
+    <button type="submit" class="long bg-file"
       ><i class="bx bx-math align-middle"></i> scale</button
     >
   </form>

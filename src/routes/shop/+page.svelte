@@ -78,7 +78,7 @@
         </p>
       </button>
       <button class="ml-4 square bg-input self-center" on:click={() => edit(i)}>
-        <i class="bx bx-dots-horizontal-rounded"></i>
+        <i class="bx bx-pencil"></i>
       </button>
     </div>
   {/each}
@@ -88,7 +88,7 @@
   title="edit shopping list item"
   onClose={() => edit(undefined)}
 >
-  <div class="flex justify-center">
+  <div class="check justify-center">
     <input
       type="checkbox"
       name="smart"
@@ -101,7 +101,8 @@
   <SmoothHeight>
     {#if smartEdit}
       <p class="text-lg text-center font-semibold opacity-50">{whole}</p>
-      <form class="px-2"
+      <form
+        class="px-2"
         on:submit={() => onEdit(normaliseIngredient(number, unit, item, desc))}
       >
         <div class="group">

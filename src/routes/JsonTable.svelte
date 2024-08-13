@@ -49,7 +49,7 @@
         <input type="text" bind:value on:keyup={onKey} />
       {/if}
     {/if}
-    <button class="mx-2 square bg-cook" on:click={submitValue}
+    <button class="mx-2 square bg-file" on:click={submitValue}
       ><i class="bx bx-check"></i></button
     >
   </div>
@@ -85,7 +85,7 @@
                   ><i class="bx bx-trash align-middle"></i></button
                 >
                 <button
-                  class="mx-2 -my-6 square bg-cook opacity-0 group-hover:opacity-100 transition-all"
+                  class="mx-2 -my-6 square bg-file opacity-0 group-hover:opacity-100 transition-all"
                   on:click={() => (addPath = `${pathPrefix}.${key}`)}
                   ><i class="bx bx-plus align-middle"></i></button
                 >
@@ -124,7 +124,7 @@
                       </tbody>
                     </table>
                     <button
-                      class="ml-2 square bg-cook"
+                      class="ml-2 square bg-file"
                       on:click={() => {
                         onEdit([
                           {
