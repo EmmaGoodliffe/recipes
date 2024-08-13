@@ -31,7 +31,7 @@
 </script>
 
 <div
-  class="py-4 grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+  class="py-4 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
 >
   {#if recipes === undefined}
     <LoaderText text="fetching recipes..." />
@@ -51,9 +51,9 @@
         transition:fly={{ y: 20 }}
       >
         {#if rec.image?.url}
-          <img src={rec.image.url} alt={rec.name} class="object-fit" />
+          <img src={rec.image.url} alt={rec.name} class="object-cover flex-1" />
         {/if}
-        <div class="absolute bottom-0 w-full px-6 py-4 bg-bg">
+        <div class="w-full px-6 py-4 bg-bg">
           <span class="text-lg font-bold">{rec.name}</span>
           <p class="text-sm opacity-50 truncate">
             {rec.publisher?.name
@@ -104,6 +104,6 @@
 
 <style lang="postcss">
   button.card {
-    @apply border-2 border-input text-left relative flex shadow-md rounded-lg overflow-hidden;
+    @apply border-2 border-border text-left flex flex-col shadow-md rounded-lg overflow-hidden;
   }
 </style>

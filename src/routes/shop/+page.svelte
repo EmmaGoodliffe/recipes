@@ -98,7 +98,7 @@
             .join(" "),
         ).flat(),
       ];
-      groups = [{ name: "all" }];
+      groups = [];
     } else if (method === "source") {
       sorted = sortByPath(list.flat(), "source.id");
       groups = sorted.map(section => {
@@ -226,11 +226,9 @@
         )}><i class="bx bx-trash"></i> delete</button
     >
   </div>
-  <div class="enforced-rounded border-2 border-input">
+  <div class="enforced-rounded border-2 border-border">
     {#each $shoppingList as section, i}
-      <div
-        class="py-1 flex justify-center items-baseline border-b-2 border-input"
-      >
+      <div class="py-1 flex justify-center items-baseline border-b-2 border-border">
         <button
           class="mx-2 square bg-input"
           on:click={() =>
@@ -240,7 +238,7 @@
               return l;
             })}><i class="bx bx-select-multiple"></i></button
         >
-        <span class="text-lg font-bold">{groups[i]?.name ?? "?"}</span>
+        <span class="text-lg font-bold">{groups[i]?.name ?? ""}</span>
       </div>
       {#each section as item, j}
         {#if !item.deleted}
@@ -366,6 +364,6 @@
   }
 
   .not-last-border:not(:last-child) {
-    @apply border-b-2 border-input;
+    @apply border-b-2 border-border;
   }
 </style>

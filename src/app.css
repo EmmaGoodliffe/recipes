@@ -61,11 +61,6 @@ label.focal {
   @apply text-lg opacity-50 group-focus-within:opacity-100;
 }
 
-.bg-cook,
-.bg-cook i {
-  @apply text-dark-text;
-}
-
 .check:has(input[type="checkbox"]) {
   @apply flex items-center;
 
@@ -85,44 +80,41 @@ label.focal {
 }
 
 table.json {
-  @apply my-4 enforced-rounded overflow-y-visible font-mono border-input border-2;
+  @apply my-4 enforced-rounded overflow-y-visible font-mono border-border border-2;
 
   tbody {
     @apply w-full inline-table;
   }
 
   tr:not(:last-child) {
-    @apply border-b-2 border-input;
+    @apply border-b-2 border-border;
   }
 
   td:first-child {
-    @apply px-2 border-r-2 border-input;
-    overflow-wrap: normal;
+    @apply px-2 border-r-2 border-border;
+    overflow-wrap: anywhere;
   }
-
+  
   td:last-child {
     @apply w-full px-2;
-    /* TODO: consider other wrap options */
     overflow-wrap: anywhere;
   }
 }
 
-/* Scroller width */
+@media (min-width: 640px) {
+  table.json td:first-child {
+    overflow-wrap: normal;
+  }
+}
+
 ::-webkit-scrollbar {
   @apply w-2;
 }
 
-/* Scroller track */
 ::-webkit-scrollbar-track {
   @apply bg-bg;
 }
 
-/* Scroller handle */
 ::-webkit-scrollbar-thumb {
-  @apply bg-input;
-}
-
-/* Scroller handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-text;
+  @apply bg-input hover:bg-scroller;
 }

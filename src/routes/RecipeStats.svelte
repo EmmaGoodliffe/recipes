@@ -54,15 +54,15 @@
   }
 
   .times {
-    @apply flex justify-between border-2 border-input rounded;
+    @apply flex justify-between border-2 border-border rounded;
   }
 
   .serves {
-    @apply border-2 border-input rounded;
+    @apply border-2 border-border rounded;
   }
 
   .stat {
-    @apply flex flex-col items-center px-4 py-2 border-input;
+    @apply flex flex-col items-center px-4 py-2 border-border shadow-md;
   }
 
   .stat:not(:last-child) {

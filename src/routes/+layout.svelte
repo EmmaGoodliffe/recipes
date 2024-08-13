@@ -72,7 +72,7 @@
     {#each pages as p}
       <a href={p.url} on:click={p.onClick ?? (() => {})}>
         {#if p.url !== selectedPage && p.emptySvg}
-          <img src={p.emptySvg} alt="flask" class="h-[30px] mt-[0.125rem]" />
+          <img src={p.emptySvg} alt="flask" class="h-[30px] mt-0.5" />
         {:else}
           <i
             class={p.url === selectedPage

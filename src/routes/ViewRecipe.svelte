@@ -185,18 +185,18 @@
   </header>
   <!-- VIEW: image -->
   {#if $rec("image")?.url}
-    <div class="max-w-2xl mx-auto">
-      <button class="mx-auto block" {disabled} on:click={() => edit("image")}>
-        <img
-          src={$rec("image")?.url}
-          alt={$rec("name")}
-          class="max-w-[75%] mx-auto pb-4 rounded"
-        />
+    <div class="max-w-sm mx-auto my-2 flex justify-center">
+      <button
+        class="enforced-rounded shadow-md overflow-hidden"
+        {disabled}
+        on:click={() => edit("image")}
+      >
+        <img src={$rec("image")?.url} alt={$rec("name")} />
       </button>
     </div>
   {/if}
-  <!-- VIEW: publisher -->
-  <div class="flex justify-center items-center">
+  <div class="flex flex-col sm:flex-row justify-center items-center">
+    <!-- VIEW: publisher -->
     {#if pub}
       <a href={pub.url} target="_blank">
         <img
@@ -360,7 +360,7 @@
         </div>
       </div>
       <button type="submit" class="long bg-cook"
-        ><i class="bx bx-file"></i> commit edits</button
+        ><i class="bx bx-list-check"></i> commit edits</button
       >
     </form>
   {:else if typeof editObj === "string" || typeof editObj === "number" || editKey === "image"}
@@ -433,7 +433,7 @@
         {/if}
       </div>
       <button type="submit" class="long bg-cook"
-        ><i class="bx bx-file"></i> commit edits</button
+        ><i class="bx bx-list-check"></i> commit edits</button
       >
     </form>
   {:else if typeof editObj === "object"}
