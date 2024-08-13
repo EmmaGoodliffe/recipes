@@ -44,6 +44,14 @@ export default {
         shop: palette.mustard[1],
         "light-danger": palette.ketchup[0],
         danger: palette.ketchup[1],
+        matches: {
+          0: palette.asparagus[0],
+          1: palette.asparagus[1],
+          2: palette.mustard[0],
+          3: palette.mustard[1],
+          4: palette.ketchup[0],
+          5: palette.ketchup[1],
+        },
       },
       screens: {
         xs: "320px",

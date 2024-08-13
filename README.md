@@ -13,9 +13,9 @@ A simple and free app for collecting recipes and generating shopping lists.
   - ~~Shopping list~~
 - PWA
   - Hosting
-  - Service worker
+  - ~~Service worker~~
   - Caching
-  - `manifest.json`
+  - ~~`manifest.json`~~
   - ~~https~~
   - Shell layouts
   - ~~Responsive CSS~~

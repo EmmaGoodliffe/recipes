@@ -23,11 +23,29 @@
 
   onMount(initAll);
 
-  const bolden = (text: string, words: string[]) => {
+  const lemmaToIngredientIndex = (
+    lemma: string,
+    matchedIngredients: ReturnType<
+      typeof searchInstructionForIngredients
+    >["ingredientMatches"],
+  ) =>
+    matchedIngredients
+      .map((ing, i) => ({ ...ing, i }))
+      .filter(ing => ing.lemmas.item.includes(lemma))[0].i;
+
+  const toHtml = (
+    text: string,
+    matches: ReturnType<typeof searchInstructionForIngredients>,
+  ) => {
     let result = text;
-    for (const w of words) {
+    for (const match of matches.instructionMatches) {
+      const w = match.value;
+      const i = lemmaToIngredientIndex(match.lemma, matches.ingredientMatches);
       const re = new RegExp(`\\b${w}\\b`, "g");
-      result = result.replaceAll(re, `<span class="font-bold">${w}</span>`);
+      result = result.replaceAll(
+        re,
+        `<span class="font-bold text-matches-${i % 6}">${w}</span>`,
+      );
     }
     return result;
   };
@@ -41,8 +59,7 @@
   $: unmatchedIngredients = ingredients.filter(
     ing => !matchedIngredients.map(mi => mi.value).includes(ing),
   );
-  $: matchedInstructionWords = matches.instructionMatches.map(i => i.value);
-  $: instructionHtml = bolden(instructionText ?? "", matchedInstructionWords);
+  $: instructionHtml = toHtml(instructionText ?? "", matches);
 </script>
 
 <svelte:head>
@@ -122,8 +139,16 @@
   <div class="my-4 relative enforced-rounded">
     <!-- (ul) class:v-truncate={truncateIngredients} -->
     <ul class="mx-4 text-lg">
-      {#each matchedIngredients as ing}
-        <li class="font-bold">{ing.value}</li>
+      <li class="hidden text-matches-0">dummy</li>
+      <li class="hidden text-matches-1">dummy</li>
+      <li class="hidden text-matches-2">dummy</li>
+      <li class="hidden text-matches-3">dummy</li>
+      <li class="hidden text-matches-4">dummy</li>
+      <li class="hidden text-matches-5">dummy</li>
+      {#each matchedIngredients as ing, i}
+        <li class="font-bold text-matches-{i % 6}">
+          {ing.value}
+        </li>
       {/each}
       {#each unmatchedIngredients as ing}
         <li>{ing}</li>
@@ -154,15 +179,15 @@
       );
       const scaledIngredients = scaleIngredients(ingredients, scaling);
       toBeCooked.update(rec => {
-        const original = rec?.original;
-        if (!original) {
-          return rec;
+        if (!rec) {
+          return undefined;
         }
-        const edited = rec?.edited ?? original;
-        return {
-          original,
-          edited: { ...edited, recipeIngredient: scaledIngredients },
+        rec[version] = {
+          ...(rec[version] ?? rec.original),
+          recipeYield: newYield,
+          recipeIngredient: scaledIngredients,
         };
+        return rec;
       });
       scaleShow = false;
     }}

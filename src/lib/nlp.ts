@@ -34,10 +34,7 @@ const doesInclude = <T extends readonly string[]>(
 export const UNITS = ["g", "tbsp", "tsp"] as const;
 
 const getQuantity = (tokens: Token[]) => {
-  const number =
-    tokens[0].pos === "NUM" && tokens.filter(t => t.pos === "NUM").length === 1
-      ? tokens[0].value
-      : null;
+  const number = tokens[0].pos === "NUM" ? tokens[0].value : null;
   const unit =
     number !== null &&
     tokens[1].pos === "NOUN" &&
@@ -90,11 +87,17 @@ export const parseIngredient = (ing: string | undefined) => {
   const [item, description] =
     commas.length === 2 ? commas : [commas.flat(), []];
   return {
+    /** NLP number */
     number,
+    /** NLP unit */
     unit,
+    /** NLP item */
     item,
+    /** NLP description */
     description,
+    /** NLP value */
     value: ing,
+    /** NLP lemmas */
     lemmas: {
       bracketed: lemmas(nlpTokens(bracketed)),
       item: lemmas(item),
@@ -115,7 +118,9 @@ export const searchInstructionForIngredients = (
       getKeys(i.lemmas).map(where => ({
         ...i,
         match: {
+          /** Location of match in ingredient */
           where,
+          /** Matched lemmas */
           lemmas: overlap(i.lemmas[where], instructionLemmas),
         },
       })),
