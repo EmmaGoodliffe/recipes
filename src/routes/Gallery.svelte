@@ -53,18 +53,16 @@
         {#if rec.image?.url}
           <img src={rec.image.url} alt={rec.name} class="object-fit" />
         {/if}
-        <div class="absolute bottom-0 w-full bg-bg">
-          <div class="mx-2 my-2">
-            <span class="font-bold">{rec.name}</span>
-            <p class="text-sm opacity-50 truncate">
-              {rec.publisher?.name
-                ? `Imported from ${rec.publisher.name}`
-                : `By ${toArray(rec.author)
-                    .map(a => a?.name)
-                    .filter(n => n)
-                    .join(", ")}`}
-            </p>
-          </div>
+        <div class="absolute bottom-0 w-full px-6 py-4 bg-bg">
+          <span class="text-lg font-bold">{rec.name}</span>
+          <p class="text-sm opacity-50 truncate">
+            {rec.publisher?.name
+              ? `Imported from ${rec.publisher.name}`
+              : `By ${toArray(rec.author)
+                  .map(a => a?.name)
+                  .filter(n => n)
+                  .join(", ")}`}
+          </p>
         </div>
       </button>
     {/each}
@@ -106,6 +104,6 @@
 
 <style lang="postcss">
   button.card {
-    @apply border-2 border-input text-left relative flex;
+    @apply border-2 border-input text-left relative flex shadow-md rounded-lg overflow-hidden;
   }
 </style>
