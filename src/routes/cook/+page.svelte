@@ -14,7 +14,9 @@
   // let truncateIngredients = true;
   let direction: "l" | "r" = "r";
   let instructionIndex = 0;
-  let version: "original" | "edited" = "edited";
+  let version: "original" | "edited" = $toBeCooked?.edited
+    ? "edited"
+    : "original";
   let scaleShow = false;
   let scaleValue = 0;
   let scaleInput: HTMLInputElement | undefined;

@@ -6,7 +6,7 @@
   import { delay, unique, areDeepEqual } from "$lib/util";
   import { onMount } from "svelte";
 
-  let method: null | "source" = null;
+  let method: "alphabetical" | "source" = "alphabetical";
   let groups: { name: string }[] = [];
   let editIndex: { i: number; j: number } | undefined;
   let smartEdit = false;
@@ -53,22 +53,38 @@
     editIndex = undefined;
   };
 
-  const sortByPath = <T,>(items: T[], path: string) => {
-    const values = unique(items.map(x => getByPath(x, path)));
+  const sortByPath = <T, S>(
+    items: T[],
+    path: string,
+    transform: (x: unknown) => unknown = x => x,
+  ) => {
+    const values = unique(items.map(x => transform(getByPath(x, path))));
     values.sort();
-    return values.map(v => items.filter(x => getByPath(x, path) === v));
+    return values.map(v =>
+      items.filter(x => transform(getByPath(x, path)) === transform(v)),
+    );
   };
 
   const sort = (list: ShoppingListItem[][]) => {
     let sorted = list;
-    if (method === "source") {
+    if (method === "alphabetical") {
+      sorted = [
+        sortByPath(list.flat(), "value", x =>
+          parseIngredient(`${x}`)
+            .item.map(({ value }) => value)
+            .join(" "),
+        ).flat(),
+      ];
+      groups = [{ name: "all" }];
+    } else if (method === "source") {
       sorted = sortByPath(list.flat(), "source.recipe.@id");
+      groups = sorted.map(section => {
+        const source = section[0]?.source;
+        const name =
+          source && source.type === "recipe" ? source.recipe.name : "?";
+        return { name: name ?? "?" };
+      });
     }
-    groups = sorted.map(section => {
-      const { source } = section[0];
-      const name = source.type === "recipe" ? source.recipe.name : "?";
-      return { name: name ?? "?" };
-    });
     return sorted;
   };
 
@@ -77,7 +93,7 @@
     return shoppingList.subscribe(l => {
       const sorted = sort(l);
       if (!areDeepEqual(sorted, l)) {
-        console.log("should update from", l, "to", sorted);
+        shoppingList.set(sorted);
       } else {
         console.log("already sorted");
       }
@@ -105,9 +121,9 @@
         class="long"
         id="sort"
         bind:value={method}
-        on:input={() => shoppingList.update(l => sort(l))}
+        on:change={() => shoppingList.update(l => sort(l))}
       >
-        <option value={null}>default</option>
+        <option value="alphabetical">alphabetical</option>
         <option value="source">recipe</option>
       </select>
     </div>
@@ -233,7 +249,7 @@
       type="checkbox"
       name="smart"
       id="smart"
-      on:input={() => edit(editIndex)}
+      on:change={() => edit(editIndex)}
       bind:checked={smartEdit}
     />
     <label for="smart">smart editor</label>
