@@ -96,7 +96,7 @@
       on:change={() => edit(editIndex)}
       bind:checked={smartEdit}
     />
-    <label for="smart" class="font-semibold">smart editor</label>
+    <label for="smart">smart editor</label>
   </div>
   <SmoothHeight>
     {#if smartEdit}

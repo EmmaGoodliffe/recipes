@@ -420,9 +420,7 @@
               id="scale"
               bind:checked={scale}
             />
-            <label for="scale" class="font-semibold"
-              >scale the ingredients too</label
-            >
+            <label for="scale">scale the ingredients too</label>
           </div>
         {:else}
           <input

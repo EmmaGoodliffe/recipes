@@ -59,16 +59,19 @@ label.focal {
 
 .check:has(input[type="checkbox"]) {
   @apply flex items-center;
-}
 
-input[type="checkbox"] {
-  @apply w-4 h-4 mr-2;
+  input[type="checkbox"] {
+    @apply w-4 h-4 mr-2;
+  }
+
+  label {
+    @apply font-semibold;
+  }
 }
 
 @layer utilities {
   .enforced-rounded {
-    @apply rounded;
-    display: inline-block;
+    @apply inline-block rounded;
   }
 }
 
