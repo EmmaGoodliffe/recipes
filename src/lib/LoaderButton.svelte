@@ -26,7 +26,7 @@
 
 <button
   type={buttonType}
-  class="{className} disabled:opacity-50"
+  class="{className}"
   disabled={loading || disabled}
   on:click={e => {
     x.update(v => v + 1);
@@ -45,7 +45,7 @@
 
 <style lang="postcss">
   button {
-    @apply p-0 overflow-hidden;
+    @apply p-0 inline-block overflow-hidden disabled:opacity-50;
   }
   button .loader {
     @apply h-2 rounded-sm;

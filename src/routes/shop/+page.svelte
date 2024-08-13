@@ -1,11 +1,14 @@
 <script lang="ts">
-  import { shoppingList } from "$lib/stores";
+  import { getByPath, shoppingList, type ShoppingListItem } from "$lib/stores";
   import { parseIngredient, toIngredient, UNITS } from "$lib/nlp";
   import Dialog from "$lib/Dialog.svelte";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
-  import { delay } from "$lib/util";
+  import { delay, unique, areDeepEqual } from "$lib/util";
+  import { onMount } from "svelte";
 
-  let editIndex: number | undefined;
+  let method: null | "source" = null;
+  let groups: { name: string }[] = [];
+  let editIndex: { i: number; j: number } | undefined;
   let smartEdit = false;
   let number: string | null;
   let unit: string | null;
@@ -24,10 +27,11 @@
       parseIngredient(`${number ?? ""} ${unit ?? ""} ${item}, ${desc ?? ""}`),
     );
 
-  const edit = async (index: number | undefined) => {
+  const edit = async (index: { i: number; j: number } | undefined) => {
     editIndex = index;
     if (index !== undefined) {
-      const parsed = parseIngredient($shoppingList[index]?.value ?? "");
+      const { i, j } = index;
+      const parsed = parseIngredient($shoppingList[i][j]?.value ?? "");
       number = parsed.number;
       unit = parsed.unit;
       item = parsed.item.map(({ value }) => value).join(" ");
@@ -39,40 +43,95 @@
   };
 
   const onEdit = (value: string) => {
-    shoppingList.update(l => {
-      l[editIndex ?? -1] = {
-        ...l[editIndex ?? -1],
-        value,
-        source: { type: "custom" },
-      };
-      return l;
-    });
+    if (editIndex !== undefined) {
+      const { i, j } = editIndex;
+      shoppingList.update(l => {
+        l[i][j] = { ...l[i][j], value, source: { type: "custom" } };
+        return l;
+      });
+    }
     editIndex = undefined;
   };
 
-  $: noneSelected = $shoppingList.every(item => item.deleted || !item.selected);
+  const sortByPath = <T,>(items: T[], path: string) => {
+    const values = unique(items.map(x => getByPath(x, path)));
+    values.sort();
+    return values.map(v => items.filter(x => getByPath(x, path) === v));
+  };
+
+  const sort = (list: ShoppingListItem[][]) => {
+    let sorted = list;
+    if (method === "source") {
+      sorted = sortByPath(list.flat(), "source.recipe.@id");
+    }
+    groups = sorted.map(section => {
+      const { source } = section[0];
+      const name = source.type === "recipe" ? source.recipe.name : "?";
+      return { name: name ?? "?" };
+    });
+    return sorted;
+  };
+
+  onMount(() => {
+    // sort($shoppingList);
+    return shoppingList.subscribe(l => {
+      const sorted = sort(l);
+      if (!areDeepEqual(sorted, l)) {
+        console.log("should update from", l, "to", sorted);
+      } else {
+        console.log("already sorted");
+      }
+    });
+  });
+
+  $: noneSelected = $shoppingList
+    .flat()
+    .every(item => item.deleted || !item.selected);
 </script>
 
-<button class="long bg-shop" on:click={() => edit($shoppingList.length)}
+<button
+  class="long bg-shop"
+  on:click={() => edit({ i: $shoppingList.length, j: 0 })}
   ><i class="bx bx-plus"></i> item</button
 >
 {#if $shoppingList.length === 0}
   <p class="my-4">No items.</p>
 {:else}
   <div class="my-4">
+    <div class="group">
+      <label for="sort" class="focal">sort by</label>
+      <select
+        name="sort"
+        class="long"
+        id="sort"
+        bind:value={method}
+        on:input={() => shoppingList.update(l => sort(l))}
+      >
+        <option value={null}>default</option>
+        <option value="source">recipe</option>
+      </select>
+    </div>
+  </div>
+  <div class="my-4">
     <button
       class="short bg-input"
       on:click={() =>
         shoppingList.update(l => {
-          const allSelected = l.every(item => item.deleted || item.selected);
-          return l.map(item => ({ ...item, selected: !allSelected }));
+          const allSelected = l
+            .flat()
+            .every(item => item.deleted || item.selected);
+          return l.map(section =>
+            section.map(item => ({ ...item, selected: !allSelected })),
+          );
         })}><i class="bx bx-select-multiple"></i> select all</button
     >
     <button
       class="short bg-input"
       on:click={() =>
         shoppingList.update(l =>
-          l.map(item => ({ ...item, selected: !item.selected })),
+          l.map(section =>
+            section.map(item => ({ ...item, selected: !item.selected })),
+          ),
         )}><i class="bx bxs-x-square"></i> invert selection</button
     >
     <button
@@ -80,13 +139,15 @@
       disabled={noneSelected}
       on:click={() =>
         shoppingList.update(l => {
-          const allBought = l.every(
-            item => item.deleted || !item.selected || item.bought,
+          const allBought = l
+            .flat()
+            .every(item => item.deleted || !item.selected || item.bought);
+          return l.map(section =>
+            section.map(item => ({
+              ...item,
+              bought: item.selected ? !allBought : item.bought,
+            })),
           );
-          return l.map(item => ({
-            ...item,
-            bought: item.selected ? !allBought : item.bought,
-          }));
         })}><i class="bx bx-strikethrough"></i> bought</button
     >
     <button
@@ -94,50 +155,71 @@
       disabled={noneSelected}
       on:click={() =>
         shoppingList.update(l =>
-          l.map(item => ({ ...item, deleted: item.deleted || item.selected })),
+          l.map(section =>
+            section.map(item => ({
+              ...item,
+              deleted: item.deleted || item.selected,
+            })),
+          ),
         )}><i class="bx bx-trash"></i> delete</button
     >
   </div>
   <div class="enforced-rounded border-2 border-input">
-    {#each $shoppingList as item, i}
-      {#if !item.deleted}
-        <div class="py-1 flex justify-between not-last-border">
-          <input
-            type="checkbox"
-            class="mx-3"
-            checked={item.selected}
-            on:change={e =>
-              shoppingList.update(l => {
-                l[i].selected = e.currentTarget.checked;
-                return l;
-              })}
-          />
-          <button
-            class="flex-1 text-left transition"
-            class:opacity-50={item.bought}
-            on:click={() =>
-              shoppingList.update(l => {
-                l[i].bought = !l[i].bought;
-                return l;
-              })}
-          >
-            <div class="font-semibold" class:line-through={item.bought}>
-              {toIngredient(parseIngredient(item.value), false)}
-            </div>
-            <p class="text-sm">
-              {parseIngredient(item.value)
-                .description.map(({ value }) => value)
-                .join(" ")}
-            </p>
-          </button>
-          <button
-            class="mx-3 square bg-input self-center"
-            on:click={() => edit(i)}
-          >
-            <i class="bx bx-pencil"></i>
-          </button>
-        </div>
-      {/if}
+    {#each $shoppingList as section, i}
+      <div
+        class="py-1 flex justify-center items-baseline border-b-2 border-input"
+      >
+        <button
+          class="mx-2 square bg-input"
+          on:click={() =>
+            shoppingList.update(l => {
+              const all = l[i].every(item => item.deleted || item.selected);
+              l[i] = l[i].map(item => ({ ...item, selected: !all }));
+              return l;
+            })}><i class="bx bx-select-multiple"></i></button
+        >
+        <span class="text-lg font-bold">{groups[i]?.name ?? "?"}</span>
+      </div>
+      {#each section as item, j}
+        {#if !item.deleted}
+          <div class="py-1 flex justify-between not-last-border">
+            <input
+              type="checkbox"
+              class="mx-3"
+              checked={item.selected}
+              on:change={e =>
+                shoppingList.update(l => {
+                  l[i][j].selected = e.currentTarget.checked;
+                  return l;
+                })}
+            />
+            <button
+              class="flex-1 text-left transition"
+              class:opacity-50={item.bought}
+              on:click={() =>
+                shoppingList.update(l => {
+                  l[i][j].bought = !l[i][j].bought;
+                  return l;
+                })}
+            >
+              <div class="font-semibold" class:line-through={item.bought}>
+                {toIngredient(parseIngredient(item.value), false)}
+              </div>
+              <p class="text-sm">
+                {parseIngredient(item.value)
+                  .description.map(({ value }) => value)
+                  .join(" ")}
+              </p>
+            </button>
+            <button
+              class="mx-3 square bg-input self-center"
+              on:click={() => edit({ i, j })}
+            >
+              <i class="bx bx-pencil"></i>
+            </button>
+          </div>
+        {/if}
+      {/each}
     {/each}
   </div>
 {/if}
@@ -151,7 +233,7 @@
       type="checkbox"
       name="smart"
       id="smart"
-      on:change={() => edit(editIndex)}
+      on:input={() => edit(editIndex)}
       bind:checked={smartEdit}
     />
     <label for="smart">smart editor</label>

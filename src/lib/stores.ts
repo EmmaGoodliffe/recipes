@@ -59,7 +59,7 @@ export const user = writable<User | null | undefined>(undefined);
 export type ShoppingListItem = {
   value: string;
   source:
-    | { type: "recipe"; id: string }
+    | { type: "recipe"; recipe: Recipe }
     | { type: "unknown" }
     | { type: "custom" };
   bought: boolean;
@@ -67,7 +67,7 @@ export type ShoppingListItem = {
   deleted: boolean;
 };
 
-export const shoppingList = writable<ShoppingListItem[]>([]);
+export const shoppingList = writable<ShoppingListItem[][]>([]);
 
 export const initAll = () => {
   updateRecipes(); // not awaited

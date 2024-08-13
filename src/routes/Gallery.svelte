@@ -20,9 +20,9 @@
   let showPreview = false;
 
   const ingredientToShoppingListItem = (ing: string | undefined) => {
-    const id = $toBePreviewed?.original["@id"];
-    const source: ShoppingListItem["source"] = id
-      ? { type: "recipe", id }
+    const recipe = $toBePreviewed?.edited ?? $toBePreviewed?.original;
+    const source: ShoppingListItem["source"] = recipe
+      ? { type: "recipe", recipe }
       : { type: "unknown" };
     return ing
       ? { value: ing, source, bought: false, selected: false, deleted: false }
@@ -89,12 +89,16 @@
         href="/shop"
         class="long bg-shop inline-block text-center"
         on:click={() =>
-          shoppingList.update(list => [
-            ...list,
-            ...toArray($toBePreviewed.edited?.recipeIngredient)
-              .map(ingredientToShoppingListItem)
-              .filter(ing => ing !== undefined),
-          ])}><i class="bx bxs-basket"></i> shop</a
+          shoppingList.update(list => {
+            const { recipeIngredient } =
+              $toBePreviewed.edited ?? $toBePreviewed.original;
+            return [
+              ...list,
+              toArray(recipeIngredient)
+                .map(ingredientToShoppingListItem)
+                .filter(ing => ing !== undefined),
+            ];
+          })}><i class="bx bxs-basket"></i> shop</a
       >
     </div>
   </Dialog>

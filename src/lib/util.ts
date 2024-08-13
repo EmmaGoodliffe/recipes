@@ -23,7 +23,7 @@ export const keyValuesToObj = <K extends string, V>(
 const overwrite = (x: string, overs: Record<string, string>) =>
   getKeys(overs).includes(x) ? overs[x] : x;
 
-const areDeepEqual = (a: unknown, b: unknown): boolean => {
+export const areDeepEqual = (a: unknown, b: unknown): boolean => {
   if (a && typeof a === "object" && b && typeof b === "object") {
     if (getKeys(a).length !== getKeys(b).length) {
       return false;
