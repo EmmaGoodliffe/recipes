@@ -1,9 +1,10 @@
 import model from "wink-eng-lite-web-model";
 import wink from "wink-nlp";
-import { getKeys, overlap, unique } from "./util";
+import { doesInclude, getKeys, overlap, unique } from "./util";
 import type { ItsFunction } from "wink-nlp";
 
 const nlp = wink(model);
+console.log("making model");
 
 const nlpTokens = (text: string) => {
   const doc = nlp.readDoc(text);
@@ -25,11 +26,6 @@ type Token = ReturnType<typeof nlpTokens>[number];
 
 const lemmas = (tokens: Token[]) =>
   unique(tokens.filter(t => t.pos === "NOUN").map(t => t.lemma));
-
-const doesInclude = <T extends readonly string[]>(
-  arr: T,
-  x: string,
-): x is T[number] => arr.includes(x);
 
 export const UNITS = ["g", "tbsp", "tsp"] as const;
 

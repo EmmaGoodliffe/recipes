@@ -178,8 +178,10 @@ export const doesEndWith = <T extends string, S extends string>(
   sub: S,
 ): text is T & ExtractEndsWith<T, S> => text.endsWith(sub);
 
-const doesInclude = <S, T extends S>(arr: T[], x: S): x is T & S =>
-  arr.includes(x as T);
+export const doesInclude = <T extends readonly string[]>(
+  arr: T,
+  x: string,
+): x is T[number] => arr.includes(x);
 
 export const omit = <T extends object, K extends string & keyof T>(
   obj: T,

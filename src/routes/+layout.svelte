@@ -49,7 +49,6 @@
   });
 </script>
 
-<!-- TODO: fix direction -->
 <div class="overflow-x-hidden">
   {#if selectedPage === "/" && $toBeEdited}
     <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>edit recipe</h1>

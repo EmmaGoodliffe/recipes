@@ -39,9 +39,8 @@
     {#if recipes.length === 0}
       <p>No recipes.</p>
     {/if}
-    <!-- TODO: handle edited version -->
     {#each recipes as recipe}
-      {@const rec = recipe.edited ? recipe.edited : recipe.original}
+      {@const rec = recipe.edited ?? recipe.original}
       <button
         class="card enforced-rounded"
         on:click={() => {

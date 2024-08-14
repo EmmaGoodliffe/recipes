@@ -121,20 +121,20 @@ export const addRecipe = async (
   }
 };
 
-export const deleteWholeRecipe = async (
-  auth_: Auth | undefined,
-  db_: Firestore | undefined,
-  id: string | undefined,
-) => {
-  const { auth, db } = checkAuthAndDb(auth_, db_);
-  const uid = checkUid(auth);
-  const ref = doc(db, "users", uid);
-  const userDoc = await getDoc(ref);
-  const { recipes } = toUserData(userDoc.data() ?? {});
-  return safeUpdateDoc(ref, {
-    recipes: recipes.filter(r => r.original["@id"] !== id),
-  });
-};
+// export const deleteWholeRecipe = async (
+//   auth_: Auth | undefined,
+//   db_: Firestore | undefined,
+//   id: string | undefined,
+// ) => {
+//   const { auth, db } = checkAuthAndDb(auth_, db_);
+//   const uid = checkUid(auth);
+//   const ref = doc(db, "users", uid);
+//   const userDoc = await getDoc(ref);
+//   const { recipes } = toUserData(userDoc.data() ?? {});
+//   return safeUpdateDoc(ref, {
+//     recipes: recipes.filter(r => r.original["@id"] !== id),
+//   });
+// };
 
 export const saveEditedRecipe = async (
   auth_: Auth | undefined,
