@@ -31,7 +31,9 @@
 >
   {#if show}
     <div transition:fly={{ y: 20 }}>
-      <header class="sticky top-0 px-4 py-2 flex justify-between items-start mb-4 text-lg">
+      <header
+        class="sticky top-0 px-4 py-2 flex justify-between items-start mb-4 text-lg"
+      >
         <span class="font-bold pr-6">{title}</span>
         <button
           aria-label="Close"

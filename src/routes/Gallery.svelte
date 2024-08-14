@@ -1,7 +1,8 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
   import ViewRecipe from "./ViewRecipe.svelte";
-  import type { Recipe, RecipeVersions } from "$lib/types";
+  import type { ShoppingListItem } from "$lib/stores";
+  import type { RecipeVersions } from "$lib/types";
   import type { Writable } from "svelte/store";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
@@ -10,7 +11,6 @@
     toBeCooked,
     toBeEdited,
     toBePreviewed,
-    type ShoppingListItem,
   } from "$lib/stores";
   import { toArray } from "$lib/util";
 
@@ -51,7 +51,11 @@
         transition:fly={{ y: 20 }}
       >
         {#if rec.image?.url}
-          <img src={rec.image.url} alt={rec.name} class="w-full flex-1 object-cover" />
+          <img
+            src={rec.image.url}
+            alt={rec.name}
+            class="w-full flex-1 object-cover"
+          />
         {/if}
         <div class="w-full px-6 py-4 bg-bg">
           <p class="text-lg font-bold truncate">{rec.name}</p>

@@ -7,6 +7,7 @@
   import { deleteEditedRecipe, saveEditedRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
+  import { scaleIngredients } from "$lib/nlp";
   import {
     Editable,
     toastWrap,
@@ -18,16 +19,15 @@
   import {
     addDurations,
     dateToText,
+    deepUnique,
     delay,
     doesEndWith,
     fetchImage,
+    hasRequiredKeys,
     parseDur,
     toArray,
     toDur,
-    hasRequiredKeys,
-    deepUnique,
   } from "$lib/util";
-  import { scaleIngredients } from "$lib/nlp";
 
   export let recipeVersions: RecipeVersions;
   export let editable = false;

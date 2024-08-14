@@ -1,19 +1,14 @@
 <script lang="ts">
-  import {
-    getByPath,
-    shoppingList,
-    recipes,
-    type ShoppingListItem,
-    toastWrap,
-  } from "$lib/stores";
-  import { parseIngredient, toIngredient, UNITS } from "$lib/nlp";
-  import Dialog from "$lib/Dialog.svelte";
-  import SmoothHeight from "$lib/SmoothHeight.svelte";
-  import { delay, unique, areDeepEqual, debounce } from "$lib/util";
   import { onDestroy, onMount } from "svelte";
-  import LoaderButton from "$lib/LoaderButton.svelte";
-  import { saveShoppingList } from "$lib/db";
   import { getFb } from "../fb";
+  import type { ShoppingListItem } from "$lib/stores";
+  import { saveShoppingList } from "$lib/db";
+  import Dialog from "$lib/Dialog.svelte";
+  import LoaderButton from "$lib/LoaderButton.svelte";
+  import { parseIngredient, toIngredient, UNITS } from "$lib/nlp";
+  import SmoothHeight from "$lib/SmoothHeight.svelte";
+  import { getByPath, recipes, shoppingList, toastWrap } from "$lib/stores";
+  import { areDeepEqual, delay, unique } from "$lib/util";
 
   let method: "alphabetical" | "source" = "alphabetical";
   let groups: { name: string }[] = [];
@@ -75,7 +70,7 @@
     }
   };
 
-  const sortByPath = <T, S>(
+  const sortByPath = <T,>(
     items: T[],
     path: string,
     transform: (x: unknown) => unknown = x => x,

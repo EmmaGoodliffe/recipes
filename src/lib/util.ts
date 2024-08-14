@@ -204,8 +204,12 @@ export const debounce = (
   f: () => Promise<void>,
 ): (() => Promise<void>) => {
   let timeoutId: number = NaN;
-  return () => new Promise((resolve, reject) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => f().then(resolve).catch(reject), time);
-  });
+  return () =>
+    new Promise((resolve, reject) => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(
+        () => f().then(resolve).catch(reject),
+        time,
+      );
+    });
 };

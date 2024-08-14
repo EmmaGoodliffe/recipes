@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import Gallery from "../Gallery.svelte";
   import RecipeStats from "../RecipeStats.svelte";
-  import { searchInstructionForIngredients } from "$lib/nlp";
-  import SmoothHeight from "$lib/SmoothHeight.svelte";
   import Dialog from "$lib/Dialog.svelte";
-  import { toBeCooked } from "$lib/stores";
-  import {  recipes } from "$lib/stores";
-  import { delay, toArray, uniqueByKey } from "$lib/util";
+  import { searchInstructionForIngredients } from "$lib/nlp";
   import { scaleIngredients } from "$lib/nlp";
+  import SmoothHeight from "$lib/SmoothHeight.svelte";
+  import { toBeCooked } from "$lib/stores";
+  import { recipes } from "$lib/stores";
+  import { delay, toArray, uniqueByKey } from "$lib/util";
 
   // let truncateIngredients = true;
   let direction: "l" | "r" = "r";
@@ -20,7 +19,6 @@
   let scaleShow = false;
   let scaleValue = 0;
   let scaleInput: HTMLInputElement | undefined;
-
 
   const lemmaToIngredientIndex = (
     lemma: string,
@@ -106,7 +104,7 @@
   />
   <div class="instruction">
     <SmoothHeight>
-      {#each instructions as inst, i}
+      {#each instructions as _, i}
         {#if i === instructionIndex}
           <p in:fly={{ x: direction === "r" ? 200 : -200 }}>
             {instructionIndex + 1}. {@html instructionHtml}
