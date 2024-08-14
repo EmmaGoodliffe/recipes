@@ -3,7 +3,7 @@ import { toast } from "./stores";
 import { isRecipe, isRecord } from "./types";
 import { omit, toArray } from "./util";
 import type { ShoppingListItem } from "./stores";
-import type { Recipe } from "./types";
+import type { Recipe, RecipeVersions } from "./types";
 import type { Auth } from "firebase/auth";
 import type { DocumentReference, Firestore } from "firebase/firestore";
 
@@ -41,11 +41,15 @@ type UserData = {
 const toUserData = (x: Record<string, unknown>): UserData => ({
   recipes: toArray(x.recipes)
     .filter(isRecord)
-    .map(({ original, edited }) =>
-      isRecipe(original)
-        ? { original, edited: isRecipe(edited) ? edited : undefined }
-        : null,
-    )
+    .map(({ original, edited }) => {
+      const rv: RecipeVersions | null = isRecipe(original)
+        ? { original }
+        : null;
+      if (rv && isRecipe(edited)) {
+        rv.edited = edited;
+      }
+      return rv;
+    })
     .filter(r => !!r),
   shopping_list: toArray(x.shopping_list)
     .filter(isRecord)
@@ -55,9 +59,10 @@ const toUserData = (x: Record<string, unknown>): UserData => ({
       }
       const type = isRecord(source) ? source.type : undefined;
       const id = isRecord(source) ? source.id : undefined;
+      const y = isRecord(source) ? source.recipeYield : undefined;
       const s: ShoppingListItem["source"] =
         type === "recipe" && typeof id === "string"
-          ? { type, id }
+          ? { type, id, recipeYield: typeof y === "number" ? y : 1 }
           : type === "custom"
             ? { type }
             : { type: "unknown" };
@@ -164,11 +169,13 @@ export const deleteEditedRecipe = async (
   const ref = doc(db, "users", uid);
   const userDoc = await getDoc(ref);
   const { recipes } = toUserData(userDoc.data() ?? {});
-  return safeUpdateDoc(ref, {
+  const data = {
     recipes: recipes.map(r =>
       r.original["@id"] === id ? omit(r, ["edited"]) : r,
     ),
-  });
+  };
+  console.log(data);
+  return safeUpdateDoc(ref, data);
 };
 
 export const saveShoppingList = async (
