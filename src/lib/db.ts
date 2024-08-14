@@ -169,13 +169,11 @@ export const deleteEditedRecipe = async (
   const ref = doc(db, "users", uid);
   const userDoc = await getDoc(ref);
   const { recipes } = toUserData(userDoc.data() ?? {});
-  const data = {
+  return safeUpdateDoc(ref, {
     recipes: recipes.map(r =>
       r.original["@id"] === id ? omit(r, ["edited"]) : r,
     ),
-  };
-  console.log(data);
-  return safeUpdateDoc(ref, data);
+  });
 };
 
 export const saveShoppingList = async (

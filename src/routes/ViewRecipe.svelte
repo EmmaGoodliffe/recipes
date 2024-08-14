@@ -89,7 +89,9 @@
   );
   $: disabled = !(editable && version === "edited");
   $: name = $user?.displayName;
-  $: authorCredit = name ? { name } : undefined;
+  $: authorCredit = name
+    ? { name, url: `https://recipes-7ef89.web.app/u/${$user?.uid}` }
+    : undefined;
   $: authors = toArray($rec("author"));
   $: authorNames = authors.length
     ? authors.map(a => a?.name ?? "?").join(", ")

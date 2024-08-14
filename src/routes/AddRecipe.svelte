@@ -9,14 +9,15 @@
   import { addRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { toast, toastWrap, updateData } from "$lib/stores";
+  import { toast, toastWrap, updateData, user } from "$lib/stores";
   import { isRecipe } from "$lib/types";
+  import { toDur } from "$lib/util";
 
   let auth: Auth | undefined;
   let db: Firestore | undefined;
   let show = false;
   let loading = false;
-  let method: "by-url" | "from-clipboard" = "by-url";
+  let method: "by-url" | "blank" = "by-url";
   let recipe: Recipe | undefined;
   let onCancel = () => {};
 
@@ -33,51 +34,91 @@
   <div class="px-4">
     <select name="method" class="long" bind:value={method}>
       <option value="by-url">by URL</option>
-      <option value="from-clipboard">from clipboard</option>
+      <option value="blank">blank</option>
     </select>
   </div>
   {#if recipe === undefined}
-    {#if method === "by-url"}
-      <form
-        action="?/fetchRecipe"
-        method="post"
-        class="px-4 pb-2"
-        use:enhance={({ cancel }) => {
-          loading = true;
-          onCancel = cancel;
-          return ({ result }) => {
-            loading = false;
-            onCancel = () => {};
-            if (result.type !== "success") {
-              toast("api failed to add recipe");
-              console.error(result);
-              const error =
-                result.type === "error"
-                  ? result.error
-                  : result.type === "failure"
-                    ? result.data?.message
-                    : "";
-              throw new Error(`api failed to add recipe: ${error}`);
-            }
-            if (!isRecipe(result.data?.content)) {
-              toast("invalid recipe");
-              console.error(result);
-              throw new Error("invalid recipe");
-            }
-            recipe = result.data.content;
-          };
-        }}
-      >
-        <input
-          type="url"
-          name="url"
-          placeholder="https://www.example.com"
-          value="https://www.bbcgoodfood.com/recipes/courgette-curry"
-          class="long font-mono"
-        />
-        <LoaderButton buttonType="submit" {loading}>go</LoaderButton>
-      </form>
-    {/if}
+    <div class="px-4 pb-2">
+      {#if method === "by-url"}
+        <form
+          action="?/fetchRecipe"
+          method="post"
+          use:enhance={({ cancel }) => {
+            loading = true;
+            onCancel = cancel;
+            return ({ result }) => {
+              loading = false;
+              onCancel = () => {};
+              if (result.type !== "success") {
+                toast("api failed to add recipe");
+                console.error(result);
+                const error =
+                  result.type === "error"
+                    ? result.error
+                    : result.type === "failure"
+                      ? result.data?.message
+                      : "";
+                throw new Error(`api failed to add recipe: ${error}`);
+              }
+              if (!isRecipe(result.data?.content)) {
+                toast("invalid recipe");
+                console.error(result);
+                throw new Error("invalid recipe");
+              }
+              recipe = result.data.content;
+            };
+          }}
+        >
+          <input
+            type="url"
+            name="url"
+            placeholder="https://www.example.com"
+            value="https://www.bbcgoodfood.com/recipes/courgette-curry"
+            class="long font-mono"
+          />
+          <LoaderButton buttonType="submit" {loading}>go</LoaderButton>
+        </form>
+      {:else if method === "blank"}
+        <button
+          type="submit"
+          class="long bg-file"
+          on:click={() => {
+            const uid = $user?.uid ?? "_";
+            const rid = `${Date.now()}-${Math.random().toString().slice(2)}`;
+            const url = `https://recipes-7ef89.web.app/u/${uid}/r/${rid}`;
+            const date = new Date().toISOString();
+            recipe = {
+              "@context": "https://schema.org",
+              "@id": url,
+              "@type": "Recipe",
+              prepTime: toDur({ h: 0, m: 10 }),
+              cookTime: toDur({ h: 0, m: 10 }),
+              totalTime: toDur({ h: 0, m: 20 }),
+              recipeIngredient: ["69 aubergines"],
+              recipeInstructions: [{ text: "you know what to do" }],
+              recipeYield: 1,
+              author: [
+                {
+                  name: $user?.displayName ?? "?",
+                  url: `https://recipes-7ef89.web.app/u/${uid}`,
+                },
+              ],
+              dateModified: date,
+              datePublished: date,
+              image: {
+                url: "/favicon.png",
+                width: 128,
+                height: 128,
+              },
+              name: "my awesome recipe",
+              url,
+            };
+          }}>go</button
+        >
+      {:else}
+        <p>Don't know how to add recipe by method {method}</p>
+      {/if}
+    </div>
   {:else}
     <ViewRecipe recipeVersions={{ original: recipe }} />
   {/if}
