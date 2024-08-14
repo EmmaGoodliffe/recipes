@@ -13,14 +13,25 @@
 
   let targetH = 0;
 
-  afterUpdate(async () => {
-    await delay(10); // hacky
+  const update = () => {
     if (inner) {
       if (Math.abs(targetH - inner.clientHeight) > 0.01) {
         targetH = inner.clientHeight;
         h.set(inner.clientHeight);
       }
     }
+  };
+
+  afterUpdate(async () => {
+    // hacky
+    await delay(10);
+    update();
+    await delay(500);
+    update();
+    await delay(200);
+    update();
+    await delay(200);
+    update();
   });
 </script>
 

@@ -29,7 +29,7 @@
     {#if recipes.length === 0}
       <p>No recipes.</p>
     {/if}
-    {#each recipes as recipe}
+    {#each recipes as recipe (recipe.original["@id"])}
       {@const rec = recipe.edited ?? recipe.original}
       <button
         class="card enforced-rounded"
@@ -67,13 +67,13 @@
     <div slot="footer">
       <button
         class="long bg-input inline-block"
-        on:click={() => toBeEdited.set({...$toBePreviewed})}
+        on:click={() => toBeEdited.set({ ...$toBePreviewed })}
         ><i class="bx bx-pencil"></i> edit</button
       >
       <a
         href="/cook"
         class="long bg-cook inline-block text-center"
-        on:click={() => toBeCooked.set({...$toBePreviewed})}
+        on:click={() => toBeCooked.set({ ...$toBePreviewed })}
         ><i class="bx bxs-flask"></i> cook</a
       >
       <a

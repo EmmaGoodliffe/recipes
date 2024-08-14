@@ -80,6 +80,7 @@
               <div class="flex self-center z-10">
                 <button
                   class="mx-2 -my-6 square bg-input opacity-0 group-hover:opacity-100 transition-all"
+                  disabled={getKeys(obj).length === 1}
                   on:click={() =>
                     onEdit([{ mode: "delete", path: `${pathPrefix}.${key}` }])}
                   ><i class="bx bx-trash"></i></button

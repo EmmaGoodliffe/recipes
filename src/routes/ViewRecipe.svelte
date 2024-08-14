@@ -1,13 +1,20 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { fade, fly } from "svelte/transition";
   import { getFb } from "./fb";
   import JsonTable from "./JsonTable.svelte";
   import RecipeStats from "./RecipeStats.svelte";
   import type { Recipe, RecipeVersions } from "$lib/types";
-  import { deleteEditedRecipe, saveEditedRecipe } from "$lib/db";
+  import {
+    deleteEditedRecipe,
+    deleteOriginalRecipe,
+    deleteWholeRecipe,
+    saveEditedRecipe,
+  } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { scaleIngredients } from "$lib/nlp";
+  import SmoothHeight from "$lib/SmoothHeight.svelte";
   import {
     addIngredientsToShoppingList,
     Editable,
@@ -45,7 +52,10 @@
   let mValue = "";
   let longInput = false;
   let saveLoading = false;
-  let resetLoading = false;
+  let revertLoading = false;
+  let overwriteLoading = false;
+  let deleteLoading = false;
+  let showVc = false;
   let scale = true;
   let version: "original" | "edited" = "edited";
   let authorCredit: { name: string; url?: string } | undefined;
@@ -115,53 +125,7 @@
 <!-- MENU -->
 {#if editable}
   <button class="long bg-input" on:click={() => toBeEdited.set(undefined)}
-    ><i class="bx bx-chevron-left"></i> back</button
-  >
-  <LoaderButton
-    loading={saveLoading}
-    disabled={version === "original" || resetLoading}
-    onClick={async () => {
-      saveLoading = true;
-      const existentAuthors = authors
-        .filter(a => a !== undefined)
-        .filter(a => hasRequiredKeys(a, ["name"]));
-      const data = {
-        ...rec.data,
-        dateModified: new Date().toISOString(),
-        author: deepUnique([...existentAuthors, ...toArray(authorCredit)]),
-      };
-      recipeVersions.edited = data;
-      const { auth, db } = getFb();
-      const error = await toastWrap(saveEditedRecipe)(
-        auth,
-        db,
-        recipeVersions.original["@id"],
-        data,
-      );
-      saveLoading = false;
-      if (!error) {
-        toast("saved recipe");
-      }
-      updateData(); // not awaited
-    }}><i class="bx bxs-save"></i> save</LoaderButton
-  >
-  <LoaderButton
-    className="long bg-input"
-    loading={resetLoading}
-    disabled={version === "original" || saveLoading}
-    onClick={async () => {
-      resetLoading = true;
-      const { auth, db } = getFb();
-      recipeVersions.edited = { ...recipeVersions.original };
-      version = "original";
-      await toastWrap(deleteEditedRecipe)(
-        auth,
-        db,
-        recipeVersions.original["@id"],
-      );
-      resetLoading = false;
-      updateData(); // not awaited
-    }}><i class="bx bx-reset"></i> revert to original version</LoaderButton
+    ><i class="bx bx-left-arrow-alt"></i> back</button
   >
   <a
     href="/cook"
@@ -186,7 +150,119 @@
         ];
       })}><i class="bx bxs-basket"></i> add to shopping list</a
   >
-
+  <LoaderButton
+    loading={saveLoading}
+    disabled={version === "original" ||
+      revertLoading ||
+      overwriteLoading ||
+      deleteLoading}
+    onClick={async () => {
+      saveLoading = true;
+      const existentAuthors = authors
+        .filter(a => a !== undefined)
+        .filter(a => hasRequiredKeys(a, ["name"]));
+      const data = {
+        ...rec.data,
+        dateModified: new Date().toISOString(),
+        author: deepUnique([...existentAuthors, ...toArray(authorCredit)]),
+      };
+      recipeVersions.edited = data;
+      const { auth, db } = getFb();
+      const error = await toastWrap(saveEditedRecipe)(
+        auth,
+        db,
+        recipeVersions.original["@id"],
+        data,
+      );
+      if (!error) {
+        toast("saved recipe");
+      }
+      await updateData();
+      saveLoading = false;
+    }}><i class="bx bxs-save"></i> save</LoaderButton
+  >
+  <button class="long bg-input" on:click={() => (showVc = !showVc)}
+    ><i class="bx bx-chevron-right transition" class:rotate-90={showVc}></i> version
+    control</button
+  >
+  <div class="my-2">
+    <SmoothHeight>
+      {#if showVc}
+        <div
+          class="px-4 py-4 border-2 border-border rounded"
+          transition:fade={{}}
+        >
+          <LoaderButton
+            className="long bg-input"
+            loading={revertLoading}
+            disabled={version === "original" ||
+              saveLoading ||
+              overwriteLoading ||
+              deleteLoading}
+            onClick={async () => {
+              revertLoading = true;
+              const { auth, db } = getFb();
+              recipeVersions.edited = undefined;
+              rec.setWhole(recipeVersions.original);
+              version = "original";
+              await toastWrap(deleteEditedRecipe)(
+                auth,
+                db,
+                recipeVersions.original["@id"],
+              );
+              await updateData();
+              revertLoading = false;
+            }}
+            ><i class="bx bxs-skip-previous-circle lg"></i> revert (delete edited version)</LoaderButton
+          >
+          <LoaderButton
+            className="long bg-input"
+            loading={overwriteLoading}
+            disabled={version === "original" ||
+              saveLoading ||
+              revertLoading ||
+              deleteLoading}
+            onClick={async () => {
+              overwriteLoading = true;
+              const { auth, db } = getFb();
+              recipeVersions.original = { ...rec.data };
+              recipeVersions.edited = undefined;
+              rec.setWhole(recipeVersions.original);
+              version = "original";
+              await toastWrap(deleteOriginalRecipe)(
+                auth,
+                db,
+                recipeVersions.original["@id"],
+              );
+              await updateData();
+              overwriteLoading = false;
+            }}
+            ><i class="bx bxs-skip-next-circle lg"></i> overwrite (delete original version)</LoaderButton
+          >
+          <LoaderButton
+            className="long bg-danger"
+            loading={deleteLoading}
+            disabled={version === "original" ||
+              saveLoading ||
+              revertLoading ||
+              overwriteLoading}
+            onClick={async () => {
+              deleteLoading = true;
+              const { auth, db } = getFb();
+              await toastWrap(deleteWholeRecipe)(
+                auth,
+                db,
+                recipeVersions.original["@id"],
+              );
+              toBeEdited.set(undefined);
+              await updateData();
+              deleteLoading = false;
+            }}><i class="bx bxs-trash"></i> delete whole recipe</LoaderButton
+          >
+        </div>
+      {/if}
+    </SmoothHeight>
+  </div>
   <!-- VERSION -->
   <div class="group text-left">
     <label for="version" class="focal">version</label>
@@ -315,7 +391,7 @@
         {/each}
       </ol>
       <!-- VIEW: nutrition -->
-      <div class="pt-4 pb-1 font-bold">
+      <!-- <div class="pt-4 pb-1 font-bold">
         Nutrition info <button
           class="mx-2 square bg-input"
           class:invisible={disabled}
@@ -323,13 +399,12 @@
           on:click={() => edit("nutrition")}
           ><i class="bx bx-pencil"></i></button
         >
-        <!-- TODO: scale nutrition info -->
       </div>
       <ul>
         {#each Object.values($rec("nutrition") ?? {}).filter(v => v !== "NutritionInformation") as info}
           <li>{info}</li>
         {/each}
-      </ul>
+      </ul> -->
     </div>
     <!-- VIEW: other -->
     <JsonTable
@@ -389,7 +464,7 @@
           <label for="mins" class="text-sm italic">minutes</label>
         </div>
       </div>
-      <button type="submit" class="long bg-cook"
+      <button type="submit" class="long bg-file"
         ><i class="bx bx-list-check"></i> commit edits</button
       >
     </form>
@@ -462,7 +537,7 @@
           />
         {/if}
       </div>
-      <button type="submit" class="long bg-cook"
+      <button type="submit" class="long bg-file"
         ><i class="bx bx-list-check"></i> commit edits</button
       >
     </form>

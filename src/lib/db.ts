@@ -126,26 +126,25 @@ export const addRecipe = async (
   }
 };
 
-// export const deleteWholeRecipe = async (
-//   auth_: Auth | undefined,
-//   db_: Firestore | undefined,
-//   id: string | undefined,
-// ) => {
-//   const { auth, db } = checkAuthAndDb(auth_, db_);
-//   const uid = checkUid(auth);
-//   const ref = doc(db, "users", uid);
-//   const userDoc = await getDoc(ref);
-//   const { recipes } = toUserData(userDoc.data() ?? {});
-//   return safeUpdateDoc(ref, {
-//     recipes: recipes.filter(r => r.original["@id"] !== id),
-//   });
-// };
+export const deleteWholeRecipe = async (
+  auth_: Auth | undefined,
+  db_: Firestore | undefined,
+  id: string | undefined,
+) => {
+  const { auth, db } = checkAuthAndDb(auth_, db_);
+  const uid = checkUid(auth);
+  const ref = doc(db, "users", uid);
+  const userDoc = await getDoc(ref);
+  const { recipes } = toUserData(userDoc.data() ?? {});
+  return safeUpdateDoc(ref, {
+    recipes: recipes.filter(r => r.original["@id"] !== id),
+  });
+};
 
-export const saveEditedRecipe = async (
+export const deleteOriginalRecipe = async (
   auth_: Auth | undefined,
   db_: Firestore | undefined,
   id: string,
-  recipe: Recipe,
 ) => {
   const { auth, db } = checkAuthAndDb(auth_, db_);
   const uid = checkUid(auth);
@@ -154,7 +153,7 @@ export const saveEditedRecipe = async (
   const { recipes } = toUserData(userDoc.data() ?? {});
   return safeUpdateDoc(ref, {
     recipes: recipes.map(r =>
-      r.original["@id"] === id ? { ...r, edited: recipe } : r,
+      r.original["@id"] === id ? { original: r.edited ?? r.original } : r,
     ),
   });
 };
@@ -172,6 +171,24 @@ export const deleteEditedRecipe = async (
   return safeUpdateDoc(ref, {
     recipes: recipes.map(r =>
       r.original["@id"] === id ? omit(r, ["edited"]) : r,
+    ),
+  });
+};
+
+export const saveEditedRecipe = async (
+  auth_: Auth | undefined,
+  db_: Firestore | undefined,
+  id: string,
+  recipe: Recipe,
+) => {
+  const { auth, db } = checkAuthAndDb(auth_, db_);
+  const uid = checkUid(auth);
+  const ref = doc(db, "users", uid);
+  const userDoc = await getDoc(ref);
+  const { recipes } = toUserData(userDoc.data() ?? {});
+  return safeUpdateDoc(ref, {
+    recipes: recipes.map(r =>
+      r.original["@id"] === id ? { ...r, edited: recipe } : r,
     ),
   });
 };

@@ -86,7 +86,6 @@
             const uid = $user?.uid ?? "_";
             const rid = `${Date.now()}-${Math.random().toString().slice(2)}`;
             const url = `https://recipes-7ef89.web.app/u/${uid}/r/${rid}`;
-            const date = new Date().toISOString();
             recipe = {
               "@context": "https://schema.org",
               "@id": url,
@@ -103,8 +102,7 @@
                   url: `https://recipes-7ef89.web.app/u/${uid}`,
                 },
               ],
-              dateModified: date,
-              datePublished: date,
+              datePublished: new Date().toISOString(),
               image: {
                 url: "/favicon.png",
                 width: 128,
