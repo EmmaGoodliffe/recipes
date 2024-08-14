@@ -51,10 +51,10 @@
         transition:fly={{ y: 20 }}
       >
         {#if rec.image?.url}
-          <img src={rec.image.url} alt={rec.name} class="object-cover flex-1" />
+          <img src={rec.image.url} alt={rec.name} class="w-full flex-1 object-cover" />
         {/if}
         <div class="w-full px-6 py-4 bg-bg">
-          <span class="text-lg font-bold">{rec.name}</span>
+          <p class="text-lg font-bold truncate">{rec.name}</p>
           <p class="text-sm opacity-50 truncate">
             {rec.publisher?.name
               ? `Imported from ${rec.publisher.name}`

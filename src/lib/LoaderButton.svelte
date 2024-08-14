@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { sineInOut } from "svelte/easing";
   import { tweened } from "svelte/motion";
 
@@ -11,35 +10,36 @@
 
   const x = tweened<number>(-1, { duration: 1000, easing: sineInOut });
 
-  onMount(() =>
-    x.subscribe(v => {
-      if (loading && typeof v === "number") {
-        if (v <= 0) {
-          x.set(75);
-        } else if (v >= 75) {
-          x.set(0);
-        }
+  $: {
+    if (loading && typeof $x === "number") {
+      if ($x <= 0) {
+        x.set(75);
+      } else if ($x >= 75) {
+        x.set(0);
       }
-    }),
-  );
+    }
+  }
 </script>
 
 <button
   type={buttonType}
-  class="{className}"
+  class={className}
   disabled={loading || disabled}
   on:click={e => {
     x.update(v => v + 1);
     onClick(e);
   }}
 >
-  <div class="px-4 pt-2 pb-1 inline-flex items-center" class:opacity-50={loading}>
+  <div
+    class="px-4 pt-2 pb-1 inline-flex items-center"
+    class:opacity-50={loading}
+  >
     <slot />
   </div>
   <div
     class="loader"
     class:bg-text={loading}
-    style={`margin-left: ${$x}%`}
+    style={`margin-left: ${$x}%;`}
   ></div>
 </button>
 

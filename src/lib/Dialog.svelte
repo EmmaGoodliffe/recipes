@@ -43,7 +43,7 @@
           }}><i class="bx bx-x"></i></button
         >
       </header>
-      <main class="max-h-[60vh] px-4 pb-2 overflow-auto">
+      <main class="max-h-[60vh] px-2 sm:px-4 pb-2 overflow-auto">
         <slot />
       </main>
       <footer class="sticky bottom-0">
@@ -59,6 +59,6 @@
   }
 
   footer:has(div :first-child) {
-    @apply w-full bg-bg px-4 py-2;
+    @apply w-full bg-bg px-2 sm:px-4 py-2;
   }
 </style>

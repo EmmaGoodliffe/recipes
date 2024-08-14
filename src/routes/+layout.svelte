@@ -5,7 +5,7 @@
   import Toast from "./Toast.svelte";
   import { beforeNavigate } from "$app/navigation";
   import emptyFlask from "$lib/images/empty-flask.svg";
-  import { toBeEdited } from "$lib/stores";
+  import { initAll, toBeEdited } from "$lib/stores";
 
   const pageIcons = [
     { url: "/", icon: "home", onClick: () => toBeEdited.set(undefined) },
@@ -38,6 +38,7 @@
 
   onMount(() => {
     selectedPage = window.location.pathname;
+    return initAll();
   });
 
   beforeNavigate(nav => {

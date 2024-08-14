@@ -11,7 +11,7 @@
   import type { Auth, User } from "firebase/auth";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
-  import { initAll, toast, user } from "$lib/stores";
+  import {  toast, user } from "$lib/stores";
   import { delay } from "$lib/util";
 
   let auth: Auth;
@@ -47,7 +47,6 @@
   onMount(() => {
     auth = getFb().auth;
     downloading = false;
-    return initAll();
   });
 
   const updateSetting = async (index: number) => {

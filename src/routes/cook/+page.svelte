@@ -7,7 +7,7 @@
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import Dialog from "$lib/Dialog.svelte";
   import { toBeCooked } from "$lib/stores";
-  import { initAll, recipes } from "$lib/stores";
+  import {  recipes } from "$lib/stores";
   import { delay, toArray, uniqueByKey } from "$lib/util";
   import { scaleIngredients } from "$lib/nlp";
 
@@ -21,7 +21,6 @@
   let scaleValue = 0;
   let scaleInput: HTMLInputElement | undefined;
 
-  onMount(initAll);
 
   const lemmaToIngredientIndex = (
     lemma: string,

@@ -50,7 +50,7 @@
 
 <style lang="postcss">
   .stats {
-    @apply w-5/6 max-w-sm flex justify-between mx-auto;
+    @apply w-full xs:w-5/6 max-w-sm mx-auto flex justify-between;
   }
 
   .times {

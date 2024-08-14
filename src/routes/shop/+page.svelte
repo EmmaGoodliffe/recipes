@@ -1,7 +1,6 @@
 <script lang="ts">
   import {
     getByPath,
-    initAll,
     shoppingList,
     recipes,
     type ShoppingListItem,
@@ -11,7 +10,7 @@
   import Dialog from "$lib/Dialog.svelte";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import { delay, unique, areDeepEqual, debounce } from "$lib/util";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { saveShoppingList } from "$lib/db";
   import { getFb } from "../fb";
@@ -115,33 +114,22 @@
     return sorted;
   };
 
-  const slowSave = debounce(5 * 1000, async () => {
+  const save = async () => {
     const { auth, db } = getFb();
     await toastWrap(saveShoppingList)(auth, db, $shoppingList.flat());
-  });
-
-  const save = async () => {
-    loading = true;
-    await slowSave();
-    loading = false;
+    console.log("saved list");
   };
 
-  onMount(() => {
-    const unsub = shoppingList.subscribe(async l => {
+  onMount(() =>
+    shoppingList.subscribe(async l => {
       const sorted = sort(l);
       if (!areDeepEqual(sorted, l)) {
         shoppingList.set(sorted);
-      } else {
-        console.log("already sorted");
       }
-      await save();
-    });
-    const endAll = initAll();
-    return () => {
-      unsub();
-      endAll();
-    };
-  });
+    }),
+  );
+
+  onDestroy(save);
 
   $: noneSelected = $shoppingList
     .flat()
@@ -153,8 +141,13 @@
   on:click={() => edit({ i: $shoppingList.length, j: 0 })}
   ><i class="bx bx-plus"></i> item</button
 >
-<LoaderButton {loading} onClick={save}
-  ><i class="bx bx-save"></i> save</LoaderButton
+<LoaderButton
+  {loading}
+  onClick={async () => {
+    loading = true;
+    await save();
+    loading = false;
+  }}><i class="bx bx-save"></i> save</LoaderButton
 >
 {#if $shoppingList.length === 0}
   <p class="my-4">No items.</p>
@@ -228,7 +221,9 @@
   </div>
   <div class="enforced-rounded border-2 border-border">
     {#each $shoppingList as section, i}
-      <div class="py-1 flex justify-center items-baseline border-b-2 border-border">
+      <div
+        class="py-1 flex justify-center items-baseline border-b-2 border-border"
+      >
         <button
           class="mx-2 square bg-input"
           on:click={() =>

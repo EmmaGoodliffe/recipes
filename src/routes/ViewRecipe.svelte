@@ -163,7 +163,7 @@
     </select>
   </div>
 {/if}
-<article class="px-4 pb-4">
+<article>
   <header class="mx-2 py-4 text-center">
     <div class="text-lg">
       <!-- VIEW: name -->

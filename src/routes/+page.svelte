@@ -1,18 +1,9 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import AddRecipe from "./AddRecipe.svelte";
   import Gallery from "./Gallery.svelte";
   import ViewRecipe from "./ViewRecipe.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
-  import {
-    initAll,
-    recipes,
-    toBeEdited,
-    toBePreviewed,
-    user,
-  } from "$lib/stores";
-
-  onMount(initAll);
+  import { recipes, toBeEdited, toBePreviewed, user } from "$lib/stores";
 </script>
 
 <svelte:head>
