@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fade, fly } from "svelte/transition";
+  import { fade } from "svelte/transition";
   import { getFb } from "./fb";
   import JsonTable from "./JsonTable.svelte";
   import RecipeStats from "./RecipeStats.svelte";
@@ -213,7 +213,8 @@
               await updateData();
               revertLoading = false;
             }}
-            ><i class="bx bxs-skip-previous-circle lg"></i> revert (delete edited version)</LoaderButton
+            ><i class="bx bxs-skip-previous-circle lg"></i> revert (delete edited
+            version)</LoaderButton
           >
           <LoaderButton
             className="long bg-input"
@@ -237,7 +238,8 @@
               await updateData();
               overwriteLoading = false;
             }}
-            ><i class="bx bxs-skip-next-circle lg"></i> overwrite (delete original version)</LoaderButton
+            ><i class="bx bxs-skip-next-circle lg"></i> overwrite (delete original
+            version)</LoaderButton
           >
           <LoaderButton
             className="long bg-danger"
