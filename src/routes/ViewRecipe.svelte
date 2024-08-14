@@ -9,8 +9,12 @@
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { scaleIngredients } from "$lib/nlp";
   import {
+    addIngredientsToShoppingList,
     Editable,
+    shoppingList,
+    toast,
     toastWrap,
+    toBeCooked,
     toBeEdited,
     updateData,
     user,
@@ -109,7 +113,7 @@
 <!-- MENU -->
 {#if editable}
   <button class="long bg-input" on:click={() => toBeEdited.set(undefined)}
-    ><i class="bx bx-chevron-left"></i> cancel</button
+    ><i class="bx bx-chevron-left"></i> back</button
   >
   <LoaderButton
     loading={saveLoading}
@@ -126,15 +130,18 @@
       };
       recipeVersions.edited = data;
       const { auth, db } = getFb();
-      await toastWrap(saveEditedRecipe)(
+      const error = await toastWrap(saveEditedRecipe)(
         auth,
         db,
         recipeVersions.original["@id"],
         data,
       );
       saveLoading = false;
+      if (!error) {
+        toast("saved recipe");
+      }
       updateData(); // not awaited
-    }}><i class="bx bx-save"></i> save</LoaderButton
+    }}><i class="bx bxs-save"></i> save</LoaderButton
   >
   <LoaderButton
     className="long bg-input"
@@ -154,6 +161,28 @@
       updateData(); // not awaited
     }}><i class="bx bx-reset"></i> revert to original version</LoaderButton
   >
+  <a
+    href="/cook"
+    class="long bg-cook inline-block text-center"
+    on:click={() => toBeCooked.set({...recipeVersions})}
+    ><i class="bx bxs-flask"></i> cook</a
+  >
+  <a
+    href="/shop"
+    class="long bg-shop inline-block text-center"
+    on:click={() =>
+      shoppingList.update(list => {
+        const { recipeIngredient } =
+          recipeVersions[version] ?? recipeVersions.original;
+        return [
+          addIngredientsToShoppingList(list.flat(), toArray(recipeIngredient), {
+            type: "recipe",
+            id: recipeVersions.original["@id"],
+          }),
+        ];
+      })}><i class="bx bxs-basket"></i> shop</a
+  >
+
   <!-- VERSION -->
   <div class="group text-left">
     <label for="version" class="focal">version</label>
@@ -244,8 +273,6 @@
       yieldEdit: () => {
         if (editable) {
           edit("recipeYield");
-        } else {
-          console.log("editing yield");
         }
       },
     }}
@@ -328,7 +355,6 @@
         const prepTime = editKey === "prepTime" ? dur : rec.get("prepTime");
         const cookTime = editKey === "cookTime" ? dur : rec.get("cookTime");
         const totalDur = addDurations([prepTime, cookTime]);
-        console.log([prepTime, cookTime, totalDur]);
         rec.setByPath(editKey ?? "", dur);
         rec.set("totalTime", totalDur);
         editKey = undefined;

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
   import ViewRecipe from "./ViewRecipe.svelte";
-  import type { ShoppingListItem } from "$lib/stores";
   import type { RecipeVersions } from "$lib/types";
   import type { Writable } from "svelte/store";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
   import {
+    addIngredientsToShoppingList,
     shoppingList,
     toBeCooked,
     toBeEdited,
@@ -18,16 +18,6 @@
   export let selectStores: Writable<RecipeVersions | undefined>[];
 
   let showPreview = false;
-
-  const ingredientToShoppingListItem = (ing: string | undefined) => {
-    const id = $toBePreviewed?.original["@id"];
-    const source: ShoppingListItem["source"] = id
-      ? { type: "recipe", id }
-      : { type: "unknown" };
-    return ing
-      ? { value: ing, source, bought: false, selected: false, deleted: false }
-      : undefined;
-  };
 </script>
 
 <div
@@ -77,13 +67,13 @@
     <div slot="footer">
       <button
         class="long bg-input inline-block"
-        on:click={() => toBeEdited.set($toBePreviewed)}
+        on:click={() => toBeEdited.set({...$toBePreviewed})}
         ><i class="bx bx-pencil"></i> edit</button
       >
       <a
         href="/cook"
         class="long bg-cook inline-block text-center"
-        on:click={() => toBeCooked.set($toBePreviewed)}
+        on:click={() => toBeCooked.set({...$toBePreviewed})}
         ><i class="bx bxs-flask"></i> cook</a
       >
       <a
@@ -93,11 +83,13 @@
           shoppingList.update(list => {
             const { recipeIngredient } =
               $toBePreviewed.edited ?? $toBePreviewed.original;
+            const id = $toBePreviewed?.original["@id"];
             return [
-              ...list,
-              toArray(recipeIngredient)
-                .map(ingredientToShoppingListItem)
-                .filter(ing => ing !== undefined),
+              addIngredientsToShoppingList(
+                list.flat(),
+                toArray(recipeIngredient),
+                { type: "recipe", id },
+              ),
             ];
           })}><i class="bx bxs-basket"></i> shop</a
       >

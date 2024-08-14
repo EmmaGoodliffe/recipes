@@ -1,6 +1,13 @@
 import model from "wink-eng-lite-web-model";
 import wink from "wink-nlp";
-import { doesInclude, getKeys, overlap, unique } from "./util";
+import {
+  decimalToString,
+  doesInclude,
+  getKeys,
+  overlap,
+  toIngredient,
+  unique,
+} from "./util";
 import type { ItsFunction } from "wink-nlp";
 
 const nlp = wink(model);
@@ -24,7 +31,7 @@ const nlpTokens = (text: string) => {
 
 type Token = ReturnType<typeof nlpTokens>[number];
 
-const lemmas = (tokens: Token[]) =>
+const nounLemmas = (tokens: Token[]) =>
   unique(tokens.filter(t => t.pos === "NOUN").map(t => t.lemma));
 
 export const UNITS = ["g", "tbsp", "tsp"] as const;
@@ -73,31 +80,25 @@ export const parseIngredient = (ing: string | undefined) => {
       item: [],
       description: [],
       value: "",
-      lemmas: { bracketed: [], item: [], description: [] },
+      nounLemmas: { bracketed: [], item: [], description: [] },
     };
   }
   const { ext, bracketed } = splitBrackets(ing);
   const extTokens = nlpTokens(ext);
   const { number, unit, rest } = getQuantity(extTokens);
-  const commas = splitCommas(rest);
+  const commaParts = splitCommas(rest);
   const [item, description] =
-    commas.length === 2 ? commas : [commas.flat(), []];
+    commaParts.length === 2 ? commaParts : [commaParts.flat(), []];
   return {
-    /** NLP number */
     number,
-    /** NLP unit */
     unit,
-    /** NLP item */
     item,
-    /** NLP description */
     description,
-    /** NLP value */
     value: ing,
-    /** NLP lemmas */
-    lemmas: {
-      bracketed: lemmas(nlpTokens(bracketed)),
-      item: lemmas(item),
-      description: lemmas(description),
+    nounLemmas: {
+      bracketed: nounLemmas(nlpTokens(bracketed)),
+      item: nounLemmas(item),
+      description: nounLemmas(description),
     },
   };
 };
@@ -107,17 +108,16 @@ export const searchInstructionForIngredients = (
   ingredients: string[],
 ) => {
   const instructionTokens = nlpTokens(instruction ?? "");
-  const instructionLemmas = lemmas(instructionTokens);
+  const instructionLemmas = nounLemmas(instructionTokens);
   const ingredientMatches = ingredients
     .map(parseIngredient)
     .map(i =>
-      getKeys(i.lemmas).map(where => ({
+      getKeys(i.nounLemmas).map(where => ({
+        // TODO: clarify object by not spreading
         ...i,
         match: {
-          /** Location of match in ingredient */
           where,
-          /** Matched lemmas */
-          lemmas: overlap(i.lemmas[where], instructionLemmas),
+          lemmas: overlap(i.nounLemmas[where], instructionLemmas),
         },
       })),
     )
@@ -128,12 +128,6 @@ export const searchInstructionForIngredients = (
     matchingLemmas.includes(t.lemma),
   );
   return { ingredientMatches, instructionMatches };
-};
-
-const decimalToString = (x: number) => {
-  const regular = x.toString();
-  const precise = x.toFixed(2);
-  return regular.length < precise.length ? regular : precise;
 };
 
 const scale = (x: string | null, scaling: number) => {
@@ -153,27 +147,6 @@ const scale = (x: string | null, scaling: number) => {
     decimalToString(scaling * parseFloat(n)),
   );
   return `${scaledMin}-${scaledMax}`;
-};
-
-export const toIngredient = (
-  {
-    number,
-    unit,
-    item,
-    description,
-  }: Pick<
-    ReturnType<typeof parseIngredient>,
-    "number" | "unit" | "item" | "description"
-  >,
-  includeDescription = true,
-) => {
-  const n = number ?? "";
-  const spaceBeforeUnit = unit === "g" ? "" : " ";
-  const u = unit ? spaceBeforeUnit + unit + " " : " ";
-  const i = item.map(({ value }) => value).join(" ");
-  const desc = description.map(({ value }) => value).join(" ");
-  const d = includeDescription && desc ? `, ${desc}` : "";
-  return (n + u + i + d).trim();
 };
 
 export const scaleIngredients = (ingredients: string[], scaling: number) =>

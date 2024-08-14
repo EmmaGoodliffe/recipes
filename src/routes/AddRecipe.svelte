@@ -94,7 +94,7 @@
             toast("added recipe");
             return updateData();
           }
-        }}><i class="bx bx-save"></i> save</LoaderButton
+        }}><i class="bx bxs-save"></i> save</LoaderButton
       >
       <button
         class="long cancel"

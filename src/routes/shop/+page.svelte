@@ -5,10 +5,16 @@
   import { saveShoppingList } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { parseIngredient, toIngredient, UNITS } from "$lib/nlp";
+  import { parseIngredient, UNITS } from "$lib/nlp";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
-  import { getByPath, recipes, shoppingList, toastWrap } from "$lib/stores";
-  import { areDeepEqual, delay, unique } from "$lib/util";
+  import {
+    getByPath,
+    recipes,
+    shoppingList,
+    toast,
+    toastWrap,
+  } from "$lib/stores";
+  import { areDeepEqual, delay, toIngredient, unique } from "$lib/util";
 
   let method: "alphabetical" | "source" = "alphabetical";
   let groups: { name: string }[] = [];
@@ -142,7 +148,8 @@
     loading = true;
     await save();
     loading = false;
-  }}><i class="bx bx-save"></i> save</LoaderButton
+    toast("saved list");
+  }}><i class="bx bxs-save"></i> save</LoaderButton
 >
 {#if $shoppingList.length === 0}
   <p class="my-4">No items.</p>

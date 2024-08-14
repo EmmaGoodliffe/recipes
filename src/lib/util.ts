@@ -1,3 +1,4 @@
+import type { parseIngredient } from "./nlp";
 import type { ExtractEndsWith } from "./types";
 
 export const delay = (ms: number): Promise<void> =>
@@ -56,7 +57,56 @@ export const deepUnique = <T>(items: T[]) => {
   return result;
 };
 
+export const doesEndWith = <T extends string, S extends string>(
+  text: T,
+  sub: S,
+): text is T & ExtractEndsWith<T, S> => text.endsWith(sub);
+
+export const doesInclude = <T extends readonly string[]>(
+  arr: T,
+  x: string,
+): x is T[number] => arr.includes(x);
+
+// const doesDeepInclude = <T extends object[]>(
+//   arr: T,
+//   x: object,
+// ): x is T[number] => arr.some(item => areDeepEqual(item, x));
+
+// const pick = <T extends object, K extends string & keyof T>(
+//   obj: T,
+//   keys: K[],
+// ) => {
+//   const result: Partial<T> = {};
+//   for (const k of getKeys(obj)) {
+//     if (doesInclude(keys, k)) {
+//       result[k] = obj[k];
+//     }
+//   }
+//   return result as Pick<T, K>;
+// };
+
+export const omit = <T extends object, K extends string & keyof T>(
+  obj: T,
+  keys: K[],
+) => {
+  const result: Partial<T> = {};
+  for (const k of getKeys(obj)) {
+    if (!doesInclude(keys, k)) {
+      result[k] = obj[k];
+    }
+  }
+  return result as Omit<T, K>;
+};
+
+export const hasRequiredKeys = <T extends object, K extends string & keyof T>(
+  obj: T,
+  keys: K[],
+): obj is T & Required<Pick<T, K>> => keys.every(k => obj[k] !== undefined);
+
 export const overlap = <T>(a: T[], b: T[]) => a.filter(x => b.includes(x));
+
+// const deepOverlap = <T extends object>(a: T[], b: T[]) =>
+//   a.filter(x => doesDeepInclude(b, x));
 
 const MY_TIME_PERIODS = ["y", "mo", "d", "h", "m", "s"] as const;
 
@@ -132,7 +182,8 @@ const rollover = (x: Record<(typeof MY_TIME_PERIODS)[number], number>) => {
 
 const transpose = (x: number[][]) => x[0].map((_, i) => x.map(row => row[i]));
 
-const sum = (x: number[]) => x.reduce((a, b) => a + b);
+export const sum = (x: number[]) =>
+  x.map(a => (isNaN(a) ? 0 : a)).reduce((a, b) => a + b);
 
 /**
  * Add arrays like rows on a spread sheet
@@ -165,6 +216,33 @@ export const dateToText = (date: string | undefined) => {
   };
 };
 
+export const decimalToString = (x: number) => {
+  const regular = x.toString();
+  const precise = x.toFixed(2);
+  return regular.length < precise.length ? regular : precise;
+};
+
+export const toIngredient = (
+  {
+    number,
+    unit,
+    item,
+    description,
+  }: Pick<
+    ReturnType<typeof parseIngredient>,
+    "number" | "unit" | "item" | "description"
+  >,
+  includeDescription = true,
+) => {
+  const n = number ?? "";
+  const spaceBeforeUnit = unit === "g" ? "" : " ";
+  const u = unit ? spaceBeforeUnit + unit + " " : " ";
+  const i = item.map(({ value }) => value).join(" ");
+  const desc = description.map(({ value }) => value).join(" ");
+  const d = includeDescription && desc ? `, ${desc}` : "";
+  return (n + u + i + d).trim();
+};
+
 export const fetchImage = async (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
     const image = new Image();
@@ -172,34 +250,6 @@ export const fetchImage = async (url: string): Promise<HTMLImageElement> =>
     image.onerror = error => reject(error);
     image.src = url;
   });
-
-export const doesEndWith = <T extends string, S extends string>(
-  text: T,
-  sub: S,
-): text is T & ExtractEndsWith<T, S> => text.endsWith(sub);
-
-export const doesInclude = <T extends readonly string[]>(
-  arr: T,
-  x: string,
-): x is T[number] => arr.includes(x);
-
-export const omit = <T extends object, K extends string & keyof T>(
-  obj: T,
-  keys: K[],
-) => {
-  const result: Partial<T> = {};
-  for (const k of getKeys(obj)) {
-    if (!doesInclude(keys, k)) {
-      result[k] = obj[k];
-    }
-  }
-  return result as Omit<T, K>;
-};
-
-export const hasRequiredKeys = <T extends object, K extends string & keyof T>(
-  obj: T,
-  keys: K[],
-): obj is T & Required<Pick<T, K>> => keys.every(k => obj[k] !== undefined);
 
 export const debounce = (
   time: number,

@@ -28,7 +28,7 @@
   ) =>
     matchedIngredients
       .map((ing, i) => ({ ...ing, i }))
-      .filter(ing => ing.lemmas.item.includes(lemma))[0].i;
+      .filter(ing => ing.nounLemmas.item.includes(lemma))[0].i;
 
   const toHtml = (
     text: string,
@@ -176,16 +176,16 @@
         ing => ing !== undefined,
       );
       const scaledIngredients = scaleIngredients(ingredients, scaling);
-      toBeCooked.update(rec => {
-        if (!rec) {
+      toBeCooked.update(rv => {
+        if (!rv) {
           return undefined;
         }
-        rec[version] = {
-          ...(rec[version] ?? rec.original),
+        rv[version] = {
+          ...(rv[version] ?? rv.original),
           recipeYield: newYield,
           recipeIngredient: scaledIngredients,
         };
-        return rec;
+        return rv;
       });
       scaleShow = false;
     }}

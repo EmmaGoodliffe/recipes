@@ -2,8 +2,18 @@ import { onAuthStateChanged } from "firebase/auth";
 import { writable } from "svelte/store";
 import { getFb } from "../routes/fb";
 import { getUserData } from "./db";
+import { parseIngredient } from "./nlp";
 import { isRecord } from "./types";
-import { deepUnique, getKeys, keyValuesToObj } from "./util";
+import {
+  areDeepEqual,
+  decimalToString,
+  deepUnique,
+  getKeys,
+  keyValuesToObj,
+  sum,
+  toIngredient,
+  unique,
+} from "./util";
 import type { Func, Recipe, RecipeVersions } from "./types";
 import type { User } from "firebase/auth";
 import type { Readable } from "svelte/store";
@@ -56,6 +66,88 @@ export type ShoppingListItem = {
   bought: boolean;
   selected: boolean;
   deleted: boolean;
+};
+
+const ingredientToShoppingListItem = (
+  ingredient: string,
+  source: Partial<ShoppingListItem["source"]> = {},
+): ShoppingListItem => {
+  const fullSource: ShoppingListItem["source"] =
+    source.type === "recipe" && source.id
+      ? { type: "recipe", id: source.id }
+      : source.type === "custom"
+        ? { type: "custom" }
+        : { type: "unknown" };
+  return {
+    value: ingredient,
+    source: fullSource,
+    bought: false,
+    selected: false,
+    deleted: false,
+  };
+};
+
+const toBareItem = ({
+  parsed,
+  source,
+}: {
+  parsed: ReturnType<typeof parseIngredient>;
+  source: ShoppingListItem["source"];
+}) => ({
+  itemValue: parsed.item.map(({ value }) => value).join(" "),
+  source,
+});
+
+export const addIngredientsToShoppingList = (
+  list: ShoppingListItem[],
+  ingredients: (string | undefined)[],
+  source: Partial<ShoppingListItem["source"]> = {},
+) => {
+  const newItems = ingredients
+    .filter(ing => ing !== undefined)
+    .map(ing => ingredientToShoppingListItem(ing, source));
+  const items = [...list, ...newItems]
+    .filter(item => !item.deleted)
+    .map(item => ({
+      ...item,
+      parsed: parseIngredient(item.value),
+    }));
+  const uniqueBareItems = deepUnique(items.map(item => toBareItem(item)));
+  return uniqueBareItems
+    .map(bare => items.filter(item => areDeepEqual(toBareItem(item), bare)))
+    .map(items => {
+      const numbers = items.map(item => {
+        const [min, max] = (item.parsed.number ?? "").split("-");
+        return {
+          min: parseFloat(min),
+          max: max ? parseFloat(max) : parseFloat(min),
+        };
+      });
+      const totalMin = decimalToString(sum(numbers.map(n => n.min)));
+      const totalMax = decimalToString(sum(numbers.map(n => n.max)));
+      const totalNumber =
+        totalMin === totalMax ? totalMin : `${totalMin}-${totalMax}`;
+      const totalAmount = totalNumber === "0" ? "" : totalNumber;
+      const totalUnit = unique(
+        items.map(item => item.parsed.unit).filter(unit => unit),
+      ).join("/");
+      const totalItem = items[0].parsed.item
+        .map(({ value }) => value)
+        .join(" ");
+      const totalDescription = unique(
+        items
+          .map(item =>
+            item.parsed.description.map(({ value }) => value).join(" "),
+          )
+          .filter(item => item),
+      ).join("; ");
+      const totalValue = toIngredient(
+        parseIngredient(
+          `${totalAmount} ${totalUnit} ${totalItem}, ${totalDescription}`,
+        ),
+      );
+      return ingredientToShoppingListItem(totalValue, items[0].source);
+    });
 };
 
 export const shoppingList = writable<ShoppingListItem[][]>([]);
