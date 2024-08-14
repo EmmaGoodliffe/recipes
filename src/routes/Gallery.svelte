@@ -81,17 +81,17 @@
         class="long bg-shop inline-block text-center"
         on:click={() =>
           shoppingList.update(list => {
-            const { recipeIngredient } =
+            const { recipeIngredient, recipeYield } =
               $toBePreviewed.edited ?? $toBePreviewed.original;
             const id = $toBePreviewed?.original["@id"];
             return [
               addIngredientsToShoppingList(
                 list.flat(),
                 toArray(recipeIngredient),
-                { type: "recipe", id },
+                { type: "recipe", id, recipeYield },
               ),
             ];
-          })}><i class="bx bxs-basket"></i> shop</a
+          })}><i class="bx bxs-basket"></i> add to shopping list</a
       >
     </div>
   </Dialog>

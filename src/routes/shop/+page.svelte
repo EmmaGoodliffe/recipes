@@ -102,6 +102,12 @@
     } else if (method === "source") {
       sorted = sortByPath(list.flat(), "source.id");
       groups = sorted.map(section => {
+        const yields = unique(
+          section.map(item =>
+            item.source.type === "recipe" ? item.source.recipeYield : 1,
+          ),
+        ).sort();
+        const yieldText = yields.length ? `(serves ${yields.join("/")})` : "";
         const source = section[0]?.source;
         const versions =
           source && source.type === "recipe"
@@ -109,7 +115,7 @@
             : undefined;
         const rec = versions?.edited ?? versions?.original;
         const name = rec?.name ?? "?";
-        return { name };
+        return { name: `${name} ${yieldText}`.trim() };
       });
     }
     return sorted;
@@ -148,7 +154,7 @@
     loading = true;
     await save();
     loading = false;
-    toast("saved list");
+    toast("saved shopping list");
   }}><i class="bx bxs-save"></i> save</LoaderButton
 >
 {#if $shoppingList.length === 0}

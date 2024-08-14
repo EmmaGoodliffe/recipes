@@ -60,7 +60,7 @@ export const recipes = writable<
 export type ShoppingListItem = {
   value: string;
   source:
-    | { type: "recipe"; id: string }
+    | { type: "recipe"; id: string; recipeYield: number }
     | { type: "unknown" }
     | { type: "custom" };
   bought: boolean;
@@ -74,7 +74,7 @@ const ingredientToShoppingListItem = (
 ): ShoppingListItem => {
   const fullSource: ShoppingListItem["source"] =
     source.type === "recipe" && source.id
-      ? { type: "recipe", id: source.id }
+      ? { type: "recipe", id: source.id, recipeYield: source.recipeYield ?? 1 }
       : source.type === "custom"
         ? { type: "custom" }
         : { type: "unknown" };
@@ -95,7 +95,7 @@ const toBareItem = ({
   source: ShoppingListItem["source"];
 }) => ({
   itemValue: parsed.item.map(({ value }) => value).join(" "),
-  source,
+  sourceId: source.type === "recipe" ? source.id : null,
 });
 
 export const addIngredientsToShoppingList = (
@@ -146,7 +146,17 @@ export const addIngredientsToShoppingList = (
           `${totalAmount} ${totalUnit} ${totalItem}, ${totalDescription}`,
         ),
       );
-      return ingredientToShoppingListItem(totalValue, items[0].source);
+      const totalYield = sum(
+        items.map(item =>
+          item.source.type === "recipe" ? item.source.recipeYield : 1,
+        ),
+      );
+      return ingredientToShoppingListItem(
+        totalValue,
+        items[0].source.type === "recipe"
+          ? { ...items[0].source, recipeYield: totalYield }
+          : items[0].source,
+      );
     });
 };
 

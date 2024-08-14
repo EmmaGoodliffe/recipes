@@ -164,7 +164,8 @@
   <a
     href="/cook"
     class="long bg-cook inline-block text-center"
-    on:click={() => toBeCooked.set({...recipeVersions})}
+    on:click={() =>
+      toBeCooked.set({ original: recipeVersions.original, edited: rec.data })}
     ><i class="bx bxs-flask"></i> cook</a
   >
   <a
@@ -172,15 +173,16 @@
     class="long bg-shop inline-block text-center"
     on:click={() =>
       shoppingList.update(list => {
-        const { recipeIngredient } =
-          recipeVersions[version] ?? recipeVersions.original;
+        const { recipeIngredient, recipeYield } = rec.data;
+        console.log({ recipeVersions, version, recipeIngredient });
         return [
           addIngredientsToShoppingList(list.flat(), toArray(recipeIngredient), {
             type: "recipe",
             id: recipeVersions.original["@id"],
+            recipeYield,
           }),
         ];
-      })}><i class="bx bxs-basket"></i> shop</a
+      })}><i class="bx bxs-basket"></i> add to shopping list</a
   >
 
   <!-- VERSION -->
