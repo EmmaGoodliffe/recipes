@@ -245,7 +245,7 @@
       </div>
       {#each section as item, j}
         {#if !item.deleted}
-          <div class="py-1 flex justify-between not-last-border">
+          <div class="py-1 flex justify-between items-center not-last-border">
             <input
               type="checkbox"
               class="mx-3"
@@ -362,6 +362,7 @@
 </Dialog>
 
 <style lang="postcss">
+
   button.short {
     @apply min-w-max mr-2 disabled:opacity-50;
   }

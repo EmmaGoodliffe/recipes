@@ -64,7 +64,7 @@
 {:else if isRecord(obj) || Array.isArray(obj)}
   <table class="json">
     <tbody>
-      {#each getKeys(obj).filter(k => !k.startsWith("@")) as key (key)}
+      {#each getKeys(obj).filter(k => !k.startsWith("@")) as key, i (`${getKeys(obj).length}-${key}-${i}`)}
         <tr class="group">
           <td>{key}</td>
           <td class="flex flex-col">
@@ -79,14 +79,14 @@
               <!-- TODO: allow reordering of arrays -->
               <div class="flex self-center z-10">
                 <button
-                  class="mx-2 -my-6 square bg-input opacity-0 group-hover:opacity-100 transition-all"
+                  class="mx-2 md:-my-2 square bg-input md:invisible group-hover:visible"
                   disabled={getKeys(obj).length === 1}
                   on:click={() =>
                     onEdit([{ mode: "delete", path: `${pathPrefix}.${key}` }])}
                   ><i class="bx bx-trash"></i></button
                 >
                 <button
-                  class="mx-2 -my-6 square bg-file opacity-0 group-hover:opacity-100 transition-all"
+                  class="mx-2 md:-my-2 square bg-file md:invisible group-hover:visible"
                   on:click={() => (addPath = `${pathPrefix}.${key}`)}
                   ><i class="bx bx-plus"></i></button
                 >
@@ -114,11 +114,11 @@
                   <div class="flex items-center">
                     <table class="json">
                       <tbody>
-                        {#each getKeys(obj[0]).filter(k => !k.startsWith("@")) as key, i}
+                        {#each getKeys(obj[0]).filter(k => !k.startsWith("@")) as key, j (`${getKeys(obj[0]).length}-${key}-${j}`)}
                           <tr>
                             <td>{key}</td>
                             <td>
-                              <input type="text" bind:value={values[i]} />
+                              <input type="text" bind:value={values[j]} />
                             </td>
                           </tr>
                         {/each}

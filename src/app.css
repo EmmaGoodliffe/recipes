@@ -65,11 +65,15 @@ label.focal {
   @apply text-lg opacity-50 group-focus-within:opacity-100;
 }
 
+input[type="checkbox"] {
+  @apply w-5 h-5;
+}
+
 .check:has(input[type="checkbox"]) {
   @apply flex items-center;
 
   input[type="checkbox"] {
-    @apply w-4 h-4 mr-2;
+    @apply mr-2;
   }
 
   label {

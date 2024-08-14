@@ -140,7 +140,6 @@
     on:click={() =>
       shoppingList.update(list => {
         const { recipeIngredient, recipeYield } = rec.data;
-        console.log({ recipeVersions, version, recipeIngredient });
         return [
           addIngredientsToShoppingList(list.flat(), toArray(recipeIngredient), {
             type: "recipe",
@@ -389,7 +388,7 @@
       <!-- VIEW: steps -->
       <ol class="list-inside list-decimal">
         {#each toArray($rec("recipeInstructions")) as step}
-          <li class="truncate">{step?.text ?? "?"}</li>
+          <li class="pb-2" class:truncate={concise}>{step?.text ?? "?"}</li>
         {/each}
       </ol>
       <!-- VIEW: nutrition -->
