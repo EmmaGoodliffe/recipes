@@ -54,9 +54,18 @@ export default [
         },
       ],
       "import/consistent-type-specifier-style": ["warn", "prefer-top-level"],
-      "sort-imports": [
+      "@typescript-eslint/no-unused-vars": [
+        // allow unused variables marked with an underscore
         "error",
-        { ignoreCase: true, ignoreDeclarationSort: true },
+        {
+          args: "all",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
       ],
     },
   },

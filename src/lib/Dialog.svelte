@@ -9,6 +9,7 @@
 
   $: {
     if (dialog) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       show ? dialog.showModal() : dialog.close();
     }
   }

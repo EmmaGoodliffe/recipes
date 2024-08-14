@@ -107,6 +107,7 @@
       {#each instructions as _, i}
         {#if i === instructionIndex}
           <p in:fly={{ x: direction === "r" ? 200 : -200 }}>
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
             {instructionIndex + 1}. {@html instructionHtml}
           </p>
         {/if}
