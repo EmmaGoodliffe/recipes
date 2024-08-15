@@ -4,6 +4,8 @@
     "beforeinstallprompt",
     "firestore",
     "hotscript",
+    "microdata",
+    "overlayed",
     "parens",
     "popover",
     "tbsp",
