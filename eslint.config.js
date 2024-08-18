@@ -38,6 +38,7 @@ export default [
       import: imp,
     },
     rules: {
+      "sort-imports": ["error", { ignoreDeclarationSort: true }],
       "import/order": [
         "error",
         {

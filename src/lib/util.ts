@@ -1,4 +1,3 @@
-import type { parseIngredient } from "./nlp";
 import type { ExtractEndsWith } from "./types";
 
 export const delay = (ms: number): Promise<void> =>

@@ -17,13 +17,13 @@
   import { isRecipe } from "$lib/Recipe";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import {
-    addIngredientsToShoppingList,
     Editable,
+    addIngredientsToShoppingList,
     shoppingList,
-    toast,
-    toastWrap,
     toBeCooked,
     toBeEdited,
+    toast,
+    toastWrap,
     updateData,
     user,
   } from "$lib/stores";

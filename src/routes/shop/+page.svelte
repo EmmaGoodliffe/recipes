@@ -5,7 +5,7 @@
   import { saveShoppingList } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { parseIngredient, UNITS, toIngredient } from "$lib/nlp";
+  import { UNITS, parseIngredient, toIngredient } from "$lib/nlp";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import {
     getByPath,
