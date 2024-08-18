@@ -1,9 +1,10 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { isRecipe } from "./Recipe";
 import { toast } from "./stores";
-import { isRecipe, isRecord } from "./types";
-import { omit, toArray } from "./util";
+import { deepOmitUndefined, isRecord, toArray } from "./types";
+import { omit } from "./util";
+import type { Recipe, RecipeVersions } from "./Recipe";
 import type { ShoppingListItem } from "./stores";
-import type { Recipe, RecipeVersions } from "./types";
 import type { Auth } from "firebase/auth";
 import type { DocumentReference, Firestore } from "firebase/firestore";
 
@@ -80,7 +81,7 @@ const toUserData = (x: Record<string, unknown>): UserData => ({
 const safeSetDoc = <C extends "users">(
   ref: DocumentReference,
   data: C extends "users" ? UserData : never,
-) => setDoc(ref, data);
+) => setDoc(ref, deepOmitUndefined(data));
 
 const safeUpdateDoc = <C extends "users">(
   ref: DocumentReference,

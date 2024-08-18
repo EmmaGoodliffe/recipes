@@ -59,12 +59,11 @@
                       : "";
                 throw new Error(`api failed to add recipe: ${error}`);
               }
-              if (!isRecipe(result.data?.content)) {
-                toast("invalid recipe");
-                console.error(result);
+              const content = result.data?.content;
+              if (!isRecipe(content)) {
                 throw new Error("invalid recipe");
               }
-              recipe = result.data.content;
+              recipe = content;
             };
           }}
         >

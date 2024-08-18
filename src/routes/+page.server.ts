@@ -18,7 +18,7 @@ export const actions = {
         if (!isRecord(json)) {
           return fail(400, { message: `data wasn't object, ${json}` });
         }
-        return toRecipe(json);
+        return { content: toRecipe(json) };
       } catch (error) {
         if (`${error}`.includes("SchemaError")) {
           return fail(400, { message: `data didn't satisfy schema, ${error}` });

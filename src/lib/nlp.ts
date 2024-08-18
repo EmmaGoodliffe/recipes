@@ -1,13 +1,6 @@
 import model from "wink-eng-lite-web-model";
 import wink from "wink-nlp";
-import {
-  decimalToString,
-  doesInclude,
-  getKeys,
-  overlap,
-  toIngredient,
-  unique,
-} from "./util";
+import { decimalToString, doesInclude, getKeys, overlap, unique } from "./util";
 import type { ItsFunction } from "wink-nlp";
 
 const nlp = wink(model);
@@ -101,6 +94,27 @@ export const parseIngredient = (ing: string | undefined) => {
       description: nounLemmas(description),
     },
   };
+};
+
+export const toIngredient = (
+  {
+    number,
+    unit,
+    item,
+    description,
+  }: Pick<
+    ReturnType<typeof parseIngredient>,
+    "number" | "unit" | "item" | "description"
+  >,
+  includeDescription = true,
+) => {
+  const n = number ?? "";
+  const spaceBeforeUnit = unit === "g" ? "" : " ";
+  const u = unit ? spaceBeforeUnit + unit + " " : " ";
+  const i = item.map(({ value }) => value).join(" ");
+  const desc = description.map(({ value }) => value).join(" ");
+  const d = includeDescription && desc ? `, ${desc}` : "";
+  return (n + u + i + d).trim();
 };
 
 export const searchInstructionForIngredients = (

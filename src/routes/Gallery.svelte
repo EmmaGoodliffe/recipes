@@ -43,7 +43,7 @@
       >
         {#if imageUrl}
           <img
-            src={typeof imageUrl}
+            src={imageUrl}
             alt={rec.name}
             class="w-full flex-1 object-cover"
           />

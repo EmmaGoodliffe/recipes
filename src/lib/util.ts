@@ -4,7 +4,6 @@ import type { ExtractEndsWith } from "./types";
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
 
-
 export const getKeys = <T extends object>(obj: T) =>
   Object.keys(obj) as (string & keyof T)[];
 
@@ -218,27 +217,6 @@ export const decimalToString = (x: number) => {
   const regular = x.toString();
   const precise = x.toFixed(2);
   return regular.length < precise.length ? regular : precise;
-};
-
-export const toIngredient = (
-  {
-    number,
-    unit,
-    item,
-    description,
-  }: Pick<
-    ReturnType<typeof parseIngredient>,
-    "number" | "unit" | "item" | "description"
-  >,
-  includeDescription = true,
-) => {
-  const n = number ?? "";
-  const spaceBeforeUnit = unit === "g" ? "" : " ";
-  const u = unit ? spaceBeforeUnit + unit + " " : " ";
-  const i = item.map(({ value }) => value).join(" ");
-  const desc = description.map(({ value }) => value).join(" ");
-  const d = includeDescription && desc ? `, ${desc}` : "";
-  return (n + u + i + d).trim();
 };
 
 // const fetchImage = async (url: string): Promise<HTMLImageElement> =>
