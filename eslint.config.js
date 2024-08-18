@@ -31,7 +31,7 @@ export default [
     },
   },
   {
-    ignores: ["build/", ".svelte-kit/", "dist/", "schemas/"],
+    ignores: ["build/", ".svelte-kit/", "dist/"],
   },
   {
     plugins: {

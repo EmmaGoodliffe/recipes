@@ -87,29 +87,7 @@
             const rid = `${Date.now()}-${Math.random().toString().slice(2)}`;
             const url = `https://recipes-7ef89.web.app/u/${uid}/r/${rid}`;
             recipe = {
-              "@context": "https://schema.org",
-              "@id": url,
-              "@type": "Recipe",
-              prepTime: toDur({ h: 0, m: 10 }),
-              cookTime: toDur({ h: 0, m: 10 }),
-              totalTime: toDur({ h: 0, m: 20 }),
-              recipeIngredient: ["69 aubergines"],
-              recipeInstructions: [{ text: "you know what to do" }],
-              recipeYield: 1,
-              author: [
-                {
-                  name: $user?.displayName ?? "?",
-                  url: `https://recipes-7ef89.web.app/u/${uid}`,
-                },
-              ],
-              datePublished: new Date().toISOString(),
-              image: {
-                url: "/favicon.png",
-                width: 128,
-                height: 128,
-              },
-              name: "my awesome recipe",
-              url,
+            
             };
           }}>go</button
         >

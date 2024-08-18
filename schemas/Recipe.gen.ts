@@ -1,9 +1,16 @@
-/* File generated from schema.org */
+/*
+ * This file was automatically generated according to the
+ * schema at https://schema.org/Recipe
+ * accessed via the
+ * repository https://github.com/charlestati/schema-org-json-schemas
+ */
+
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 
 type MaybeArray<T> = T | T[];
 
 /** A recipe. For dietary restrictions covered by the recipe, a few common restrictions are enumerated via [[suitableForDiet]]. The [[keywords]] property can also be used to add more detail. */
-export type Recipe = HowTo & {
+export type Recipe_ = HowTo & {
 
   /** The time it takes to actually cook the dish, in [ISO 8601 duration format](http://en.wikipedia.org/wiki/ISO_8601). */
   'cookTime': string;
@@ -137,7 +144,7 @@ type CreativeWork = Thing & {
   /** A citation or reference to another creative work, such as another publication, web page, scholarly article, etc. */
   'citation': string | CreativeWork | string | CreativeWork[];
   /** Comments, typically from users. */
-  'comment': Comment_ | Comment_[];
+  'comment': Comment | Comment[];
   /** The number of comments this CreativeWork (e.g. Article, Question or Answer) has received. This is most applicable to works published in Web sites with commenting system; additional comments may exist elsewhere. */
   'commentCount': number;
   /** Conditions that affect the availability of, or method(s) of access to, an item. Typically used for real world items such as an [[ArchiveComponent]] held by an [[ArchiveOrganization]]. This property is not suitable for use as a general Web access control mechanism. It is expressed only in natural language.\n\nFor example "Available by appointment from the Reading Room" or "Accessible only from logged-in accounts ".  */
@@ -277,7 +284,7 @@ While such policies are most typically expressed in natural language, sometimes 
  */
   'publishingPrinciples': string | CreativeWork;
   /** The Event where the CreativeWork was recorded. The CreativeWork may capture all or part of the event. */
-  'recordedAt': Event_;
+  'recordedAt': Event;
   /** The place and time the release was issued, expressed as a PublicationEvent. */
   'releasedEvent': PublicationEvent;
   /** A review of the item. */
@@ -546,7 +553,7 @@ type Thing = {
   /** URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Wikidata entry, or official website. */
   'sameAs': string | string[];
   /** A CreativeWork or Event about this Thing. */
-  'subjectOf': CreativeWork | Event_ | CreativeWork | Event_[];
+  'subjectOf': CreativeWork | Event | CreativeWork | Event[];
   /** URL of the item. */
   'url': string;
 };
@@ -666,7 +673,7 @@ type Person = Thing & {
   /** A parents of the person. */
   'parents': Person | Person[];
   /** Event that this person is a performer or participant in. */
-  'performerIn': Event_ | Event_[];
+  'performerIn': Event | Event[];
   /** The publishingPrinciples property indicates (typically via [[URL]]) a document describing the editorial principles of an [[Organization]] (or individual e.g. a [[Person]] writing a blog) that relate to their activities as a publisher, e.g. ethics or diversity policies. When applied to a [[CreativeWork]] (e.g. [[NewsArticle]]) the principles are those of the party primarily responsible for the creation of the [[CreativeWork]].
 
 While such policies are most typically expressed in natural language, sometimes related information (e.g. indicating a [[funder]]) can be expressed using schema.org terminology.
@@ -921,9 +928,9 @@ type Organization = Thing & {
   /** Statement about ethics policy, e.g. of a [[NewsMediaOrganization]] regarding journalistic and publishing practices, or of a [[Restaurant]], a page describing food source policies. In the case of a [[NewsMediaOrganization]], an ethicsPolicy is typically a statement describing the personal, organizational, and corporate standards of behavior expected by the organization. */
   'ethicsPolicy': string | CreativeWork | string | CreativeWork[];
   /** Upcoming or past event associated with this place, organization, or action. */
-  'event': Event_ | Event_[];
+  'event': Event | Event[];
   /** Upcoming or past events associated with this place or organization. */
-  'events': Event_ | Event_[];
+  'events': Event | Event[];
   /** The fax number. */
   'faxNumber': string;
   /** A person who founded this organization. */
@@ -1014,12 +1021,12 @@ While such policies are most typically expressed in natural language, sometimes 
 
 
 /** A comment on an item - for example, a comment on a blog post. The comment's content is expressed via the [[text]] property, and its topic via [[about]], properties shared with all CreativeWorks. */
-type Comment_ = CreativeWork & {
+type Comment = CreativeWork & {
 
   /** The number of downvotes this question, answer or comment has received from the community. */
   'downvoteCount': number;
   /** The parent of a question, answer or item in general. */
-  'parentItem': Comment_;
+  'parentItem': Comment;
   /** The number of upvotes this question, answer or comment has received from the community. */
   'upvoteCount': number;
 };
@@ -1048,9 +1055,9 @@ type Place = Thing & {
   /** The basic containment relation between a place and another that it contains. */
   'containsPlace': Place;
   /** Upcoming or past event associated with this place, organization, or action. */
-  'event': Event_ | Event_[];
+  'event': Event | Event[];
   /** Upcoming or past events associated with this place or organization. */
-  'events': Event_ | Event_[];
+  'events': Event | Event[];
   /** The fax number. */
   'faxNumber': string;
   /** The geo coordinates of the place. */
@@ -1080,7 +1087,7 @@ type Place = Thing & {
   /** Indicates whether some facility (e.g. [[FoodEstablishment]], [[CovidTestingFacility]]) offers a service that can be used by driving through in a car. In the case of [[CovidTestingFacility]] such facilities could potentially help with social distancing from other potentially-infected users. */
   'hasDriveThroughService': boolean;
   /** A URL to a map of the place. */
-  'hasMap': string | Map_ | string | Map_[];
+  'hasMap': string | Map | string | Map[];
   /** A flag to signal that the item, event, or place is accessible for free. */
   'isAccessibleForFree': boolean;
   /** The International Standard of Industrial Classification of All Economic Activities (ISIC), Revision 4 code for a particular organization, business person, or place. */
@@ -1144,7 +1151,7 @@ type Rating = Intangible & {
 
 
 /** A [[comment]] that corrects [[CreativeWork]]. */
-type CorrectionComment = Comment_ & {
+type CorrectionComment = Comment & {
 
 };
 
@@ -1384,7 +1391,7 @@ type Demand = Intangible & {
   /** A predefined value from OfferItemCondition specifying the condition of the product or service, or the products or services included in the offer. Also used for product return policies to specify the condition of products accepted for returns. */
   'itemCondition': OfferItemCondition | OfferItemCondition[];
   /** An item being offered (or demanded). The transactional nature of the offer or demand is documented using [[businessFunction]], e.g. sell, lease etc. While several common expected types are listed explicitly in this definition, others can be used. Using a second type, such as Product or a subtype of Product, can clarify the nature of the offer. */
-  'itemOffered': AggregateOffer | CreativeWork | Event_ | MenuItem | Product | Service | Trip;
+  'itemOffered': AggregateOffer | CreativeWork | Event | MenuItem | Product | Service | Trip;
   /** The Manufacturer Part Number (MPN) of the product, or the product to which the offer refers. */
   'mpn': string;
   /** One or more detailed price specifications, indicating the unit price and delivery or payment charges. */
@@ -1470,7 +1477,7 @@ type Offer = Intangible & {
   /** A predefined value from OfferItemCondition specifying the condition of the product or service, or the products or services included in the offer. Also used for product return policies to specify the condition of products accepted for returns. */
   'itemCondition': OfferItemCondition | OfferItemCondition[];
   /** An item being offered (or demanded). The transactional nature of the offer or demand is documented using [[businessFunction]], e.g. sell, lease etc. While several common expected types are listed explicitly in this definition, others can be used. Using a second type, such as Product or a subtype of Product, can clarify the nature of the offer. */
-  'itemOffered': AggregateOffer | CreativeWork | Event_ | MenuItem | Product | Service | Trip;
+  'itemOffered': AggregateOffer | CreativeWork | Event | MenuItem | Product | Service | Trip;
   /** Length of the lease for some [[Accommodation]], either particular to some [[Offer]] or in some cases intrinsic to the property. */
   'leaseLength': string | QuantitativeValue | string | QuantitativeValue[];
   /** The Manufacturer Part Number (MPN) of the product, or the product to which the offer refers. */
@@ -1509,7 +1516,7 @@ type Offer = Intangible & {
 
 
 /** A PublicationEvent corresponds indifferently to the event of publication for a CreativeWork of any type e.g. a broadcast event, an on-demand event, a book/journal publication via a variety of delivery media. */
-type PublicationEvent = Event_ & {
+type PublicationEvent = Event & {
 
   /** A flag to signal that the item, event, or place is accessible for free. */
   'free': boolean;
@@ -1522,7 +1529,7 @@ type PublicationEvent = Event_ & {
 
 
 /** An event happening at a certain time and location, such as a concert, lecture, or festival. Ticketing information may be added via the [[offers]] property. Repeated events may be structured as separate Event objects. */
-type Event_ = Thing & {
+type Event = Thing & {
 
   /** The subject matter of the content. */
   'about': Thing;
@@ -1595,11 +1602,11 @@ type Event_ = Thing & {
   /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
   'startDate': string | string;
   /** An Event that is part of this event. For example, a conference event includes many presentations, each of which is a subEvent of the conference. */
-  'subEvent': Event_ | Event_[];
+  'subEvent': Event | Event[];
   /** Events that are a part of this event. For example, a conference event includes many presentations, each subEvents of the conference. */
-  'subEvents': Event_ | Event_[];
+  'subEvents': Event | Event[];
   /** An event that this event is a part of. For example, a collection of individual music performances might each have a music festival as their superEvent. */
-  'superEvent': Event_ | Event_[];
+  'superEvent': Event | Event[];
   /** Organization or person who adapts a creative work to different languages, regional differences and technical requirements of a target market, or that translates during some event. */
   'translator': Organization | Person | Organization | Person[];
   /** The typical expected age range, e.g. '7-9', '11-'. */
@@ -1708,289 +1715,21 @@ type HowToItem = ListItem & {
 
 
 
-/** A NewsArticle is an article whose content reports news, or provides background context and supporting materials for understanding the news.
-
-A more detailed overview of [schema.org News markup](/docs/news.html) is also available.
- */
-type NewsArticle = Article & {
-
-  /** A [dateline](https://en.wikipedia.org/wiki/Dateline) is a brief piece of text included in news articles that describes where and when the story was written or filed though the date is often omitted. Sometimes only a placename is provided.
-
-Structured representations of dateline-related information can also be expressed more explicitly using [[locationCreated]] (which represents where a work was created e.g. where a news report was written).  For location depicted or described in the content, use [[contentLocation]].
-
-Dateline summaries are oriented more towards human readers than towards automated processing, and can vary substantially. Some examples: "BEIRUT, Lebanon, June 2.", "Paris, France", "December 19, 2017 11:43AM Reporting from Washington", "Beijing/Moscow", "QUEZON CITY, Philippines".
+/** A BreadcrumbList is an ItemList consisting of a chain of linked Web pages, typically described using at least their URL and their name, and typically ending with the current page.\n\nThe [[position]] property is used to reconstruct the order of the items in a BreadcrumbList The convention is that a breadcrumb list has an [[itemListOrder]] of [[ItemListOrderAscending]] (lower values listed first), and that the first items in this list correspond to the "top" or beginning of the breadcrumb trail, e.g. with a site or section homepage. The specific values of 'position' are not assigned meaning for a BreadcrumbList, but they should be integers, e.g. beginning with '1' for the first item in the list.
        */
-  'dateline': string;
-  /** The number of the column in which the NewsArticle appears in the print edition. */
-  'printColumn': string;
-  /** The edition of the print product in which the NewsArticle appears. */
-  'printEdition': string;
-  /** If this NewsArticle appears in print, this field indicates the name of the page on which the article is found. Please note that this field is intended for the exact page name (e.g. A5, B18). */
-  'printPage': string;
-  /** If this NewsArticle appears in print, this field indicates the print section in which the article appeared. */
-  'printSection': string;
-};
-
-
-
-/** The geographic shape of a place. A GeoShape can be described using several properties whose values are based on latitude/longitude pairs. Either whitespace or commas can be used to separate latitude and longitude; whitespace should be used when writing a list of several such points. */
-type GeoShape = StructuredValue & {
-
-  /** Physical address of the item. */
-  'address': string | PostalAddress;
-  /** The country. For example, USA. You can also provide the two-letter [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1). */
-  'addressCountry': string | Country;
-  /** A box is the area enclosed by the rectangle formed by two points. The first point is the lower corner, the second point is the upper corner. A box is expressed as two points separated by a space character. */
-  'box': string | string[];
-  /** A circle is the circular region of a specified radius centered at a specified latitude and longitude. A circle is expressed as a pair followed by a radius in meters. */
-  'circle': string | string[];
-  /** The elevation of a location ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System)). Values may be of the form 'NUMBER UNIT_OF_MEASUREMENT' (e.g., '1,000 m', '3,200 ft') while numbers alone should be assumed to be a value in meters. */
-  'elevation': number | string;
-  /** A line is a point-to-point path consisting of two or more points. A line is expressed as a series of two or more point objects separated by space. */
-  'line': string | string[];
-  /** A polygon is the area enclosed by a point-to-point path for which the starting and ending points are the same. A polygon is expressed as a series of four or more space delimited points where the first and final points are identical. */
-  'polygon': string | string[];
-  /** The postal code. For example, 94043. */
-  'postalCode': string;
-};
-
-
-
-/** A subscription which allows a user to access media including audio, video, books, etc. */
-type MediaSubscription = Intangible & {
-
-  /** The Organization responsible for authenticating the user's subscription. For example, many media apps require a cable/satellite provider to authenticate your subscription before playing media. */
-  'authenticator': Organization;
-  /** An Offer which must be accepted before the user can perform the Action. For example, the user may need to buy a movie before being able to watch it. */
-  'expectsAcceptanceOf': Offer | Offer[];
-};
-
-
-
-/** A HyperToEntry is an item within a [[HyperToc]], which represents a hypertext table of contents for complex media objects, such as [[VideoObject]], [[AudioObject]]. The media object itself is indicated using [[associatedMedia]]. Each section of interest within that content can be described with a [[HyperTocEntry]], with associated [[startOffset]] and [[endOffset]]. When several entries are all from the same file, [[associatedMedia]] is used on the overarching [[HyperTocEntry]]; if the content has been split into multiple files, they can be referenced using [[associatedMedia]] on each [[HyperTocEntry]]. */
-type HyperTocEntry = CreativeWork & {
-
-  /** A media object that encodes this CreativeWork. This property is a synonym for encoding. */
-  'associatedMedia': MediaObject;
-  /** A [[HyperTocEntry]] can have a [[tocContinuation]] indicated, which is another [[HyperTocEntry]] that would be the default next item to play or render. */
-  'tocContinuation': HyperTocEntry | HyperTocEntry[];
-  /** Text of an utterances (spoken words, lyrics etc.) that occurs at a certain section of a media object, represented as a [[HyperTocEntry]]. */
-  'utterances': string | string[];
-};
-
-
-
-/** A musical group, such as a band, an orchestra, or a choir. Can also be a solo musician. */
-type MusicGroup = PerformingGroup & {
-
-  /** A music album. */
-  'album': MusicAlbum | MusicAlbum[];
-  /** A collection of music albums. */
-  'albums': MusicAlbum | MusicAlbum[];
-  /** Genre of the creative work, broadcast channel or group. */
-  'genre': string | string;
-  /** A member of a music group—for example, John, Paul, George, or Ringo. */
-  'musicGroupMember': Person | Person[];
-  /** A music recording (track)—usually a single song. If an ItemList is given, the list should contain items of type MusicRecording. */
-  'track': MaybeArray<MusicRecording> | MaybeArray<MusicRecording>[];
-  /** A music recording (track)—usually a single song. */
-  'tracks': MusicRecording | MusicRecording[];
-};
-
-
-
-/** A media episode (e.g. TV, radio, video game) which can be part of a series or season. */
-type Episode = CreativeWork & {
-
-  /** An actor, e.g. in tv, radio, movie, video games etc., or in an event. Actors can be associated with individual items or with a series, episode, clip. */
-  'actor': Person | Person[];
-  /** An actor, e.g. in tv, radio, movie, video games etc. Actors can be associated with individual items or with a series, episode, clip. */
-  'actors': Person | Person[];
-  /** A director of e.g. tv, radio, movie, video gaming etc. content, or of an event. Directors can be associated with individual items or with a series, episode, clip. */
-  'director': Person;
-  /** A director of e.g. tv, radio, movie, video games etc. content. Directors can be associated with individual items or with a series, episode, clip. */
-  'directors': Person | Person[];
-  /** The duration of the item (movie, audio recording, event, etc.) in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601). */
-  'duration': string;
-  /** Position of the episode within an ordered group of episodes. */
-  'episodeNumber': number | string;
-  /** The composer of the soundtrack. */
-  'musicBy': MusicGroup | Person;
-  /** The season to which this episode belongs. */
-  'partOfSeason': CreativeWorkSeason;
-  /** The series to which this episode or season belongs. */
-  'partOfSeries': CreativeWorkSeries;
-  /** The production company or studio responsible for the item e.g. series, video game, episode etc. */
-  'productionCompany': Organization;
-  /** The trailer of a movie or tv/radio series, season, episode, etc. */
-  'trailer': VideoObject;
-};
-
-
-
-/** A media season e.g. tv, radio, video game etc. */
-type CreativeWorkSeason = CreativeWork & {
-
-  /** An actor, e.g. in tv, radio, movie, video games etc., or in an event. Actors can be associated with individual items or with a series, episode, clip. */
-  'actor': Person | Person[];
-  /** A director of e.g. tv, radio, movie, video gaming etc. content, or of an event. Directors can be associated with individual items or with a series, episode, clip. */
-  'director': Person;
-  /** The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
-  'endDate': string | string;
-  /** An episode of a tv, radio or game media within a series or season. */
-  'episode': Episode | Episode[];
-  /** An episode of a TV/radio series or season. */
-  'episodes': Episode | Episode[];
-  /** The number of episodes in this season or series. */
-  'numberOfEpisodes': number;
-  /** The series to which this episode or season belongs. */
-  'partOfSeries': CreativeWorkSeries;
-  /** The production company or studio responsible for the item e.g. series, video game, episode etc. */
-  'productionCompany': Organization;
-  /** Position of the season within an ordered group of seasons. */
-  'seasonNumber': number | string;
-  /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
-  'startDate': string | string;
-  /** The trailer of a movie or tv/radio series, season, episode, etc. */
-  'trailer': VideoObject;
-};
-
-
-
-/** A CreativeWorkSeries in schema.org is a group of related items, typically but not necessarily of the same kind. CreativeWorkSeries are usually organized into some order, often chronological. Unlike [[ItemList]] which is a general purpose data structure for lists of things, the emphasis with CreativeWorkSeries is on published materials (written e.g. books and periodicals, or media such as tv, radio and games).\n\nSpecific subtypes are available for describing [[TVSeries]], [[RadioSeries]], [[MovieSeries]], [[BookSeries]], [[Periodical]] and [[VideoGameSeries]]. In each case, the [[hasPart]] / [[isPartOf]] properties can be used to relate the CreativeWorkSeries to its parts. The general CreativeWorkSeries type serves largely just to organize these more specific and practical subtypes.\n\nIt is common for properties applicable to an item from the series to be usefully applied to the containing group. Schema.org attempts to anticipate some of these cases, but publishers should be free to apply properties of the series parts to the series as a whole wherever they seem appropriate.
-	   */
-type CreativeWorkSeries = CreativeWork & Series & {
-
-  /** The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
-  'endDate': string | string;
-  /** The International Standard Serial Number (ISSN) that identifies this serial publication. You can repeat this property to identify different formats of, or the linking ISSN (ISSN-L) for, this serial publication. */
-  'issn': string;
-  /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
-  'startDate': string | string;
-};
-
-
-
-/** A delivery service through which content is provided via broadcast over the air or online. */
-type BroadcastService = Service & {
-
-  /** The area within which users can expect to reach the broadcast service. */
-  'area': Place;
-  /** The media network(s) whose content is broadcast on this station. */
-  'broadcastAffiliateOf': Organization;
-  /** The name displayed in the channel guide. For many US affiliates, it is the network name. */
-  'broadcastDisplayName': string;
-  /** The frequency used for over-the-air broadcasts. Numeric values or simple ranges e.g. 87-99. In addition a shortcut idiom is supported for frequences of AM and FM radio channels, e.g. "87 FM". */
-  'broadcastFrequency': string | BroadcastFrequencySpecification;
-  /** The timezone in [ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601) for which the service bases its broadcasts */
-  'broadcastTimezone': string;
-  /** The organization owning or operating the broadcast service. */
-  'broadcaster': Organization;
-  /** A [callsign](https://en.wikipedia.org/wiki/Call_sign), as used in broadcasting and radio communications to identify people, radio and TV stations, or vehicles. */
-  'callSign': string | string[];
-  /** A broadcast channel of a broadcast service. */
-  'hasBroadcastChannel': BroadcastChannel_ | BroadcastChannel_[];
-  /** The language of the content or performance or used in an action. Please use one of the language codes from the [IETF BCP 47 standard](http://tools.ietf.org/html/bcp47). See also [[availableLanguage]]. */
-  'inLanguage': string | Language;
-  /** A broadcast service to which the broadcast service may belong to such as regional variations of a national channel. */
-  'parentService': BroadcastService | BroadcastService[];
-  /** The type of screening or video broadcast used (e.g. IMAX, 3D, SD, HD, etc.). */
-  'videoFormat': string;
-};
-
-
-
-/** A collection of music tracks. */
-type MusicAlbum = MusicPlaylist & {
-
-  /** Classification of the album by it's type of content: soundtrack, live album, studio album, etc. */
-  'albumProductionType': MusicAlbumProductionType | MusicAlbumProductionType[];
-  /** A release of this album. */
-  'albumRelease': MusicRelease | MusicRelease[];
-  /** The kind of release which this album is: single, EP or album. */
-  'albumReleaseType': MusicAlbumReleaseType;
-  /** The artist that performed this album or recording. */
-  'byArtist': MusicGroup | Person;
-};
-
-
-
-/** A collection of music tracks in playlist form. */
-type MusicPlaylist = CreativeWork & {
-
-  /** The number of tracks in this album or playlist. */
-  'numTracks': number;
-  /** A music recording (track)—usually a single song. If an ItemList is given, the list should contain items of type MusicRecording. */
-  'track': MaybeArray<MusicRecording> | MaybeArray<MusicRecording>[];
-  /** A music recording (track)—usually a single song. */
-  'tracks': MusicRecording | MusicRecording[];
-};
-
-
-
-/** A musical composition. */
-type MusicComposition = CreativeWork & {
-
-  /** The person or organization who wrote a composition, or who is the composer of a work performed at some event. */
-  'composer': Organization | Person;
-  /** The date and place the work was first performed. */
-  'firstPerformance': Event_;
-  /** Smaller compositions included in this work (e.g. a movement in a symphony). */
-  'includedComposition': MusicComposition | MusicComposition[];
-  /** The International Standard Musical Work Code for the composition. */
-  'iswcCode': string;
-  /** The person who wrote the words. */
-  'lyricist': Person;
-  /** The words in the song. */
-  'lyrics': CreativeWork;
-  /** An arrangement derived from the composition. */
-  'musicArrangement': MusicComposition | MusicComposition[];
-  /** The type of composition (e.g. overture, sonata, symphony, etc.). */
-  'musicCompositionForm': string;
-  /** The key, mode, or scale this composition uses. */
-  'musicalKey': string;
-  /** An audio recording of the work. */
-  'recordedAs': MusicRecording | MusicRecording[];
-};
-
-
-
-/** A utility class that serves as the umbrella for a number of 'intangible' things such as quantities, structured values, etc. */
-type Intangible = Thing & {
+type BreadcrumbList = ItemList & {
 
 };
 
 
 
-/** A class, also often called a 'Type'; equivalent to rdfs:Class. */
-type Class = Intangible & {
+/** A web page element, like a table or an image. */
+type WebPageElement = CreativeWork & {
 
-  /** Relates a term (i.e. a property, class or enumeration) to one that supersedes it. */
-  'supersededBy': Class | Enumeration | Property | Class | Enumeration | Property[];
-};
-
-
-
-/** A property, used to indicate attributes and relationships of some Thing; equivalent to rdf:Property. */
-type Property = Intangible & {
-
-  /** Relates a property to a class that is (one of) the type(s) the property is expected to be used on. */
-  'domainIncludes': Class | Class[];
-  /** Relates a property to a property that is its inverse. Inverse properties relate the same pairs of items to each other, but in reversed direction. For example, the 'alumni' and 'alumniOf' properties are inverseOf each other. Some properties don't have explicit inverses; in these situations RDFa and JSON-LD syntax for reverse properties can be used. */
-  'inverseOf': Property | Property[];
-  /** Relates a property to a class that constitutes (one of) the expected type(s) for values of the property. */
-  'rangeIncludes': Class | Class[];
-  /** Relates a term (i.e. a property, class or enumeration) to one that supersedes it. */
-  'supersededBy': Class | Enumeration | Property | Class | Enumeration | Property[];
-};
-
-
-
-/** A set of defined terms for example a set of categories or a classification scheme, a glossary, dictionary or enumeration. */
-type DefinedTermSet = CreativeWork & {
-
-  /** A Defined Term contained in this term set. */
-  'hasDefinedTerm': DefinedTerm | DefinedTerm[];
+  /** A CSS selector, e.g. of a [[SpeakableSpecification]] or [[WebPageElement]]. In the latter case, multiple matches within a page can constitute a single conceptual "Web page element". */
+  'cssSelector': string;
+  /** An XPath, e.g. of a [[SpeakableSpecification]] or [[WebPageElement]]. In the latter case, multiple matches within a page can constitute a single conceptual "Web page element". */
+  'xpath': string;
 };
 
 
@@ -2012,102 +1751,20 @@ type ImageObject = MediaObject & {
 
 
 
-/** A geographical region, typically under the jurisdiction of a particular government. */
-type AdministrativeArea = Place & {
+/** A SpeakableSpecification indicates (typically via [[xpath]] or [[cssSelector]]) sections of a document that are highlighted as particularly [[speakable]]. Instances of this type are expected to be used primarily as values of the [[speakable]] property. */
+type SpeakableSpecification = Intangible & {
 
+  /** A CSS selector, e.g. of a [[SpeakableSpecification]] or [[WebPageElement]]. In the latter case, multiple matches within a page can constitute a single conceptual "Web page element". */
+  'cssSelector': string;
+  /** An XPath, e.g. of a [[SpeakableSpecification]] or [[WebPageElement]]. In the latter case, multiple matches within a page can constitute a single conceptual "Web page element". */
+  'xpath': string;
 };
 
 
 
-/** A software application. */
-type SoftwareApplication = CreativeWork & {
+/** Any branch of a field in which people typically develop specific expertise, usually after significant study, time, and effort. */
+type Specialty = {
 
-  /** Type of software application, e.g. 'Game, Multimedia'. */
-  'applicationCategory': string | string;
-  /** Subcategory of the application, e.g. 'Arcade Game'. */
-  'applicationSubCategory': string | string;
-  /** The name of the application suite to which the application belongs (e.g. Excel belongs to Office). */
-  'applicationSuite': string;
-  /** Device required to run the application. Used in cases where a specific make/model is required to run the application. */
-  'availableOnDevice': string | string[];
-  /** Countries for which the application is not supported. You can also provide the two-letter ISO 3166-1 alpha-2 country code. */
-  'countriesNotSupported': string | string[];
-  /** Countries for which the application is supported. You can also provide the two-letter ISO 3166-1 alpha-2 country code. */
-  'countriesSupported': string | string[];
-  /** Device required to run the application. Used in cases where a specific make/model is required to run the application. */
-  'device': string;
-  /** If the file can be downloaded, URL to download the binary. */
-  'downloadUrl': string;
-  /** Features or modules provided by this application (and possibly required by other applications). */
-  'featureList': string | string | string | string[];
-  /** Size of the application / package (e.g. 18MB). In the absence of a unit (MB, KB etc.), KB will be assumed. */
-  'fileSize': string;
-  /** URL at which the app may be installed, if different from the URL of the item. */
-  'installUrl': string;
-  /** Minimum memory requirements. */
-  'memoryRequirements': string | string;
-  /** Operating systems supported (Windows 7, OSX 10.6, Android 1.6). */
-  'operatingSystem': string | string[];
-  /** Permission(s) required to run the app (for example, a mobile app may require full internet access or may run only on wifi). */
-  'permissions': string | string[];
-  /** Processor architecture required to run the application (e.g. IA64). */
-  'processorRequirements': string;
-  /** Description of what changed in this version. */
-  'releaseNotes': string | string;
-  /** Component dependency requirements for application. This includes runtime environments and shared libraries that are not included in the application distribution package, but required to run the application (Examples: DirectX, Java or .NET runtime). */
-  'requirements': string | string | string | string[];
-  /** A link to a screenshot image of the app. */
-  'screenshot': string | ImageObject | string | ImageObject[];
-  /** Additional content for a software application. */
-  'softwareAddOn': SoftwareApplication | SoftwareApplication[];
-  /** Software application help. */
-  'softwareHelp': CreativeWork | CreativeWork[];
-  /** Component dependency requirements for application. This includes runtime environments and shared libraries that are not included in the application distribution package, but required to run the application (Examples: DirectX, Java or .NET runtime). */
-  'softwareRequirements': string | string | string | string[];
-  /** Version of the software instance. */
-  'softwareVersion': string;
-  /** Storage requirements (free space required). */
-  'storageRequirements': string | string;
-  /** Supporting data for a SoftwareApplication. */
-  'supportingData': DataFeed | DataFeed[];
-};
-
-
-
-/** A WebSite is a set of related web pages and other items typically served from a single web domain and accessible via URLs. */
-type WebSite = CreativeWork & {
-
-  /** The International Standard Serial Number (ISSN) that identifies this serial publication. You can repeat this property to identify different formats of, or the linking ISSN (ISSN-L) for, this serial publication. */
-  'issn': string;
-};
-
-
-
-/** An action performed by a direct agent and indirect participants upon a direct object. Optionally happens at a location with the help of an inanimate instrument. The execution of the action may produce a result. Specific action sub-type documentation specifies the exact expectation of each argument/role.\n\nSee also [blog post](http://blog.schema.org/2014/04/announcing-schemaorg-actions.html) and [Actions overview document](https://schema.org/docs/actions.html). */
-type Action = Thing & {
-
-  /** Indicates the current disposition of the Action. */
-  'actionStatus': ActionStatusType | ActionStatusType[];
-  /** The direct performer or driver of the action (animate or inanimate). e.g. *John* wrote a book. */
-  'agent': Organization | Person;
-  /** The endTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to end. For actions that span a period of time, when the action was performed. e.g. John wrote a book from January to *December*. For media, including audio and video, it's the time offset of the end of a clip within a larger file.\n\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions. */
-  'endTime': string | string;
-  /** For failed actions, more information on the cause of the failure. */
-  'error': Thing | Thing[];
-  /** The object that helped the agent perform the action. e.g. John wrote a book with *a pen*. */
-  'instrument': Thing;
-  /** The location of, for example, where an event is happening, where an organization is located, or where an action takes place. */
-  'location': string | Place | PostalAddress | VirtualLocation;
-  /** The object upon which the action is carried out, whose state is kept intact or changed. Also known as the semantic roles patient, affected or undergoer (which change their state) or theme (which doesn't). e.g. John read *a book*. */
-  'object': Thing;
-  /** Other co-agents that participated in the action indirectly. e.g. John wrote a book with *Steve*. */
-  'participant': Organization | Person | Organization | Person[];
-  /** The result produced in the action. e.g. John wrote *a book*. */
-  'result': Thing;
-  /** The startTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to start. For actions that span a period of time, when the action was performed. e.g. John wrote a book from *January* to December. For media, including audio and video, it's the time offset of the start of a clip within a larger file.\n\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions. */
-  'startTime': string | string;
-  /** Indicates a target EntryPoint for an Action. */
-  'target': EntryPoint | EntryPoint[];
 };
 
 
@@ -2131,384 +1788,32 @@ type PostalAddress = ContactPoint & {
 
 
 
-/** An online or virtual location for attending events. For example, one may attend an online seminar or educational event. While a virtual location may be used as the location of an event, virtual locations should not be confused with physical locations in the real world. */
-type VirtualLocation = Intangible & {
+/** A geographical region, typically under the jurisdiction of a particular government. */
+type AdministrativeArea = Place & {
 
 };
 
 
 
-/** An EventAttendanceModeEnumeration value is one of potentially several modes of organising an event, relating to whether it is online or offline. */
-type EventAttendanceModeEnumeration = string;
-
-
-
-/** A schedule defines a repeating time period used to describe a regularly occurring [[Event]]. At a minimum a schedule will specify [[repeatFrequency]] which describes the interval between occurences of the event. Additional information can be provided to specify the schedule more precisely.
-      This includes identifying the day(s) of the week or month when the recurring event will take place, in addition to its start and end time. Schedules may also
-      have start and end dates to indicate when they are active, e.g. to define a limited calendar of events. */
-type Schedule = Intangible & {
-
-  /** Defines the day(s) of the week on which a recurring [[Event]] takes place. May be specified using either [[DayOfWeek]], or alternatively [[Text]] conforming to iCal's syntax for byDay recurrence rules. */
-  'byDay': string | DayOfWeek | string | DayOfWeek[];
-  /** Defines the month(s) of the year on which a recurring [[Event]] takes place. Specified as an [[Integer]] between 1-12. January is 1. */
-  'byMonth': number | number[];
-  /** Defines the day(s) of the month on which a recurring [[Event]] takes place. Specified as an [[Integer]] between 1-31. */
-  'byMonthDay': number | number[];
-  /** Defines the week(s) of the month on which a recurring Event takes place. Specified as an Integer between 1-5. For clarity, byMonthWeek is best used in conjunction with byDay to indicate concepts like the first and third Mondays of a month. */
-  'byMonthWeek': number | number[];
-  /** The duration of the item (movie, audio recording, event, etc.) in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601). */
-  'duration': string;
-  /** The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
-  'endDate': string | string;
-  /** The endTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to end. For actions that span a period of time, when the action was performed. e.g. John wrote a book from January to *December*. For media, including audio and video, it's the time offset of the end of a clip within a larger file.\n\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions. */
-  'endTime': string | string;
-  /** Defines a [[Date]] or [[DateTime]] during which a scheduled [[Event]] will not take place. The property allows exceptions to
-      a [[Schedule]] to be specified. If an exception is specified as a [[DateTime]] then only the event that would have started at that specific date and time
-      should be excluded from the schedule. If an exception is specified as a [[Date]] then any event that is scheduled for that 24 hour period should be
-      excluded from the schedule. This allows a whole day to be excluded from the schedule without having to itemise every scheduled event. */
-  'exceptDate': string | string | string | string[];
-  /** Defines the number of times a recurring [[Event]] will take place */
-  'repeatCount': number | number[];
-  /** Defines the frequency at which [[Event]]s will occur according to a schedule [[Schedule]]. The intervals between
-      events should be defined as a [[Duration]] of time. */
-  'repeatFrequency': string | string | string | string[];
-  /** Indicates the timezone for which the time(s) indicated in the [[Schedule]] are given. The value provided should be among those listed in the IANA Time Zone Database. */
-  'scheduleTimezone': string | string[];
-  /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
-  'startDate': string | string;
-  /** The startTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to start. For actions that span a period of time, when the action was performed. e.g. John wrote a book from *January* to December. For media, including audio and video, it's the time offset of the start of a clip within a larger file.\n\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions. */
-  'startTime': string | string;
-};
-
-
-
-/** EventStatusType is an enumeration type whose instances represent several states that an Event may be in. */
-type EventStatusType = StatusEnumeration & {
-
-};
-
-
-
-/** A financial product for the loaning of an amount of money, or line of credit, under agreed terms and charges. */
-type LoanOrCredit = FinancialProduct & {
-
-  /** The amount of money. */
-  'amount': number | MonetaryAmount;
-  /** The currency in which the monetary amount is expressed.\n\nUse standard formats: [ISO 4217 currency format](http://en.wikipedia.org/wiki/ISO_4217) e.g. "USD"; [Ticker symbol](https://en.wikipedia.org/wiki/List_of_cryptocurrencies) for cryptocurrencies e.g. "BTC"; well known names for [Local Exchange Tradings Systems](https://en.wikipedia.org/wiki/Local_exchange_trading_system) (LETS) and other currency types e.g. "Ithaca HOUR". */
-  'currency': string;
-  /** The period of time after any due date that the borrower has to fulfil its obligations before a default (failure to pay) is deemed to have occurred. */
-  'gracePeriod': string;
-  /** A form of paying back money previously borrowed from a lender. Repayment usually takes the form of periodic payments that normally include part principal plus interest in each payment. */
-  'loanRepaymentForm': RepaymentSpecification | RepaymentSpecification[];
-  /** The duration of the loan or credit agreement. */
-  'loanTerm': QuantitativeValue;
-  /** The type of a loan or credit. */
-  'loanType': string | string;
-  /** The only way you get the money back in the event of default is the security. Recourse is where you still have the opportunity to go back to the borrower for the rest of the money. */
-  'recourseLoan': boolean;
-  /** Whether the terms for payment of interest can be renegotiated during the life of the loan. */
-  'renegotiableLoan': boolean;
-  /** Assets required to secure loan or credit repayments. It may take form of third party pledge, goods, financial instruments (cash, securities, etc.) */
-  'requiredCollateral': string | Thing | string | Thing[];
-};
-
-
-
-/** A payment method is a standardized procedure for transferring the monetary amount for a purchase. Payment methods are characterized by the legal and technical structures used, and by the organization or group carrying out the transaction.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#ByBankTransferInAdvance\n* http://purl.org/goodrelations/v1#ByInvoice\n* http://purl.org/goodrelations/v1#Cash\n* http://purl.org/goodrelations/v1#CheckInAdvance\n* http://purl.org/goodrelations/v1#COD\n* http://purl.org/goodrelations/v1#DirectDebit\n* http://purl.org/goodrelations/v1#GoogleCheckout\n* http://purl.org/goodrelations/v1#PayPal\n* http://purl.org/goodrelations/v1#PaySwarm
-         */
-type PaymentMethod = {
-
-};
-
-
-
-/** A list of possible product availability options. */
-type ItemAvailability = string;
-
-
-
-/** A delivery method is a standardized procedure for transferring the product or service to the destination of fulfillment chosen by the customer. Delivery methods are characterized by the means of transportation used, and by the organization or group that is the contracting party for the sending organization or person.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#DeliveryModeDirectDownload\n* http://purl.org/goodrelations/v1#DeliveryModeFreight\n* http://purl.org/goodrelations/v1#DeliveryModeMail\n* http://purl.org/goodrelations/v1#DeliveryModeOwnFleet\n* http://purl.org/goodrelations/v1#DeliveryModePickUp\n* http://purl.org/goodrelations/v1#DHL\n* http://purl.org/goodrelations/v1#FederalExpress\n* http://purl.org/goodrelations/v1#UPS
-         */
-type DeliveryMethod = string;
-
-
-
-/** The business function specifies the type of activity or access (i.e., the bundle of rights) offered by the organization or business person through the offer. Typical are sell, rental or lease, maintenance or repair, manufacture / produce, recycle / dispose, engineering / construction, or installation. Proprietary specifications of access rights are also instances of this class.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#ConstructionInstallation\n* http://purl.org/goodrelations/v1#Dispose\n* http://purl.org/goodrelations/v1#LeaseOut\n* http://purl.org/goodrelations/v1#Maintain\n* http://purl.org/goodrelations/v1#ProvideService\n* http://purl.org/goodrelations/v1#Repair\n* http://purl.org/goodrelations/v1#Sell\n* http://purl.org/goodrelations/v1#Buy
-         */
-type BusinessFunction = {
-
-};
-
-
-
-/** A business entity type is a conceptual entity representing the legal form, the size, the main line of business, the position in the value chain, or any combination thereof, of an organization or business person.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#Business\n* http://purl.org/goodrelations/v1#Enduser\n* http://purl.org/goodrelations/v1#PublicInstitution\n* http://purl.org/goodrelations/v1#Reseller
-	   */
-type BusinessEntityType = {
-
-};
-
-
-
-/** A structured value representing a price or price range. Typically, only the subclasses of this type are used for markup. It is recommended to use [[MonetaryAmount]] to describe independent amounts of money such as a salary, credit card limits, etc. */
-type PriceSpecification = StructuredValue & {
-
-  /** The interval and unit of measurement of ordering quantities for which the offer or price specification is valid. This allows e.g. specifying that a certain freight charge is valid only for a certain quantity. */
-  'eligibleQuantity': QuantitativeValue;
-  /** The transaction volume, in a monetary unit, for which the offer or price specification is valid, e.g. for indicating a minimal purchasing volume, to express free shipping above a certain order volume, or to limit the acceptance of credit cards to purchases to a certain minimal amount. */
-  'eligibleTransactionVolume': PriceSpecification;
-  /** The highest price if the price is a range. */
-  'maxPrice': number;
-  /** The lowest price if the price is a range. */
-  'minPrice': number;
-  /** The offer price of a product, or of a price component when attached to PriceSpecification and its subtypes.\n\nUsage guidelines:\n\n* Use the [[priceCurrency]] property (with standard formats: [ISO 4217 currency format](http://en.wikipedia.org/wiki/ISO_4217) e.g. "USD"; [Ticker symbol](https://en.wikipedia.org/wiki/List_of_cryptocurrencies) for cryptocurrencies e.g. "BTC"; well known names for [Local Exchange Tradings Systems](https://en.wikipedia.org/wiki/Local_exchange_trading_system) (LETS) and other currency types e.g. "Ithaca HOUR") instead of including [ambiguous symbols](http://en.wikipedia.org/wiki/Dollar_sign#Currencies_that_use_the_dollar_or_peso_sign) such as '$' in the value.\n* Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to indicate a decimal point. Avoid using these symbols as a readability separator.\n* Note that both [RDFa](http://www.w3.org/TR/xhtml-rdfa-primer/#using-the-content-attribute) and Microdata syntax allow the use of a "content=" attribute for publishing simple machine-readable values alongside more human-friendly formatting.\n* Use values from 0123456789 (Unicode 'DIGIT ZERO' (U+0030) to 'DIGIT NINE' (U+0039)) rather than superficially similiar Unicode symbols.
-       */
-  'price': number | string;
-  /** The currency of the price, or a price component when attached to [[PriceSpecification]] and its subtypes.\n\nUse standard formats: [ISO 4217 currency format](http://en.wikipedia.org/wiki/ISO_4217) e.g. "USD"; [Ticker symbol](https://en.wikipedia.org/wiki/List_of_cryptocurrencies) for cryptocurrencies e.g. "BTC"; well known names for [Local Exchange Tradings Systems](https://en.wikipedia.org/wiki/Local_exchange_trading_system) (LETS) and other currency types e.g. "Ithaca HOUR". */
-  'priceCurrency': string;
-  /** The date when the item becomes valid. */
-  'validFrom': string | string;
-  /** The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. */
-  'validThrough': string | string;
-  /** Specifies whether the applicable value-added tax (VAT) is included in the price specification or not. */
-  'valueAddedTaxIncluded': boolean;
-};
-
-
-
-/** A structured value indicating the quantity, unit of measurement, and business function of goods included in a bundle offer. */
-type TypeAndQuantityNode = StructuredValue & {
-
-  /** The quantity of the goods included in the offer. */
-  'amountOfThisGood': number;
-  /** The business function (e.g. sell, lease, repair, dispose) of the offer or component of a bundle (TypeAndQuantityNode). The default is http://purl.org/goodrelations/v1#Sell. */
-  'businessFunction': BusinessFunction;
-  /** The product that this structured value is referring to. */
-  'typeOfGood': Product | Service;
-  /** The unit of measurement given using the UN/CEFACT Common Code (3 characters) or a URL. Other codes than the UN/CEFACT Common Code may be used with a prefix followed by a colon. */
-  'unitCode': string | string;
-  /** A string or text indicating the unit of measurement. Useful if you cannot provide a standard unit code for
-unitCode. */
-  'unitText': string | string[];
-};
-
-
-
-/** A list of possible conditions for the item. */
-type OfferItemCondition = string;
-
-
-
-/** When a single product is associated with multiple offers (for example, the same pair of shoes is offered by different merchants), then AggregateOffer can be used.\n\nNote: AggregateOffers are normally expected to associate multiple offers that all share the same defined [[businessFunction]] value, or default to http://purl.org/goodrelations/v1#Sell if businessFunction is not explicitly defined. */
-type AggregateOffer = Offer & {
-
-  /** The highest price of all offers available.\n\nUsage guidelines:\n\n* Use values from 0123456789 (Unicode 'DIGIT ZERO' (U+0030) to 'DIGIT NINE' (U+0039)) rather than superficially similiar Unicode symbols.\n* Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to indicate a decimal point. Avoid using these symbols as a readability separator. */
-  'highPrice': number | string;
-  /** The lowest price of all offers available.\n\nUsage guidelines:\n\n* Use values from 0123456789 (Unicode 'DIGIT ZERO' (U+0030) to 'DIGIT NINE' (U+0039)) rather than superficially similiar Unicode symbols.\n* Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to indicate a decimal point. Avoid using these symbols as a readability separator. */
-  'lowPrice': number | string;
-  /** The number of offers for the product. */
-  'offerCount': number;
-  /** An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use [[businessFunction]] to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a [[Demand]]. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
-       */
-  'offers': Demand | Offer | Demand | Offer[];
-};
-
-
-
-/** A food or drink item listed in a menu or menu section. */
-type MenuItem = Intangible & {
-
-  /** Additional menu item(s) such as a side dish of salad or side order of fries that can be added to this menu item. Additionally it can be a menu section containing allowed add-on menu items for this menu item. */
-  'menuAddOn': MenuItem | MenuSection | MenuItem | MenuSection[];
-  /** Nutrition information about the recipe or menu item. */
-  'nutrition': NutritionInformation;
-  /** An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use [[businessFunction]] to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a [[Demand]]. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
-       */
-  'offers': Demand | Offer | Demand | Offer[];
-  /** Indicates a dietary restriction or guideline for which this recipe or menu item is suitable, e.g. diabetic, halal etc. */
-  'suitableForDiet': RestrictedDiet | RestrictedDiet[];
-};
-
-
-
-/** A service provided by an organization, e.g. delivery service, print services, etc. */
-type Service = Intangible & {
-
-  /** The overall rating, based on a collection of reviews or ratings, of the item. */
-  'aggregateRating': AggregateRating;
-  /** The geographic area where a service or offered item is provided. */
-  'areaServed': string | AdministrativeArea | GeoShape | Place;
-  /** An intended audience, i.e. a group for whom something was created. */
-  'audience': Audience;
-  /** A means of accessing the service (e.g. a phone bank, a web site, a location, etc.). */
-  'availableChannel': ServiceChannel | ServiceChannel[];
-  /** An award won by or for this item. */
-  'award': string | string[];
-  /** The brand(s) associated with a product or service, or the brand(s) maintained by an organization or business person. */
-  'brand': Brand | Organization;
-  /** An entity that arranges for an exchange between a buyer and a seller.  In most cases a broker never acquires or releases ownership of a product or service involved in an exchange.  If it is not clear whether an entity is a broker, seller, or buyer, the latter two terms are preferred. */
-  'broker': Organization | Person | Organization | Person[];
-  /** A category for the item. Greater signs or slashes can be used to informally indicate a category hierarchy. */
-  'category': string | string | PhysicalActivityCategory | Thing | string | string | PhysicalActivityCategory | Thing[];
-  /** Indicates an OfferCatalog listing for this Organization, Person, or Service. */
-  'hasOfferCatalog': OfferCatalog | OfferCatalog[];
-  /** The hours during which this service or contact is available. */
-  'hoursAvailable': OpeningHoursSpecification;
-  /** A pointer to another, somehow related product (or multiple products). */
-  'isRelatedTo': Product | Service | Product | Service[];
-  /** A pointer to another, functionally similar product (or multiple products). */
-  'isSimilarTo': Product | Service | Product | Service[];
-  /** An associated logo. */
-  'logo': string | ImageObject | string | ImageObject[];
-  /** An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use [[businessFunction]] to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a [[Demand]]. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
-       */
-  'offers': Demand | Offer | Demand | Offer[];
-  /** The tangible thing generated by the service, e.g. a passport, permit, etc. */
-  'produces': Thing;
-  /** The service provider, service operator, or service performer; the goods producer. Another party (a seller) may offer those services or goods on behalf of the provider. A provider may also serve as the seller. */
-  'provider': Organization | Person;
-  /** Indicates the mobility of a provided service (e.g. 'static', 'dynamic'). */
-  'providerMobility': string | string[];
-  /** A review of the item. */
-  'review': Review | Review[];
-  /** The geographic area where the service is provided. */
-  'serviceArea': AdministrativeArea | GeoShape | Place;
-  /** The audience eligible for this service. */
-  'serviceAudience': Audience;
-  /** The tangible thing generated by the service, e.g. a passport, permit, etc. */
-  'serviceOutput': Thing;
-  /** The type of service being offered, e.g. veterans' benefits, emergency relief, etc. */
-  'serviceType': string | GovernmentBenefitsType;
-  /** A slogan or motto associated with the item. */
-  'slogan': string | string[];
-  /** Human-readable terms of service documentation. */
-  'termsOfService': string | string | string | string[];
-};
-
-
-
-/** A trip or journey. An itinerary of visits to one or more places. */
-type Trip = Intangible & {
-
-  /** The expected arrival time. */
-  'arrivalTime': string | string;
-  /** The expected departure time. */
-  'departureTime': string | string;
-  /** Destination(s) ( [[Place]] ) that make up a trip. For a trip where destination order is important use [[ItemList]] to specify that order (see examples). */
-  'itinerary': MaybeArray<Place> | MaybeArray<Place>[];
-  /** An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use [[businessFunction]] to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a [[Demand]]. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
-       */
-  'offers': Demand | Offer | Demand | Offer[];
-  /** Identifies that this [[Trip]] is a subTrip of another Trip.  For example Day 1, Day 2, etc. of a multi-day trip. */
-  'partOfTrip': Trip | Trip[];
-  /** The service provider, service operator, or service performer; the goods producer. Another party (a seller) may offer those services or goods on behalf of the provider. A provider may also serve as the seller. */
-  'provider': Organization | Person;
-  /** Identifies a [[Trip]] that is a subTrip of this Trip.  For example Day 1, Day 2, etc. of a multi-day trip. */
-  'subTrip': Trip | Trip[];
-};
-
-
-
-/** A structured value representing the duration and scope of services that will be provided to a customer free of charge in case of a defect or malfunction of a product. */
-type WarrantyPromise = StructuredValue & {
-
-  /** The duration of the warranty promise. Common unitCode values are ANN for year, MON for months, or DAY for days. */
-  'durationOfWarranty': QuantitativeValue;
-  /** The scope of the warranty promise. */
-  'warrantyScope': WarrantyScope;
-};
-
-
-
-/** Specifies a location feature by providing a structured value representing a feature of an accommodation as a property-value pair of varying degrees of formality. */
-type LocationFeatureSpecification = PropertyValue & {
-
-  /** The hours during which this service or contact is available. */
-  'hoursAvailable': OpeningHoursSpecification;
-  /** The date when the item becomes valid. */
-  'validFrom': string | string;
-  /** The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. */
-  'validThrough': string | string;
-};
-
-
-
-/** The geographic coordinates of a place or event. */
-type GeoCoordinates = StructuredValue & {
+/** The geographic shape of a place. A GeoShape can be described using several properties whose values are based on latitude/longitude pairs. Either whitespace or commas can be used to separate latitude and longitude; whitespace should be used when writing a list of several such points. */
+type GeoShape = StructuredValue & {
 
   /** Physical address of the item. */
   'address': string | PostalAddress;
   /** The country. For example, USA. You can also provide the two-letter [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1). */
   'addressCountry': string | Country;
+  /** A box is the area enclosed by the rectangle formed by two points. The first point is the lower corner, the second point is the upper corner. A box is expressed as two points separated by a space character. */
+  'box': string | string[];
+  /** A circle is the circular region of a specified radius centered at a specified latitude and longitude. A circle is expressed as a pair followed by a radius in meters. */
+  'circle': string | string[];
   /** The elevation of a location ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System)). Values may be of the form 'NUMBER UNIT_OF_MEASUREMENT' (e.g., '1,000 m', '3,200 ft') while numbers alone should be assumed to be a value in meters. */
   'elevation': number | string;
-  /** The latitude of a location. For example ```37.42242``` ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System)). */
-  'latitude': number | string;
-  /** The longitude of a location. For example ```-122.08585``` ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System)). */
-  'longitude': number | string;
+  /** A line is a point-to-point path consisting of two or more points. A line is expressed as a series of two or more point objects separated by space. */
+  'line': string | string[];
+  /** A polygon is the area enclosed by a point-to-point path for which the starting and ending points are the same. A polygon is expressed as a series of four or more space delimited points where the first and final points are identical. */
+  'polygon': string | string[];
   /** The postal code. For example, 94043. */
   'postalCode': string;
-};
-
-
-
-/** (Eventually to be defined as) a supertype of GeoShape designed to accommodate definitions from Geo-Spatial best practices. */
-type GeospatialGeometry = Intangible & {
-
-  /** Represents a relationship between two geometries (or the places they represent), relating a containing geometry to a contained geometry. "a contains b iff no points of b lie in the exterior of a, and at least one point of the interior of b lies in the interior of a". As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
-  'geoContains': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents a relationship between two geometries (or the places they represent), relating a geometry to another that covers it. As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
-  'geoCoveredBy': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents a relationship between two geometries (or the places they represent), relating a covering geometry to a covered geometry. "Every point of b is a point of (the interior or boundary of) a". As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
-  'geoCovers': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents a relationship between two geometries (or the places they represent), relating a geometry to another that crosses it: "a crosses b: they have some but not all interior points in common, and the dimension of the intersection is less than that of at least one of them". As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
-  'geoCrosses': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents spatial relations in which two geometries (or the places they represent) are topologically disjoint: they have no point in common. They form a set of disconnected geometries." (a symmetric relationship, as defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM)) */
-  'geoDisjoint': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents spatial relations in which two geometries (or the places they represent) are topologically equal, as defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). "Two geometries are topologically equal if their interiors intersect and no part of the interior or boundary of one geometry intersects the exterior of the other" (a symmetric relationship) */
-  'geoEquals': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents spatial relations in which two geometries (or the places they represent) have at least one point in common. As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
-  'geoIntersects': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents a relationship between two geometries (or the places they represent), relating a geometry to another that geospatially overlaps it, i.e. they have some but not all points in common. As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
-  'geoOverlaps': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents spatial relations in which two geometries (or the places they represent) touch: they have at least one boundary point in common, but no interior points." (a symmetric relationship, as defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM) ) */
-  'geoTouches': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-  /** Represents a relationship between two geometries (or the places they represent), relating a geometry to one that contains it, i.e. it is inside (i.e. within) its interior. As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
-  'geoWithin': GeospatialGeometry | Place | GeospatialGeometry | Place[];
-};
-
-
-
-/** A map. */
-type Map_ = CreativeWork & {
-
-  /** Indicates the kind of Map, from the MapCategoryType Enumeration. */
-  'mapType': MapCategoryType | MapCategoryType[];
-};
-
-
-
-/** A structured value providing information about the opening hours of a place or a certain service inside a place.\n\n
-The place is __open__ if the [[opens]] property is specified, and __closed__ otherwise.\n\nIf the value for the [[closes]] property is less than the value for the [[opens]] property then the hour range is assumed to span over the next day.
-       */
-type OpeningHoursSpecification = StructuredValue & {
-
-  /** The closing hour of the place or service on the given day(s) of the week. */
-  'closes': string;
-  /** The day of the week for which these opening hours are valid. */
-  'dayOfWeek': DayOfWeek;
-  /** The opening hour of the place or service on the given day(s) of the week. */
-  'opens': string;
-  /** The date when the item becomes valid. */
-  'validFrom': string | string;
-  /** The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. */
-  'validThrough': string | string;
-};
-
-
-
-/** A photograph. */
-type Photograph = CreativeWork & {
-
 };
 
 
@@ -2665,6 +1970,13 @@ type OfferCatalog = ItemList & {
 
 
 
+/** An online or virtual location for attending events. For example, one may attend an online seminar or educational event. While a virtual location may be used as the location of an event, virtual locations should not be confused with physical locations in the real world. */
+type VirtualLocation = Intangible & {
+
+};
+
+
+
 /** Used to describe membership in a loyalty programs (e.g. "StarAliance"), traveler clubs (e.g. "AAA"), purchase clubs ("Safeway Club"), etc. */
 type ProgramMembership = Intangible & {
 
@@ -2713,13 +2025,674 @@ type OwnershipInfo = StructuredValue & {
 
 
 
+/** A utility class that serves as the umbrella for a number of 'intangible' things such as quantities, structured values, etc. */
+type Intangible = Thing & {
+
+};
+
+
+
 /** Enumerated for values for itemListOrder for indicating how an ordered ItemList is organized. */
 type ItemListOrderType = string;
 
 
 
+/** An educational organization. */
+type EducationalOrganization = CivicStructure & Organization & {
+
+  /** Alumni of an organization. */
+  'alumni': Person | Person[];
+};
+
+
+
+/** An enumeration of genders. */
+type GenderType = string;
+
+
+
+/** A profession, may involve prolonged training and/or a formal qualification. */
+type Occupation = Intangible & {
+
+  /** Educational background needed for the position or Occupation. */
+  'educationRequirements': string | EducationalOccupationalCredential;
+  /** An estimated salary for a job posting or occupation, based on a variety of variables including, but not limited to industry, job title, and location. Estimated salaries  are often computed by outside organizations rather than the hiring organization, who may not have committed to the estimated value. */
+  'estimatedSalary': number | MonetaryAmount | MonetaryAmountDistribution | number | MonetaryAmount | MonetaryAmountDistribution[];
+  /** Description of skills and experience needed for the position or Occupation. */
+  'experienceRequirements': string | OccupationalExperienceRequirements;
+  /** The region/country for which this occupational description is appropriate. Note that educational requirements and qualifications can vary between jurisdictions. */
+  'occupationLocation': AdministrativeArea;
+  /** A category describing the job, preferably using a term from a taxonomy such as [BLS O*NET-SOC](http://www.onetcenter.org/taxonomy.html), [ISCO-08](https://www.ilo.org/public/english/bureau/stat/isco/isco08/) or similar, with the property repeated for each applicable value. Ideally the taxonomy should be identified, and both the textual label and formal code for the category should be provided.\n
+Note: for historical reasons, any textual label and formal code provided as a literal may be assumed to be from O*NET-SOC. */
+  'occupationalCategory': string | CategoryCode | string | CategoryCode[];
+  /** Specific qualifications required for this role or Occupation. */
+  'qualifications': string | EducationalOccupationalCredential | string | EducationalOccupationalCredential[];
+  /** Responsibilities associated with this role or Occupation. */
+  'responsibilities': string | string[];
+  /** A statement of knowledge, skill, ability, task or any other assertion expressing a competency that is desired or required to fulfill this role or to work in this occupation. */
+  'skills': string | DefinedTerm | string | DefinedTerm[];
+};
+
+
+
+/** A structured value representing a price or price range. Typically, only the subclasses of this type are used for markup. It is recommended to use [[MonetaryAmount]] to describe independent amounts of money such as a salary, credit card limits, etc. */
+type PriceSpecification = StructuredValue & {
+
+  /** The interval and unit of measurement of ordering quantities for which the offer or price specification is valid. This allows e.g. specifying that a certain freight charge is valid only for a certain quantity. */
+  'eligibleQuantity': QuantitativeValue;
+  /** The transaction volume, in a monetary unit, for which the offer or price specification is valid, e.g. for indicating a minimal purchasing volume, to express free shipping above a certain order volume, or to limit the acceptance of credit cards to purchases to a certain minimal amount. */
+  'eligibleTransactionVolume': PriceSpecification;
+  /** The highest price if the price is a range. */
+  'maxPrice': number;
+  /** The lowest price if the price is a range. */
+  'minPrice': number;
+  /** The offer price of a product, or of a price component when attached to PriceSpecification and its subtypes.\n\nUsage guidelines:\n\n* Use the [[priceCurrency]] property (with standard formats: [ISO 4217 currency format](http://en.wikipedia.org/wiki/ISO_4217) e.g. "USD"; [Ticker symbol](https://en.wikipedia.org/wiki/List_of_cryptocurrencies) for cryptocurrencies e.g. "BTC"; well known names for [Local Exchange Tradings Systems](https://en.wikipedia.org/wiki/Local_exchange_trading_system) (LETS) and other currency types e.g. "Ithaca HOUR") instead of including [ambiguous symbols](http://en.wikipedia.org/wiki/Dollar_sign#Currencies_that_use_the_dollar_or_peso_sign) such as '$' in the value.\n* Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to indicate a decimal point. Avoid using these symbols as a readability separator.\n* Note that both [RDFa](http://www.w3.org/TR/xhtml-rdfa-primer/#using-the-content-attribute) and Microdata syntax allow the use of a "content=" attribute for publishing simple machine-readable values alongside more human-friendly formatting.\n* Use values from 0123456789 (Unicode 'DIGIT ZERO' (U+0030) to 'DIGIT NINE' (U+0039)) rather than superficially similiar Unicode symbols.
+       */
+  'price': number | string;
+  /** The currency of the price, or a price component when attached to [[PriceSpecification]] and its subtypes.\n\nUse standard formats: [ISO 4217 currency format](http://en.wikipedia.org/wiki/ISO_4217) e.g. "USD"; [Ticker symbol](https://en.wikipedia.org/wiki/List_of_cryptocurrencies) for cryptocurrencies e.g. "BTC"; well known names for [Local Exchange Tradings Systems](https://en.wikipedia.org/wiki/Local_exchange_trading_system) (LETS) and other currency types e.g. "Ithaca HOUR". */
+  'priceCurrency': string;
+  /** The date when the item becomes valid. */
+  'validFrom': string | string;
+  /** The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. */
+  'validThrough': string | string;
+  /** Specifies whether the applicable value-added tax (VAT) is included in the price specification or not. */
+  'valueAddedTaxIncluded': boolean;
+};
+
+
+
+/** An action performed by a direct agent and indirect participants upon a direct object. Optionally happens at a location with the help of an inanimate instrument. The execution of the action may produce a result. Specific action sub-type documentation specifies the exact expectation of each argument/role.\n\nSee also [blog post](http://blog.schema.org/2014/04/announcing-schemaorg-actions.html) and [Actions overview document](https://schema.org/docs/actions.html). */
+type Action = Thing & {
+
+  /** Indicates the current disposition of the Action. */
+  'actionStatus': ActionStatusType | ActionStatusType[];
+  /** The direct performer or driver of the action (animate or inanimate). e.g. *John* wrote a book. */
+  'agent': Organization | Person;
+  /** The endTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to end. For actions that span a period of time, when the action was performed. e.g. John wrote a book from January to *December*. For media, including audio and video, it's the time offset of the end of a clip within a larger file.\n\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions. */
+  'endTime': string | string;
+  /** For failed actions, more information on the cause of the failure. */
+  'error': Thing | Thing[];
+  /** The object that helped the agent perform the action. e.g. John wrote a book with *a pen*. */
+  'instrument': Thing;
+  /** The location of, for example, where an event is happening, where an organization is located, or where an action takes place. */
+  'location': string | Place | PostalAddress | VirtualLocation;
+  /** The object upon which the action is carried out, whose state is kept intact or changed. Also known as the semantic roles patient, affected or undergoer (which change their state) or theme (which doesn't). e.g. John read *a book*. */
+  'object': Thing;
+  /** Other co-agents that participated in the action indirectly. e.g. John wrote a book with *Steve*. */
+  'participant': Organization | Person | Organization | Person[];
+  /** The result produced in the action. e.g. John wrote *a book*. */
+  'result': Thing;
+  /** The startTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to start. For actions that span a period of time, when the action was performed. e.g. John wrote a book from *January* to December. For media, including audio and video, it's the time offset of the start of a clip within a larger file.\n\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions. */
+  'startTime': string | string;
+  /** Indicates a target EntryPoint for an Action. */
+  'target': EntryPoint | EntryPoint[];
+};
+
+
+
+/** A set of defined terms for example a set of categories or a classification scheme, a glossary, dictionary or enumeration. */
+type DefinedTermSet = CreativeWork & {
+
+  /** A Defined Term contained in this term set. */
+  'hasDefinedTerm': DefinedTerm | DefinedTerm[];
+};
+
+
+
+/** A class, also often called a 'Type'; equivalent to rdfs:Class. */
+type Class = Intangible & {
+
+  /** Relates a term (i.e. a property, class or enumeration) to one that supersedes it. */
+  'supersededBy': Class | Enumeration | Property | Class | Enumeration | Property[];
+};
+
+
+
+/** A property, used to indicate attributes and relationships of some Thing; equivalent to rdf:Property. */
+type Property = Intangible & {
+
+  /** Relates a property to a class that is (one of) the type(s) the property is expected to be used on. */
+  'domainIncludes': Class | Class[];
+  /** Relates a property to a property that is its inverse. Inverse properties relate the same pairs of items to each other, but in reversed direction. For example, the 'alumni' and 'alumniOf' properties are inverseOf each other. Some properties don't have explicit inverses; in these situations RDFa and JSON-LD syntax for reverse properties can be used. */
+  'inverseOf': Property | Property[];
+  /** Relates a property to a class that constitutes (one of) the expected type(s) for values of the property. */
+  'rangeIncludes': Class | Class[];
+  /** Relates a term (i.e. a property, class or enumeration) to one that supersedes it. */
+  'supersededBy': Class | Enumeration | Property | Class | Enumeration | Property[];
+};
+
+
+
+/** A NewsArticle is an article whose content reports news, or provides background context and supporting materials for understanding the news.
+
+A more detailed overview of [schema.org News markup](/docs/news.html) is also available.
+ */
+type NewsArticle = Article & {
+
+  /** A [dateline](https://en.wikipedia.org/wiki/Dateline) is a brief piece of text included in news articles that describes where and when the story was written or filed though the date is often omitted. Sometimes only a placename is provided.
+
+Structured representations of dateline-related information can also be expressed more explicitly using [[locationCreated]] (which represents where a work was created e.g. where a news report was written).  For location depicted or described in the content, use [[contentLocation]].
+
+Dateline summaries are oriented more towards human readers than towards automated processing, and can vary substantially. Some examples: "BEIRUT, Lebanon, June 2.", "Paris, France", "December 19, 2017 11:43AM Reporting from Washington", "Beijing/Moscow", "QUEZON CITY, Philippines".
+       */
+  'dateline': string;
+  /** The number of the column in which the NewsArticle appears in the print edition. */
+  'printColumn': string;
+  /** The edition of the print product in which the NewsArticle appears. */
+  'printEdition': string;
+  /** If this NewsArticle appears in print, this field indicates the name of the page on which the article is found. Please note that this field is intended for the exact page name (e.g. A5, B18). */
+  'printPage': string;
+  /** If this NewsArticle appears in print, this field indicates the print section in which the article appeared. */
+  'printSection': string;
+};
+
+
+
+/** A subscription which allows a user to access media including audio, video, books, etc. */
+type MediaSubscription = Intangible & {
+
+  /** The Organization responsible for authenticating the user's subscription. For example, many media apps require a cable/satellite provider to authenticate your subscription before playing media. */
+  'authenticator': Organization;
+  /** An Offer which must be accepted before the user can perform the Action. For example, the user may need to buy a movie before being able to watch it. */
+  'expectsAcceptanceOf': Offer | Offer[];
+};
+
+
+
+/** WebContent is a type representing all [[WebPage]], [[WebSite]] and [[WebPageElement]] content. It is sometimes the case that detailed distinctions between Web pages, sites and their parts is not always important or obvious. The  [[WebContent]] type makes it easier to describe Web-addressable content without requiring such distinctions to always be stated. (The intent is that the existing types [[WebPage]], [[WebSite]] and [[WebPageElement]] will eventually be declared as subtypes of [[WebContent]]). */
+type WebContent = CreativeWork & {
+
+};
+
+
+
+/** A HyperToEntry is an item within a [[HyperToc]], which represents a hypertext table of contents for complex media objects, such as [[VideoObject]], [[AudioObject]]. The media object itself is indicated using [[associatedMedia]]. Each section of interest within that content can be described with a [[HyperTocEntry]], with associated [[startOffset]] and [[endOffset]]. When several entries are all from the same file, [[associatedMedia]] is used on the overarching [[HyperTocEntry]]; if the content has been split into multiple files, they can be referenced using [[associatedMedia]] on each [[HyperTocEntry]]. */
+type HyperTocEntry = CreativeWork & {
+
+  /** A media object that encodes this CreativeWork. This property is a synonym for encoding. */
+  'associatedMedia': MediaObject;
+  /** A [[HyperTocEntry]] can have a [[tocContinuation]] indicated, which is another [[HyperTocEntry]] that would be the default next item to play or render. */
+  'tocContinuation': HyperTocEntry | HyperTocEntry[];
+  /** Text of an utterances (spoken words, lyrics etc.) that occurs at a certain section of a media object, represented as a [[HyperTocEntry]]. */
+  'utterances': string | string[];
+};
+
+
+
+/** A musical group, such as a band, an orchestra, or a choir. Can also be a solo musician. */
+type MusicGroup = PerformingGroup & {
+
+  /** A music album. */
+  'album': MusicAlbum | MusicAlbum[];
+  /** A collection of music albums. */
+  'albums': MusicAlbum | MusicAlbum[];
+  /** Genre of the creative work, broadcast channel or group. */
+  'genre': string | string;
+  /** A member of a music group—for example, John, Paul, George, or Ringo. */
+  'musicGroupMember': Person | Person[];
+  /** A music recording (track)—usually a single song. If an ItemList is given, the list should contain items of type MusicRecording. */
+  'track': MaybeArray<MusicRecording> | MaybeArray<MusicRecording>[];
+  /** A music recording (track)—usually a single song. */
+  'tracks': MusicRecording | MusicRecording[];
+};
+
+
+
+/** A media episode (e.g. TV, radio, video game) which can be part of a series or season. */
+type Episode = CreativeWork & {
+
+  /** An actor, e.g. in tv, radio, movie, video games etc., or in an event. Actors can be associated with individual items or with a series, episode, clip. */
+  'actor': Person | Person[];
+  /** An actor, e.g. in tv, radio, movie, video games etc. Actors can be associated with individual items or with a series, episode, clip. */
+  'actors': Person | Person[];
+  /** A director of e.g. tv, radio, movie, video gaming etc. content, or of an event. Directors can be associated with individual items or with a series, episode, clip. */
+  'director': Person;
+  /** A director of e.g. tv, radio, movie, video games etc. content. Directors can be associated with individual items or with a series, episode, clip. */
+  'directors': Person | Person[];
+  /** The duration of the item (movie, audio recording, event, etc.) in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601). */
+  'duration': string;
+  /** Position of the episode within an ordered group of episodes. */
+  'episodeNumber': number | string;
+  /** The composer of the soundtrack. */
+  'musicBy': MusicGroup | Person;
+  /** The season to which this episode belongs. */
+  'partOfSeason': CreativeWorkSeason;
+  /** The series to which this episode or season belongs. */
+  'partOfSeries': CreativeWorkSeries;
+  /** The production company or studio responsible for the item e.g. series, video game, episode etc. */
+  'productionCompany': Organization;
+  /** The trailer of a movie or tv/radio series, season, episode, etc. */
+  'trailer': VideoObject;
+};
+
+
+
+/** A media season e.g. tv, radio, video game etc. */
+type CreativeWorkSeason = CreativeWork & {
+
+  /** An actor, e.g. in tv, radio, movie, video games etc., or in an event. Actors can be associated with individual items or with a series, episode, clip. */
+  'actor': Person | Person[];
+  /** A director of e.g. tv, radio, movie, video gaming etc. content, or of an event. Directors can be associated with individual items or with a series, episode, clip. */
+  'director': Person;
+  /** The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
+  'endDate': string | string;
+  /** An episode of a tv, radio or game media within a series or season. */
+  'episode': Episode | Episode[];
+  /** An episode of a TV/radio series or season. */
+  'episodes': Episode | Episode[];
+  /** The number of episodes in this season or series. */
+  'numberOfEpisodes': number;
+  /** The series to which this episode or season belongs. */
+  'partOfSeries': CreativeWorkSeries;
+  /** The production company or studio responsible for the item e.g. series, video game, episode etc. */
+  'productionCompany': Organization;
+  /** Position of the season within an ordered group of seasons. */
+  'seasonNumber': number | string;
+  /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
+  'startDate': string | string;
+  /** The trailer of a movie or tv/radio series, season, episode, etc. */
+  'trailer': VideoObject;
+};
+
+
+
+/** A CreativeWorkSeries in schema.org is a group of related items, typically but not necessarily of the same kind. CreativeWorkSeries are usually organized into some order, often chronological. Unlike [[ItemList]] which is a general purpose data structure for lists of things, the emphasis with CreativeWorkSeries is on published materials (written e.g. books and periodicals, or media such as tv, radio and games).\n\nSpecific subtypes are available for describing [[TVSeries]], [[RadioSeries]], [[MovieSeries]], [[BookSeries]], [[Periodical]] and [[VideoGameSeries]]. In each case, the [[hasPart]] / [[isPartOf]] properties can be used to relate the CreativeWorkSeries to its parts. The general CreativeWorkSeries type serves largely just to organize these more specific and practical subtypes.\n\nIt is common for properties applicable to an item from the series to be usefully applied to the containing group. Schema.org attempts to anticipate some of these cases, but publishers should be free to apply properties of the series parts to the series as a whole wherever they seem appropriate.
+	   */
+type CreativeWorkSeries = CreativeWork & Series & {
+
+  /** The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
+  'endDate': string | string;
+  /** The International Standard Serial Number (ISSN) that identifies this serial publication. You can repeat this property to identify different formats of, or the linking ISSN (ISSN-L) for, this serial publication. */
+  'issn': string;
+  /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
+  'startDate': string | string;
+};
+
+
+
+/** A financial product for the loaning of an amount of money, or line of credit, under agreed terms and charges. */
+type LoanOrCredit = FinancialProduct & {
+
+  /** The amount of money. */
+  'amount': number | MonetaryAmount;
+  /** The currency in which the monetary amount is expressed.\n\nUse standard formats: [ISO 4217 currency format](http://en.wikipedia.org/wiki/ISO_4217) e.g. "USD"; [Ticker symbol](https://en.wikipedia.org/wiki/List_of_cryptocurrencies) for cryptocurrencies e.g. "BTC"; well known names for [Local Exchange Tradings Systems](https://en.wikipedia.org/wiki/Local_exchange_trading_system) (LETS) and other currency types e.g. "Ithaca HOUR". */
+  'currency': string;
+  /** The period of time after any due date that the borrower has to fulfil its obligations before a default (failure to pay) is deemed to have occurred. */
+  'gracePeriod': string;
+  /** A form of paying back money previously borrowed from a lender. Repayment usually takes the form of periodic payments that normally include part principal plus interest in each payment. */
+  'loanRepaymentForm': RepaymentSpecification | RepaymentSpecification[];
+  /** The duration of the loan or credit agreement. */
+  'loanTerm': QuantitativeValue;
+  /** The type of a loan or credit. */
+  'loanType': string | string;
+  /** The only way you get the money back in the event of default is the security. Recourse is where you still have the opportunity to go back to the borrower for the rest of the money. */
+  'recourseLoan': boolean;
+  /** Whether the terms for payment of interest can be renegotiated during the life of the loan. */
+  'renegotiableLoan': boolean;
+  /** Assets required to secure loan or credit repayments. It may take form of third party pledge, goods, financial instruments (cash, securities, etc.) */
+  'requiredCollateral': string | Thing | string | Thing[];
+};
+
+
+
+/** A payment method is a standardized procedure for transferring the monetary amount for a purchase. Payment methods are characterized by the legal and technical structures used, and by the organization or group carrying out the transaction.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#ByBankTransferInAdvance\n* http://purl.org/goodrelations/v1#ByInvoice\n* http://purl.org/goodrelations/v1#Cash\n* http://purl.org/goodrelations/v1#CheckInAdvance\n* http://purl.org/goodrelations/v1#COD\n* http://purl.org/goodrelations/v1#DirectDebit\n* http://purl.org/goodrelations/v1#GoogleCheckout\n* http://purl.org/goodrelations/v1#PayPal\n* http://purl.org/goodrelations/v1#PaySwarm
+         */
+type PaymentMethod = {
+
+};
+
+
+
+/** A list of possible product availability options. */
+type ItemAvailability = string;
+
+
+
+/** A delivery method is a standardized procedure for transferring the product or service to the destination of fulfillment chosen by the customer. Delivery methods are characterized by the means of transportation used, and by the organization or group that is the contracting party for the sending organization or person.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#DeliveryModeDirectDownload\n* http://purl.org/goodrelations/v1#DeliveryModeFreight\n* http://purl.org/goodrelations/v1#DeliveryModeMail\n* http://purl.org/goodrelations/v1#DeliveryModeOwnFleet\n* http://purl.org/goodrelations/v1#DeliveryModePickUp\n* http://purl.org/goodrelations/v1#DHL\n* http://purl.org/goodrelations/v1#FederalExpress\n* http://purl.org/goodrelations/v1#UPS
+         */
+type DeliveryMethod = string;
+
+
+
+/** The business function specifies the type of activity or access (i.e., the bundle of rights) offered by the organization or business person through the offer. Typical are sell, rental or lease, maintenance or repair, manufacture / produce, recycle / dispose, engineering / construction, or installation. Proprietary specifications of access rights are also instances of this class.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#ConstructionInstallation\n* http://purl.org/goodrelations/v1#Dispose\n* http://purl.org/goodrelations/v1#LeaseOut\n* http://purl.org/goodrelations/v1#Maintain\n* http://purl.org/goodrelations/v1#ProvideService\n* http://purl.org/goodrelations/v1#Repair\n* http://purl.org/goodrelations/v1#Sell\n* http://purl.org/goodrelations/v1#Buy
+         */
+type BusinessFunction = {
+
+};
+
+
+
 /** Categories of physical activity, organized by physiologic classification. */
 type PhysicalActivityCategory = string;
+
+
+
+/** A business entity type is a conceptual entity representing the legal form, the size, the main line of business, the position in the value chain, or any combination thereof, of an organization or business person.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#Business\n* http://purl.org/goodrelations/v1#Enduser\n* http://purl.org/goodrelations/v1#PublicInstitution\n* http://purl.org/goodrelations/v1#Reseller
+	   */
+type BusinessEntityType = {
+
+};
+
+
+
+/** A structured value indicating the quantity, unit of measurement, and business function of goods included in a bundle offer. */
+type TypeAndQuantityNode = StructuredValue & {
+
+  /** The quantity of the goods included in the offer. */
+  'amountOfThisGood': number;
+  /** The business function (e.g. sell, lease, repair, dispose) of the offer or component of a bundle (TypeAndQuantityNode). The default is http://purl.org/goodrelations/v1#Sell. */
+  'businessFunction': BusinessFunction;
+  /** The product that this structured value is referring to. */
+  'typeOfGood': Product | Service;
+  /** The unit of measurement given using the UN/CEFACT Common Code (3 characters) or a URL. Other codes than the UN/CEFACT Common Code may be used with a prefix followed by a colon. */
+  'unitCode': string | string;
+  /** A string or text indicating the unit of measurement. Useful if you cannot provide a standard unit code for
+unitCode. */
+  'unitText': string | string[];
+};
+
+
+
+/** A list of possible conditions for the item. */
+type OfferItemCondition = string;
+
+
+
+/** When a single product is associated with multiple offers (for example, the same pair of shoes is offered by different merchants), then AggregateOffer can be used.\n\nNote: AggregateOffers are normally expected to associate multiple offers that all share the same defined [[businessFunction]] value, or default to http://purl.org/goodrelations/v1#Sell if businessFunction is not explicitly defined. */
+type AggregateOffer = Offer & {
+
+  /** The highest price of all offers available.\n\nUsage guidelines:\n\n* Use values from 0123456789 (Unicode 'DIGIT ZERO' (U+0030) to 'DIGIT NINE' (U+0039)) rather than superficially similiar Unicode symbols.\n* Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to indicate a decimal point. Avoid using these symbols as a readability separator. */
+  'highPrice': number | string;
+  /** The lowest price of all offers available.\n\nUsage guidelines:\n\n* Use values from 0123456789 (Unicode 'DIGIT ZERO' (U+0030) to 'DIGIT NINE' (U+0039)) rather than superficially similiar Unicode symbols.\n* Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to indicate a decimal point. Avoid using these symbols as a readability separator. */
+  'lowPrice': number | string;
+  /** The number of offers for the product. */
+  'offerCount': number;
+  /** An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use [[businessFunction]] to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a [[Demand]]. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
+       */
+  'offers': Demand | Offer | Demand | Offer[];
+};
+
+
+
+/** A food or drink item listed in a menu or menu section. */
+type MenuItem = Intangible & {
+
+  /** Additional menu item(s) such as a side dish of salad or side order of fries that can be added to this menu item. Additionally it can be a menu section containing allowed add-on menu items for this menu item. */
+  'menuAddOn': MenuItem | MenuSection | MenuItem | MenuSection[];
+  /** Nutrition information about the recipe or menu item. */
+  'nutrition': NutritionInformation;
+  /** An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use [[businessFunction]] to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a [[Demand]]. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
+       */
+  'offers': Demand | Offer | Demand | Offer[];
+  /** Indicates a dietary restriction or guideline for which this recipe or menu item is suitable, e.g. diabetic, halal etc. */
+  'suitableForDiet': RestrictedDiet | RestrictedDiet[];
+};
+
+
+
+/** A service provided by an organization, e.g. delivery service, print services, etc. */
+type Service = Intangible & {
+
+  /** The overall rating, based on a collection of reviews or ratings, of the item. */
+  'aggregateRating': AggregateRating;
+  /** The geographic area where a service or offered item is provided. */
+  'areaServed': string | AdministrativeArea | GeoShape | Place;
+  /** An intended audience, i.e. a group for whom something was created. */
+  'audience': Audience;
+  /** A means of accessing the service (e.g. a phone bank, a web site, a location, etc.). */
+  'availableChannel': ServiceChannel | ServiceChannel[];
+  /** An award won by or for this item. */
+  'award': string | string[];
+  /** The brand(s) associated with a product or service, or the brand(s) maintained by an organization or business person. */
+  'brand': Brand | Organization;
+  /** An entity that arranges for an exchange between a buyer and a seller.  In most cases a broker never acquires or releases ownership of a product or service involved in an exchange.  If it is not clear whether an entity is a broker, seller, or buyer, the latter two terms are preferred. */
+  'broker': Organization | Person | Organization | Person[];
+  /** A category for the item. Greater signs or slashes can be used to informally indicate a category hierarchy. */
+  'category': string | string | PhysicalActivityCategory | Thing | string | string | PhysicalActivityCategory | Thing[];
+  /** Indicates an OfferCatalog listing for this Organization, Person, or Service. */
+  'hasOfferCatalog': OfferCatalog | OfferCatalog[];
+  /** The hours during which this service or contact is available. */
+  'hoursAvailable': OpeningHoursSpecification;
+  /** A pointer to another, somehow related product (or multiple products). */
+  'isRelatedTo': Product | Service | Product | Service[];
+  /** A pointer to another, functionally similar product (or multiple products). */
+  'isSimilarTo': Product | Service | Product | Service[];
+  /** An associated logo. */
+  'logo': string | ImageObject | string | ImageObject[];
+  /** An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use [[businessFunction]] to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a [[Demand]]. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
+       */
+  'offers': Demand | Offer | Demand | Offer[];
+  /** The tangible thing generated by the service, e.g. a passport, permit, etc. */
+  'produces': Thing;
+  /** The service provider, service operator, or service performer; the goods producer. Another party (a seller) may offer those services or goods on behalf of the provider. A provider may also serve as the seller. */
+  'provider': Organization | Person;
+  /** Indicates the mobility of a provided service (e.g. 'static', 'dynamic'). */
+  'providerMobility': string | string[];
+  /** A review of the item. */
+  'review': Review | Review[];
+  /** The geographic area where the service is provided. */
+  'serviceArea': AdministrativeArea | GeoShape | Place;
+  /** The audience eligible for this service. */
+  'serviceAudience': Audience;
+  /** The tangible thing generated by the service, e.g. a passport, permit, etc. */
+  'serviceOutput': Thing;
+  /** The type of service being offered, e.g. veterans' benefits, emergency relief, etc. */
+  'serviceType': string | GovernmentBenefitsType;
+  /** A slogan or motto associated with the item. */
+  'slogan': string | string[];
+  /** Human-readable terms of service documentation. */
+  'termsOfService': string | string | string | string[];
+};
+
+
+
+/** A trip or journey. An itinerary of visits to one or more places. */
+type Trip = Intangible & {
+
+  /** The expected arrival time. */
+  'arrivalTime': string | string;
+  /** The expected departure time. */
+  'departureTime': string | string;
+  /** Destination(s) ( [[Place]] ) that make up a trip. For a trip where destination order is important use [[ItemList]] to specify that order (see examples). */
+  'itinerary': MaybeArray<Place> | MaybeArray<Place>[];
+  /** An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use [[businessFunction]] to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a [[Demand]]. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
+       */
+  'offers': Demand | Offer | Demand | Offer[];
+  /** Identifies that this [[Trip]] is a subTrip of another Trip.  For example Day 1, Day 2, etc. of a multi-day trip. */
+  'partOfTrip': Trip | Trip[];
+  /** The service provider, service operator, or service performer; the goods producer. Another party (a seller) may offer those services or goods on behalf of the provider. A provider may also serve as the seller. */
+  'provider': Organization | Person;
+  /** Identifies a [[Trip]] that is a subTrip of this Trip.  For example Day 1, Day 2, etc. of a multi-day trip. */
+  'subTrip': Trip | Trip[];
+};
+
+
+
+/** OfferShippingDetails represents information about shipping destinations.
+
+Multiple of these entities can be used to represent different shipping rates for different destinations:
+
+One entity for Alaska/Hawaii. A different one for continental US.A different one for all France.
+
+Multiple of these entities can be used to represent different shipping costs and delivery times.
+
+Two entities that are identical but differ in rate and time:
+
+e.g. Cheaper and slower: $5 in 5-7days
+or Fast and expensive: $15 in 1-2 days. */
+type OfferShippingDetails = StructuredValue & {
+
+  /** The total delay between the receipt of the order and the goods reaching the final customer. */
+  'deliveryTime': ShippingDeliveryTime;
+  /** Indicates when shipping to a particular [[shippingDestination]] is not available. */
+  'doesNotShip': boolean;
+  /** indicates (possibly multiple) shipping destinations. These can be defined in several ways e.g. postalCode ranges. */
+  'shippingDestination': DefinedRegion | DefinedRegion[];
+  /** Label to match an [[OfferShippingDetails]] with a [[ShippingRateSettings]] (within the context of a [[shippingSettingsLink]] cross-reference). */
+  'shippingLabel': string | string[];
+  /** The shipping rate is the cost of shipping to the specified destination. Typically, the maxValue and currency values (of the [[MonetaryAmount]]) are most appropriate. */
+  'shippingRate': MonetaryAmount;
+  /** Link to a page containing [[ShippingRateSettings]] and [[DeliveryTimeSettings]] details. */
+  'shippingSettingsLink': string | string[];
+  /** Label to match an [[OfferShippingDetails]] with a [[DeliveryTimeSettings]] (within the context of a [[shippingSettingsLink]] cross-reference). */
+  'transitTimeLabel': string | string[];
+};
+
+
+
+/** A structured value representing the duration and scope of services that will be provided to a customer free of charge in case of a defect or malfunction of a product. */
+type WarrantyPromise = StructuredValue & {
+
+  /** The duration of the warranty promise. Common unitCode values are ANN for year, MON for months, or DAY for days. */
+  'durationOfWarranty': QuantitativeValue;
+  /** The scope of the warranty promise. */
+  'warrantyScope': WarrantyScope;
+};
+
+
+
+/** Specifies a location feature by providing a structured value representing a feature of an accommodation as a property-value pair of varying degrees of formality. */
+type LocationFeatureSpecification = PropertyValue & {
+
+  /** The hours during which this service or contact is available. */
+  'hoursAvailable': OpeningHoursSpecification;
+  /** The date when the item becomes valid. */
+  'validFrom': string | string;
+  /** The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. */
+  'validThrough': string | string;
+};
+
+
+
+/** The geographic coordinates of a place or event. */
+type GeoCoordinates = StructuredValue & {
+
+  /** Physical address of the item. */
+  'address': string | PostalAddress;
+  /** The country. For example, USA. You can also provide the two-letter [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1). */
+  'addressCountry': string | Country;
+  /** The elevation of a location ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System)). Values may be of the form 'NUMBER UNIT_OF_MEASUREMENT' (e.g., '1,000 m', '3,200 ft') while numbers alone should be assumed to be a value in meters. */
+  'elevation': number | string;
+  /** The latitude of a location. For example ```37.42242``` ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System)). */
+  'latitude': number | string;
+  /** The longitude of a location. For example ```-122.08585``` ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System)). */
+  'longitude': number | string;
+  /** The postal code. For example, 94043. */
+  'postalCode': string;
+};
+
+
+
+/** (Eventually to be defined as) a supertype of GeoShape designed to accommodate definitions from Geo-Spatial best practices. */
+type GeospatialGeometry = Intangible & {
+
+  /** Represents a relationship between two geometries (or the places they represent), relating a containing geometry to a contained geometry. "a contains b iff no points of b lie in the exterior of a, and at least one point of the interior of b lies in the interior of a". As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
+  'geoContains': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents a relationship between two geometries (or the places they represent), relating a geometry to another that covers it. As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
+  'geoCoveredBy': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents a relationship between two geometries (or the places they represent), relating a covering geometry to a covered geometry. "Every point of b is a point of (the interior or boundary of) a". As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
+  'geoCovers': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents a relationship between two geometries (or the places they represent), relating a geometry to another that crosses it: "a crosses b: they have some but not all interior points in common, and the dimension of the intersection is less than that of at least one of them". As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
+  'geoCrosses': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents spatial relations in which two geometries (or the places they represent) are topologically disjoint: they have no point in common. They form a set of disconnected geometries." (a symmetric relationship, as defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM)) */
+  'geoDisjoint': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents spatial relations in which two geometries (or the places they represent) are topologically equal, as defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). "Two geometries are topologically equal if their interiors intersect and no part of the interior or boundary of one geometry intersects the exterior of the other" (a symmetric relationship) */
+  'geoEquals': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents spatial relations in which two geometries (or the places they represent) have at least one point in common. As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
+  'geoIntersects': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents a relationship between two geometries (or the places they represent), relating a geometry to another that geospatially overlaps it, i.e. they have some but not all points in common. As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
+  'geoOverlaps': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents spatial relations in which two geometries (or the places they represent) touch: they have at least one boundary point in common, but no interior points." (a symmetric relationship, as defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM) ) */
+  'geoTouches': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+  /** Represents a relationship between two geometries (or the places they represent), relating a geometry to one that contains it, i.e. it is inside (i.e. within) its interior. As defined in [DE-9IM](https://en.wikipedia.org/wiki/DE-9IM). */
+  'geoWithin': GeospatialGeometry | Place | GeospatialGeometry | Place[];
+};
+
+
+
+/** A map. */
+type Map = CreativeWork & {
+
+  /** Indicates the kind of Map, from the MapCategoryType Enumeration. */
+  'mapType': MapCategoryType | MapCategoryType[];
+};
+
+
+
+/** A structured value providing information about the opening hours of a place or a certain service inside a place.\n\n
+The place is __open__ if the [[opens]] property is specified, and __closed__ otherwise.\n\nIf the value for the [[closes]] property is less than the value for the [[opens]] property then the hour range is assumed to span over the next day.
+       */
+type OpeningHoursSpecification = StructuredValue & {
+
+  /** The closing hour of the place or service on the given day(s) of the week. */
+  'closes': string;
+  /** The day of the week for which these opening hours are valid. */
+  'dayOfWeek': DayOfWeek;
+  /** The opening hour of the place or service on the given day(s) of the week. */
+  'opens': string;
+  /** The date when the item becomes valid. */
+  'validFrom': string | string;
+  /** The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. */
+  'validThrough': string | string;
+};
+
+
+
+/** A photograph. */
+type Photograph = CreativeWork & {
+
+};
+
+
+
+/** An EventAttendanceModeEnumeration value is one of potentially several modes of organising an event, relating to whether it is online or offline. */
+type EventAttendanceModeEnumeration = string;
+
+
+
+/** A schedule defines a repeating time period used to describe a regularly occurring [[Event]]. At a minimum a schedule will specify [[repeatFrequency]] which describes the interval between occurences of the event. Additional information can be provided to specify the schedule more precisely.
+      This includes identifying the day(s) of the week or month when the recurring event will take place, in addition to its start and end time. Schedules may also
+      have start and end dates to indicate when they are active, e.g. to define a limited calendar of events. */
+type Schedule = Intangible & {
+
+  /** Defines the day(s) of the week on which a recurring [[Event]] takes place. May be specified using either [[DayOfWeek]], or alternatively [[Text]] conforming to iCal's syntax for byDay recurrence rules. */
+  'byDay': string | DayOfWeek | string | DayOfWeek[];
+  /** Defines the month(s) of the year on which a recurring [[Event]] takes place. Specified as an [[Integer]] between 1-12. January is 1. */
+  'byMonth': number | number[];
+  /** Defines the day(s) of the month on which a recurring [[Event]] takes place. Specified as an [[Integer]] between 1-31. */
+  'byMonthDay': number | number[];
+  /** Defines the week(s) of the month on which a recurring Event takes place. Specified as an Integer between 1-5. For clarity, byMonthWeek is best used in conjunction with byDay to indicate concepts like the first and third Mondays of a month. */
+  'byMonthWeek': number | number[];
+  /** The duration of the item (movie, audio recording, event, etc.) in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601). */
+  'duration': string;
+  /** The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
+  'endDate': string | string;
+  /** The endTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to end. For actions that span a period of time, when the action was performed. e.g. John wrote a book from January to *December*. For media, including audio and video, it's the time offset of the end of a clip within a larger file.\n\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions. */
+  'endTime': string | string;
+  /** Defines a [[Date]] or [[DateTime]] during which a scheduled [[Event]] will not take place. The property allows exceptions to
+      a [[Schedule]] to be specified. If an exception is specified as a [[DateTime]] then only the event that would have started at that specific date and time
+      should be excluded from the schedule. If an exception is specified as a [[Date]] then any event that is scheduled for that 24 hour period should be
+      excluded from the schedule. This allows a whole day to be excluded from the schedule without having to itemise every scheduled event. */
+  'exceptDate': string | string | string | string[];
+  /** Defines the number of times a recurring [[Event]] will take place */
+  'repeatCount': number | number[];
+  /** Defines the frequency at which [[Event]]s will occur according to a schedule [[Schedule]]. The intervals between
+      events should be defined as a [[Duration]] of time. */
+  'repeatFrequency': string | string | string | string[];
+  /** Indicates the timezone for which the time(s) indicated in the [[Schedule]] are given. The value provided should be among those listed in the IANA Time Zone Database. */
+  'scheduleTimezone': string | string[];
+  /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
+  'startDate': string | string;
+  /** The startTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to start. For actions that span a period of time, when the action was performed. e.g. John wrote a book from *January* to December. For media, including audio and video, it's the time offset of the start of a clip within a larger file.\n\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions. */
+  'startTime': string | string;
+};
+
+
+
+/** EventStatusType is an enumeration type whose instances represent several states that an Event may be in. */
+type EventStatusType = StatusEnumeration & {
+
+};
 
 
 
@@ -2764,116 +2737,150 @@ type ProductModel = Product & {
 
 
 
-/** OfferShippingDetails represents information about shipping destinations.
+/** A software application. */
+type SoftwareApplication = CreativeWork & {
 
-Multiple of these entities can be used to represent different shipping rates for different destinations:
-
-One entity for Alaska/Hawaii. A different one for continental US.A different one for all France.
-
-Multiple of these entities can be used to represent different shipping costs and delivery times.
-
-Two entities that are identical but differ in rate and time:
-
-e.g. Cheaper and slower: $5 in 5-7days
-or Fast and expensive: $15 in 1-2 days. */
-type OfferShippingDetails = StructuredValue & {
-
-  /** The total delay between the receipt of the order and the goods reaching the final customer. */
-  'deliveryTime': ShippingDeliveryTime;
-  /** Indicates when shipping to a particular [[shippingDestination]] is not available. */
-  'doesNotShip': boolean;
-  /** indicates (possibly multiple) shipping destinations. These can be defined in several ways e.g. postalCode ranges. */
-  'shippingDestination': DefinedRegion | DefinedRegion[];
-  /** Label to match an [[OfferShippingDetails]] with a [[ShippingRateSettings]] (within the context of a [[shippingSettingsLink]] cross-reference). */
-  'shippingLabel': string | string[];
-  /** The shipping rate is the cost of shipping to the specified destination. Typically, the maxValue and currency values (of the [[MonetaryAmount]]) are most appropriate. */
-  'shippingRate': MonetaryAmount;
-  /** Link to a page containing [[ShippingRateSettings]] and [[DeliveryTimeSettings]] details. */
-  'shippingSettingsLink': string | string[];
-  /** Label to match an [[OfferShippingDetails]] with a [[DeliveryTimeSettings]] (within the context of a [[shippingSettingsLink]] cross-reference). */
-  'transitTimeLabel': string | string[];
+  /** Type of software application, e.g. 'Game, Multimedia'. */
+  'applicationCategory': string | string;
+  /** Subcategory of the application, e.g. 'Arcade Game'. */
+  'applicationSubCategory': string | string;
+  /** The name of the application suite to which the application belongs (e.g. Excel belongs to Office). */
+  'applicationSuite': string;
+  /** Device required to run the application. Used in cases where a specific make/model is required to run the application. */
+  'availableOnDevice': string | string[];
+  /** Countries for which the application is not supported. You can also provide the two-letter ISO 3166-1 alpha-2 country code. */
+  'countriesNotSupported': string | string[];
+  /** Countries for which the application is supported. You can also provide the two-letter ISO 3166-1 alpha-2 country code. */
+  'countriesSupported': string | string[];
+  /** Device required to run the application. Used in cases where a specific make/model is required to run the application. */
+  'device': string;
+  /** If the file can be downloaded, URL to download the binary. */
+  'downloadUrl': string;
+  /** Features or modules provided by this application (and possibly required by other applications). */
+  'featureList': string | string | string | string[];
+  /** Size of the application / package (e.g. 18MB). In the absence of a unit (MB, KB etc.), KB will be assumed. */
+  'fileSize': string;
+  /** URL at which the app may be installed, if different from the URL of the item. */
+  'installUrl': string;
+  /** Minimum memory requirements. */
+  'memoryRequirements': string | string;
+  /** Operating systems supported (Windows 7, OSX 10.6, Android 1.6). */
+  'operatingSystem': string | string[];
+  /** Permission(s) required to run the app (for example, a mobile app may require full internet access or may run only on wifi). */
+  'permissions': string | string[];
+  /** Processor architecture required to run the application (e.g. IA64). */
+  'processorRequirements': string;
+  /** Description of what changed in this version. */
+  'releaseNotes': string | string;
+  /** Component dependency requirements for application. This includes runtime environments and shared libraries that are not included in the application distribution package, but required to run the application (Examples: DirectX, Java or .NET runtime). */
+  'requirements': string | string | string | string[];
+  /** A link to a screenshot image of the app. */
+  'screenshot': string | ImageObject | string | ImageObject[];
+  /** Additional content for a software application. */
+  'softwareAddOn': SoftwareApplication | SoftwareApplication[];
+  /** Software application help. */
+  'softwareHelp': CreativeWork | CreativeWork[];
+  /** Component dependency requirements for application. This includes runtime environments and shared libraries that are not included in the application distribution package, but required to run the application (Examples: DirectX, Java or .NET runtime). */
+  'softwareRequirements': string | string | string | string[];
+  /** Version of the software instance. */
+  'softwareVersion': string;
+  /** Storage requirements (free space required). */
+  'storageRequirements': string | string;
+  /** Supporting data for a SoftwareApplication. */
+  'supportingData': DataFeed | DataFeed[];
 };
 
 
 
-/** A BreadcrumbList is an ItemList consisting of a chain of linked Web pages, typically described using at least their URL and their name, and typically ending with the current page.\n\nThe [[position]] property is used to reconstruct the order of the items in a BreadcrumbList The convention is that a breadcrumb list has an [[itemListOrder]] of [[ItemListOrderAscending]] (lower values listed first), and that the first items in this list correspond to the "top" or beginning of the breadcrumb trail, e.g. with a site or section homepage. The specific values of 'position' are not assigned meaning for a BreadcrumbList, but they should be integers, e.g. beginning with '1' for the first item in the list.
-       */
-type BreadcrumbList = ItemList & {
+/** A WebSite is a set of related web pages and other items typically served from a single web domain and accessible via URLs. */
+type WebSite = CreativeWork & {
 
+  /** The International Standard Serial Number (ISSN) that identifies this serial publication. You can repeat this property to identify different formats of, or the linking ISSN (ISSN-L) for, this serial publication. */
+  'issn': string;
 };
 
 
 
-/** A web page element, like a table or an image. */
-type WebPageElement = CreativeWork & {
+/** A delivery service through which content is provided via broadcast over the air or online. */
+type BroadcastService = Service & {
 
-  /** A CSS selector, e.g. of a [[SpeakableSpecification]] or [[WebPageElement]]. In the latter case, multiple matches within a page can constitute a single conceptual "Web page element". */
-  'cssSelector': string;
-  /** An XPath, e.g. of a [[SpeakableSpecification]] or [[WebPageElement]]. In the latter case, multiple matches within a page can constitute a single conceptual "Web page element". */
-  'xpath': string;
+  /** The area within which users can expect to reach the broadcast service. */
+  'area': Place;
+  /** The media network(s) whose content is broadcast on this station. */
+  'broadcastAffiliateOf': Organization;
+  /** The name displayed in the channel guide. For many US affiliates, it is the network name. */
+  'broadcastDisplayName': string;
+  /** The frequency used for over-the-air broadcasts. Numeric values or simple ranges e.g. 87-99. In addition a shortcut idiom is supported for frequences of AM and FM radio channels, e.g. "87 FM". */
+  'broadcastFrequency': string | BroadcastFrequencySpecification;
+  /** The timezone in [ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601) for which the service bases its broadcasts */
+  'broadcastTimezone': string;
+  /** The organization owning or operating the broadcast service. */
+  'broadcaster': Organization;
+  /** A [callsign](https://en.wikipedia.org/wiki/Call_sign), as used in broadcasting and radio communications to identify people, radio and TV stations, or vehicles. */
+  'callSign': string | string[];
+  /** A broadcast channel of a broadcast service. */
+  'hasBroadcastChannel': BroadcastChannel | BroadcastChannel[];
+  /** The language of the content or performance or used in an action. Please use one of the language codes from the [IETF BCP 47 standard](http://tools.ietf.org/html/bcp47). See also [[availableLanguage]]. */
+  'inLanguage': string | Language;
+  /** A broadcast service to which the broadcast service may belong to such as regional variations of a national channel. */
+  'parentService': BroadcastService | BroadcastService[];
+  /** The type of screening or video broadcast used (e.g. IMAX, 3D, SD, HD, etc.). */
+  'videoFormat': string;
 };
 
 
 
-/** A SpeakableSpecification indicates (typically via [[xpath]] or [[cssSelector]]) sections of a document that are highlighted as particularly [[speakable]]. Instances of this type are expected to be used primarily as values of the [[speakable]] property. */
-type SpeakableSpecification = Intangible & {
+/** A collection of music tracks. */
+type MusicAlbum = MusicPlaylist & {
 
-  /** A CSS selector, e.g. of a [[SpeakableSpecification]] or [[WebPageElement]]. In the latter case, multiple matches within a page can constitute a single conceptual "Web page element". */
-  'cssSelector': string;
-  /** An XPath, e.g. of a [[SpeakableSpecification]] or [[WebPageElement]]. In the latter case, multiple matches within a page can constitute a single conceptual "Web page element". */
-  'xpath': string;
+  /** Classification of the album by it's type of content: soundtrack, live album, studio album, etc. */
+  'albumProductionType': MusicAlbumProductionType | MusicAlbumProductionType[];
+  /** A release of this album. */
+  'albumRelease': MusicRelease | MusicRelease[];
+  /** The kind of release which this album is: single, EP or album. */
+  'albumReleaseType': MusicAlbumReleaseType;
+  /** The artist that performed this album or recording. */
+  'byArtist': MusicGroup | Person;
 };
 
 
 
-/** Any branch of a field in which people typically develop specific expertise, usually after significant study, time, and effort. */
-type Specialty = {
+/** A collection of music tracks in playlist form. */
+type MusicPlaylist = CreativeWork & {
 
+  /** The number of tracks in this album or playlist. */
+  'numTracks': number;
+  /** A music recording (track)—usually a single song. If an ItemList is given, the list should contain items of type MusicRecording. */
+  'track': MaybeArray<MusicRecording> | MaybeArray<MusicRecording>[];
+  /** A music recording (track)—usually a single song. */
+  'tracks': MusicRecording | MusicRecording[];
 };
 
 
 
-/** An educational organization. */
-type EducationalOrganization = CivicStructure & Organization & {
+/** A musical composition. */
+type MusicComposition = CreativeWork & {
 
-  /** Alumni of an organization. */
-  'alumni': Person | Person[];
-};
-
-
-
-/** An enumeration of genders. */
-type GenderType = string;
-
-
-
-/** A profession, may involve prolonged training and/or a formal qualification. */
-type Occupation = Intangible & {
-
-  /** Educational background needed for the position or Occupation. */
-  'educationRequirements': string | EducationalOccupationalCredential;
-  /** An estimated salary for a job posting or occupation, based on a variety of variables including, but not limited to industry, job title, and location. Estimated salaries  are often computed by outside organizations rather than the hiring organization, who may not have committed to the estimated value. */
-  'estimatedSalary': number | MonetaryAmount | MonetaryAmountDistribution | number | MonetaryAmount | MonetaryAmountDistribution[];
-  /** Description of skills and experience needed for the position or Occupation. */
-  'experienceRequirements': string | OccupationalExperienceRequirements;
-  /** The region/country for which this occupational description is appropriate. Note that educational requirements and qualifications can vary between jurisdictions. */
-  'occupationLocation': AdministrativeArea;
-  /** A category describing the job, preferably using a term from a taxonomy such as [BLS O*NET-SOC](http://www.onetcenter.org/taxonomy.html), [ISCO-08](https://www.ilo.org/public/english/bureau/stat/isco/isco08/) or similar, with the property repeated for each applicable value. Ideally the taxonomy should be identified, and both the textual label and formal code for the category should be provided.\n
-Note: for historical reasons, any textual label and formal code provided as a literal may be assumed to be from O*NET-SOC. */
-  'occupationalCategory': string | CategoryCode | string | CategoryCode[];
-  /** Specific qualifications required for this role or Occupation. */
-  'qualifications': string | EducationalOccupationalCredential | string | EducationalOccupationalCredential[];
-  /** Responsibilities associated with this role or Occupation. */
-  'responsibilities': string | string[];
-  /** A statement of knowledge, skill, ability, task or any other assertion expressing a competency that is desired or required to fulfill this role or to work in this occupation. */
-  'skills': string | DefinedTerm | string | DefinedTerm[];
-};
-
-
-
-/** WebContent is a type representing all [[WebPage]], [[WebSite]] and [[WebPageElement]] content. It is sometimes the case that detailed distinctions between Web pages, sites and their parts is not always important or obvious. The  [[WebContent]] type makes it easier to describe Web-addressable content without requiring such distinctions to always be stated. (The intent is that the existing types [[WebPage]], [[WebSite]] and [[WebPageElement]] will eventually be declared as subtypes of [[WebContent]]). */
-type WebContent = CreativeWork & {
-
+  /** The person or organization who wrote a composition, or who is the composer of a work performed at some event. */
+  'composer': Organization | Person;
+  /** The date and place the work was first performed. */
+  'firstPerformance': Event;
+  /** Smaller compositions included in this work (e.g. a movement in a symphony). */
+  'includedComposition': MusicComposition | MusicComposition[];
+  /** The International Standard Musical Work Code for the composition. */
+  'iswcCode': string;
+  /** The person who wrote the words. */
+  'lyricist': Person;
+  /** The words in the song. */
+  'lyrics': CreativeWork;
+  /** An arrangement derived from the composition. */
+  'musicArrangement': MusicComposition | MusicComposition[];
+  /** The type of composition (e.g. overture, sonata, symphony, etc.). */
+  'musicCompositionForm': string;
+  /** The key, mode, or scale this composition uses. */
+  'musicalKey': string;
+  /** An audio recording of the work. */
+  'recordedAs': MusicRecording | MusicRecording[];
 };
 
 
@@ -2888,32 +2895,8 @@ type SizeGroupEnumeration = {
 /** Enumerates common size systems for different categories of products, for example "EN-13402" or "UK" for wearables or "Imperial" for screws. */
 type SizeSystemEnumeration = string;
 
-/** Classification of the album by it's type of content: soundtrack, live album, studio album, etc. */
-type MusicAlbumProductionType = string;
-
-
-
-/** A MusicRelease is a specific release of a music album. */
-type MusicRelease = MusicPlaylist & {
-
-  /** The catalog number for the release. */
-  'catalogNumber': string;
-  /** The group the release is credited to if different than the byArtist. For example, Red and Blue is credited to "Stefani Germanotta Band", but by Lady Gaga. */
-  'creditedTo': Organization | Person;
-  /** The duration of the item (movie, audio recording, event, etc.) in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601). */
-  'duration': string;
-  /** Format of this release (the type of recording media used, ie. compact disc, digital media, LP, etc.). */
-  'musicReleaseFormat': MusicReleaseFormatType | MusicReleaseFormatType[];
-  /** The label that issued the release. */
-  'recordLabel': Organization;
-  /** The album this is a release of. */
-  'releaseOf': MusicAlbum;
-};
-
-
-
-/** The kind of release which this album is: single, EP or album. */
-type MusicAlbumReleaseType = string;
+/** Enumerated options related to a ContactPoint. */
+type ContactPointOption = string;
 
 
 
@@ -2924,40 +2907,40 @@ type PerformingGroup = Organization & {
 
 
 
-/** The day of the week, e.g. used to specify to which day the opening hours of an OpeningHoursSpecification refer.
+/** A statistical distribution of monetary amounts. */
+type MonetaryAmountDistribution = QuantitativeValueDistribution & {
 
-Originally, URLs from [GoodRelations](http://purl.org/goodrelations/v1) were used (for [[Monday]], [[Tuesday]], [[Wednesday]], [[Thursday]], [[Friday]], [[Saturday]], [[Sunday]] plus a special entry for [[PublicHolidays]]); these have now been integrated directly into schema.org.
-       */
-type DayOfWeek = string;
-
-
-
-/** A product provided to consumers and businesses by financial institutions such as banks, insurance companies, brokerage firms, consumer finance companies, and investment companies which comprise the financial services industry. */
-type FinancialProduct = Service & {
-
-  /** The annual rate that is charged for borrowing (or made by investing), expressed as a single percentage number that represents the actual yearly cost of funds over the term of a loan. This includes any fees or additional costs associated with the transaction. */
-  'annualPercentageRate': number | QuantitativeValue;
-  /** Description of fees, commissions, and other terms applied either to a class of financial product, or by a financial service organization. */
-  'feesAndCommissionsSpecification': string | string | string | string[];
-  /** The interest rate, charged or paid, applicable to the financial product. Note: This is different from the calculated annualPercentageRate. */
-  'interestRate': number | QuantitativeValue;
+  /** The currency in which the monetary amount is expressed.\n\nUse standard formats: [ISO 4217 currency format](http://en.wikipedia.org/wiki/ISO_4217) e.g. "USD"; [Ticker symbol](https://en.wikipedia.org/wiki/List_of_cryptocurrencies) for cryptocurrencies e.g. "BTC"; well known names for [Local Exchange Tradings Systems](https://en.wikipedia.org/wiki/Local_exchange_trading_system) (LETS) and other currency types e.g. "Ithaca HOUR". */
+  'currency': string;
 };
 
 
 
-/** A structured value representing repayment. */
-type RepaymentSpecification = StructuredValue & {
+/** Indicates employment-related experience requirements, e.g. [[monthsOfExperience]]. */
+type OccupationalExperienceRequirements = Intangible & {
 
-  /** a type of payment made in cash during the onset of the purchase of an expensive good/service. The payment typically represents only a percentage of the full purchase price. */
-  'downPayment': number | MonetaryAmount | number | MonetaryAmount[];
-  /** The amount to be paid as a penalty in the event of early payment of the loan. */
-  'earlyPrepaymentPenalty': MonetaryAmount;
-  /** The amount of money to pay in a single payment. */
-  'loanPaymentAmount': MonetaryAmount;
-  /** Frequency of payments due, i.e. number of months between payments. This is defined as a frequency, i.e. the reciprocal of a period of time. */
-  'loanPaymentFrequency': number | number[];
-  /** The number of payments contractually required at origination to repay the loan. For monthly paying loans this is the number of months from the contractual first payment date to the maturity date. */
-  'numberOfLoanPayments': number;
+  /** Indicates the minimal number of months of experience required for a position. */
+  'monthsOfExperience': number | number[];
+};
+
+
+
+/** A Category Code. */
+type CategoryCode = DefinedTerm & {
+
+  /** A short textual code that uniquely identifies the value. */
+  'codeValue': string;
+  /** A [[CategoryCodeSet]] that contains this category code. */
+  'inCodeSet': string | CategoryCodeSet | string | CategoryCodeSet[];
+};
+
+
+
+/** A public structure, such as a town hall or concert hall. */
+type CivicStructure = Place & {
+
+  /** The general opening hours for a business. Opening hours can be specified as a weekly time range, starting with days, then times per day. Multiple days can be listed with commas ',' separating each day. Day or time ranges are specified using a hyphen '-'.\n\n* Days are specified using the following two-letter combinations: ```Mo```, ```Tu```, ```We```, ```Th```, ```Fr```, ```Sa```, ```Su```.\n* Times are specified using 24:00 format. For example, 3pm is specified as ```15:00```, 10am as ```10:00```. \n* Here is an example: <time itemprop="openingHours" datetime="Tu,Th 16:00-20:00">Tuesdays and Thursdays 4-8pm</time>.\n* If a business is open 7 days a week, then it can be specified as <time itemprop="openingHours" datetime="Mo-Su">Monday through Sunday, all day</time>. */
+  'openingHours': string;
 };
 
 
@@ -2990,58 +2973,6 @@ type EntryPoint = Intangible & {
 
 
 
-/** A sub-grouping of food or drink items in a menu. E.g. courses (such as 'Dinner', 'Breakfast', etc.), specific type of dishes (such as 'Meat', 'Vegan', 'Drinks', etc.), or some other classification made by the menu provider. */
-type MenuSection = CreativeWork & {
-
-  /** A food or drink item contained in a menu or menu section. */
-  'hasMenuItem': MenuItem | MenuItem[];
-  /** A subgrouping of the menu (by dishes, course, serving time period, etc.). */
-  'hasMenuSection': MenuSection | MenuSection[];
-};
-
-
-
-/** The frequency in MHz and the modulation used for a particular BroadcastService. */
-type BroadcastFrequencySpecification = Intangible & {
-
-  /** The frequency in MHz for a particular broadcast. */
-  'broadcastFrequencyValue': number | QuantitativeValue;
-  /** The modulation (e.g. FM, AM, etc) used by a particular broadcast service. */
-  'broadcastSignalModulation': string | QualitativeValue;
-  /** The subchannel used for the broadcast. */
-  'broadcastSubChannel': string;
-};
-
-
-
-/** A unique instance of a BroadcastService on a CableOrSatelliteService lineup. */
-type BroadcastChannel_ = Intangible & {
-
-  /** The unique address by which the BroadcastService can be identified in a provider lineup. In US, this is typically a number. */
-  'broadcastChannelId': string;
-  /** The frequency used for over-the-air broadcasts. Numeric values or simple ranges e.g. 87-99. In addition a shortcut idiom is supported for frequences of AM and FM radio channels, e.g. "87 FM". */
-  'broadcastFrequency': string | BroadcastFrequencySpecification;
-  /** The type of service required to have access to the channel (e.g. Standard or Premium). */
-  'broadcastServiceTier': string;
-  /** Genre of the creative work, broadcast channel or group. */
-  'genre': string | string;
-  /** The CableOrSatelliteService offering the channel. */
-  'inBroadcastLineup': CableOrSatelliteService;
-  /** The BroadcastService offered on this channel. */
-  'providesBroadcastService': BroadcastService;
-};
-
-
-
-/** A single feed providing structured information about one or more entities or topics. */
-type DataFeed = Dataset & {
-
-  /** An item within in a data feed. Data feeds may have many elements. */
-  'dataFeedElement': string | DataFeedItem | Thing | string | DataFeedItem | Thing[];
-};
-
-
-
 /** A Series in schema.org is a group of related items, typically but not necessarily of the same kind. See also [[CreativeWorkSeries]], [[EventSeries]]. */
 type Series = Intangible & {
 
@@ -3049,15 +2980,43 @@ type Series = Intangible & {
 
 
 
-/** Lists or enumerations dealing with status types. */
-type StatusEnumeration = {
+/** Enumerates several kinds of policies for product return fees. */
+type ReturnFeesEnumeration = string;
 
+
+
+/** Enumerates several types of return labels for product returns. */
+type ReturnLabelSourceEnumeration = string;
+
+
+
+/** Enumerates several kinds of product return refund types. */
+type RefundTypeEnumeration = string;
+
+
+
+/** Enumerates several types of product return methods. */
+type ReturnMethodEnumeration = string;
+
+
+
+/** Enumerates several kinds of product return policies. */
+type MerchantReturnEnumeration = string;
+
+
+
+/** A seasonal override of a return policy, for example used for holidays. */
+type MerchantReturnPolicySeasonalOverride = Intangible & {
+
+  /** The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
+  'endDate': string | string;
+  /** Specifies either a fixed return date or the number of days (from the delivery date) that a product can be returned. Used when the [[returnPolicyCategory]] property is specified as [[MerchantReturnFiniteReturnWindow]]. */
+  'merchantReturnDays': number | string | string | number | string | string[];
+  /** Specifies an applicable return policy (from an enumeration). */
+  'returnPolicyCategory': MerchantReturnEnumeration | MerchantReturnEnumeration[];
+  /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
+  'startDate': string | string;
 };
-
-
-
-/** An enumeration of several kinds of Map. */
-type MapCategoryType = string;
 
 
 
@@ -3106,88 +3065,6 @@ type DefinedRegion = StructuredValue & {
 
 
 
-/** Enumerated options related to a ContactPoint. */
-type ContactPointOption = string;
-
-
-
-/** A range of of services that will be provided to a customer free of charge in case of a defect or malfunction of a product.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#Labor-BringIn\n* http://purl.org/goodrelations/v1#PartsAndLabor-BringIn\n* http://purl.org/goodrelations/v1#PartsAndLabor-PickUp
-       */
-type WarrantyScope = {
-
-};
-
-
-
-/** A statistical distribution of monetary amounts. */
-type MonetaryAmountDistribution = QuantitativeValueDistribution & {
-
-  /** The currency in which the monetary amount is expressed.\n\nUse standard formats: [ISO 4217 currency format](http://en.wikipedia.org/wiki/ISO_4217) e.g. "USD"; [Ticker symbol](https://en.wikipedia.org/wiki/List_of_cryptocurrencies) for cryptocurrencies e.g. "BTC"; well known names for [Local Exchange Tradings Systems](https://en.wikipedia.org/wiki/Local_exchange_trading_system) (LETS) and other currency types e.g. "Ithaca HOUR". */
-  'currency': string;
-};
-
-
-
-/** Indicates employment-related experience requirements, e.g. [[monthsOfExperience]]. */
-type OccupationalExperienceRequirements = Intangible & {
-
-  /** Indicates the minimal number of months of experience required for a position. */
-  'monthsOfExperience': number | number[];
-};
-
-
-
-/** A Category Code. */
-type CategoryCode = DefinedTerm & {
-
-  /** A short textual code that uniquely identifies the value. */
-  'codeValue': string;
-  /** A [[CategoryCodeSet]] that contains this category code. */
-  'inCodeSet': string | CategoryCodeSet | string | CategoryCodeSet[];
-};
-
-
-
-/** Enumerates several kinds of policies for product return fees. */
-type ReturnFeesEnumeration = string;
-
-
-
-/** Enumerates several types of return labels for product returns. */
-type ReturnLabelSourceEnumeration = string;
-
-
-
-/** Enumerates several kinds of product return refund types. */
-type RefundTypeEnumeration = string;
-
-
-
-/** Enumerates several types of product return methods. */
-type ReturnMethodEnumeration = string;
-
-
-
-/** Enumerates several kinds of product return policies. */
-type MerchantReturnEnumeration = string;
-
-
-
-/** A seasonal override of a return policy, for example used for holidays. */
-type MerchantReturnPolicySeasonalOverride = Intangible & {
-
-  /** The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
-  'endDate': string | string;
-  /** Specifies either a fixed return date or the number of days (from the delivery date) that a product can be returned. Used when the [[returnPolicyCategory]] property is specified as [[MerchantReturnFiniteReturnWindow]]. */
-  'merchantReturnDays': number | string | string | number | string | string[];
-  /** Specifies an applicable return policy (from an enumeration). */
-  'returnPolicyCategory': MerchantReturnEnumeration | MerchantReturnEnumeration[];
-  /** The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601)). */
-  'startDate': string | string;
-};
-
-
-
 /** A means for accessing a service, e.g. a government office location, web site, or phone number. */
 type ServiceChannel = Intangible & {
 
@@ -3216,12 +3093,32 @@ type GovernmentBenefitsType = string;
 
 
 
-/** A public structure, such as a town hall or concert hall. */
-type CivicStructure = Place & {
+/** Classification of the album by it's type of content: soundtrack, live album, studio album, etc. */
+type MusicAlbumProductionType = string;
 
-  /** The general opening hours for a business. Opening hours can be specified as a weekly time range, starting with days, then times per day. Multiple days can be listed with commas ',' separating each day. Day or time ranges are specified using a hyphen '-'.\n\n* Days are specified using the following two-letter combinations: ```Mo```, ```Tu```, ```We```, ```Th```, ```Fr```, ```Sa```, ```Su```.\n* Times are specified using 24:00 format. For example, 3pm is specified as ```15:00```, 10am as ```10:00```. \n* Here is an example: <time itemprop="openingHours" datetime="Tu,Th 16:00-20:00">Tuesdays and Thursdays 4-8pm</time>.\n* If a business is open 7 days a week, then it can be specified as <time itemprop="openingHours" datetime="Mo-Su">Monday through Sunday, all day</time>. */
-  'openingHours': string;
+
+
+/** A MusicRelease is a specific release of a music album. */
+type MusicRelease = MusicPlaylist & {
+
+  /** The catalog number for the release. */
+  'catalogNumber': string;
+  /** The group the release is credited to if different than the byArtist. For example, Red and Blue is credited to "Stefani Germanotta Band", but by Lady Gaga. */
+  'creditedTo': Organization | Person;
+  /** The duration of the item (movie, audio recording, event, etc.) in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601). */
+  'duration': string;
+  /** Format of this release (the type of recording media used, ie. compact disc, digital media, LP, etc.). */
+  'musicReleaseFormat': MusicReleaseFormatType | MusicReleaseFormatType[];
+  /** The label that issued the release. */
+  'recordLabel': Organization;
+  /** The album this is a release of. */
+  'releaseOf': MusicAlbum;
 };
+
+
+
+/** The kind of release which this album is: single, EP or album. */
+type MusicAlbumReleaseType = string;
 
 
 
@@ -3237,15 +3134,159 @@ type EnergyEfficiencyEnumeration = {
 
 };
 
-/** A service which provides access to media programming like TV or radio. Access may be via cable or satellite. */
-type CableOrSatelliteService = Service & {
+
+
+/** An enumeration of several kinds of Map. */
+type MapCategoryType = string;
+
+
+
+/** A range of of services that will be provided to a customer free of charge in case of a defect or malfunction of a product.\n\nCommonly used values:\n\n* http://purl.org/goodrelations/v1#Labor-BringIn\n* http://purl.org/goodrelations/v1#PartsAndLabor-BringIn\n* http://purl.org/goodrelations/v1#PartsAndLabor-PickUp
+       */
+type WarrantyScope = {
 
 };
 
 
 
-/** Format of this release (the type of recording media used, ie. compact disc, digital media, LP, etc.). */
-type MusicReleaseFormatType = string;
+/** A product provided to consumers and businesses by financial institutions such as banks, insurance companies, brokerage firms, consumer finance companies, and investment companies which comprise the financial services industry. */
+type FinancialProduct = Service & {
+
+  /** The annual rate that is charged for borrowing (or made by investing), expressed as a single percentage number that represents the actual yearly cost of funds over the term of a loan. This includes any fees or additional costs associated with the transaction. */
+  'annualPercentageRate': number | QuantitativeValue;
+  /** Description of fees, commissions, and other terms applied either to a class of financial product, or by a financial service organization. */
+  'feesAndCommissionsSpecification': string | string | string | string[];
+  /** The interest rate, charged or paid, applicable to the financial product. Note: This is different from the calculated annualPercentageRate. */
+  'interestRate': number | QuantitativeValue;
+};
+
+
+
+/** A structured value representing repayment. */
+type RepaymentSpecification = StructuredValue & {
+
+  /** a type of payment made in cash during the onset of the purchase of an expensive good/service. The payment typically represents only a percentage of the full purchase price. */
+  'downPayment': number | MonetaryAmount | number | MonetaryAmount[];
+  /** The amount to be paid as a penalty in the event of early payment of the loan. */
+  'earlyPrepaymentPenalty': MonetaryAmount;
+  /** The amount of money to pay in a single payment. */
+  'loanPaymentAmount': MonetaryAmount;
+  /** Frequency of payments due, i.e. number of months between payments. This is defined as a frequency, i.e. the reciprocal of a period of time. */
+  'loanPaymentFrequency': number | number[];
+  /** The number of payments contractually required at origination to repay the loan. For monthly paying loans this is the number of months from the contractual first payment date to the maturity date. */
+  'numberOfLoanPayments': number;
+};
+
+
+
+/** Lists or enumerations dealing with status types. */
+type StatusEnumeration = {
+
+};
+
+
+
+/** A single feed providing structured information about one or more entities or topics. */
+type DataFeed = Dataset & {
+
+  /** An item within in a data feed. Data feeds may have many elements. */
+  'dataFeedElement': string | DataFeedItem | Thing | string | DataFeedItem | Thing[];
+};
+
+
+
+/** A sub-grouping of food or drink items in a menu. E.g. courses (such as 'Dinner', 'Breakfast', etc.), specific type of dishes (such as 'Meat', 'Vegan', 'Drinks', etc.), or some other classification made by the menu provider. */
+type MenuSection = CreativeWork & {
+
+  /** A food or drink item contained in a menu or menu section. */
+  'hasMenuItem': MenuItem | MenuItem[];
+  /** A subgrouping of the menu (by dishes, course, serving time period, etc.). */
+  'hasMenuSection': MenuSection | MenuSection[];
+};
+
+
+
+/** The frequency in MHz and the modulation used for a particular BroadcastService. */
+type BroadcastFrequencySpecification = Intangible & {
+
+  /** The frequency in MHz for a particular broadcast. */
+  'broadcastFrequencyValue': number | QuantitativeValue;
+  /** The modulation (e.g. FM, AM, etc) used by a particular broadcast service. */
+  'broadcastSignalModulation': string | QualitativeValue;
+  /** The subchannel used for the broadcast. */
+  'broadcastSubChannel': string;
+};
+
+
+
+/** A unique instance of a BroadcastService on a CableOrSatelliteService lineup. */
+type BroadcastChannel = Intangible & {
+
+  /** The unique address by which the BroadcastService can be identified in a provider lineup. In US, this is typically a number. */
+  'broadcastChannelId': string;
+  /** The frequency used for over-the-air broadcasts. Numeric values or simple ranges e.g. 87-99. In addition a shortcut idiom is supported for frequences of AM and FM radio channels, e.g. "87 FM". */
+  'broadcastFrequency': string | BroadcastFrequencySpecification;
+  /** The type of service required to have access to the channel (e.g. Standard or Premium). */
+  'broadcastServiceTier': string;
+  /** Genre of the creative work, broadcast channel or group. */
+  'genre': string | string;
+  /** The CableOrSatelliteService offering the channel. */
+  'inBroadcastLineup': CableOrSatelliteService;
+  /** The BroadcastService offered on this channel. */
+  'providesBroadcastService': BroadcastService;
+};
+
+
+
+/** The day of the week, e.g. used to specify to which day the opening hours of an OpeningHoursSpecification refer.
+
+Originally, URLs from [GoodRelations](http://purl.org/goodrelations/v1) were used (for [[Monday]], [[Tuesday]], [[Wednesday]], [[Thursday]], [[Friday]], [[Saturday]], [[Sunday]] plus a special entry for [[PublicHolidays]]); these have now been integrated directly into schema.org.
+       */
+type DayOfWeek = string;
+
+/** A set of Category Code values. */
+type CategoryCodeSet = DefinedTermSet & {
+
+  /** A Category code contained in this code set. */
+  'hasCategoryCode': CategoryCode | CategoryCode[];
+};
+
+
+
+/** A statistical distribution of values. */
+type QuantitativeValueDistribution = StructuredValue & {
+
+  /** The duration of the item (movie, audio recording, event, etc.) in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601). */
+  'duration': string;
+  /** The median value. */
+  'median': number;
+  /** The 10th percentile value. */
+  'percentile10': number;
+  /** The 25th percentile value. */
+  'percentile25': number;
+  /** The 75th percentile value. */
+  'percentile75': number;
+  /** The 90th percentile value. */
+  'percentile90': number;
+};
+
+
+
+/** Indicates a range of postalcodes, usually defined as the set of valid codes between [[postalCodeBegin]] and [[postalCodeEnd]], inclusively. */
+type PostalCodeRangeSpecification = StructuredValue & {
+
+  /** First postal code in a range (included). */
+  'postalCodeBegin': string | string[];
+  /** Last postal code in the range (included). Needs to be after [[postalCodeBegin]]. */
+  'postalCodeEnd': string | string[];
+};
+
+
+
+/** A service which provides access to media programming like TV or radio. Access may be via cable or satellite. */
+type CableOrSatelliteService = Service & {
+
+};
 
 
 
@@ -3295,42 +3336,8 @@ type DataFeedItem = Intangible & {
 
 
 
-/** A set of Category Code values. */
-type CategoryCodeSet = DefinedTermSet & {
-
-  /** A Category code contained in this code set. */
-  'hasCategoryCode': CategoryCode | CategoryCode[];
-};
-
-
-
-/** Indicates a range of postalcodes, usually defined as the set of valid codes between [[postalCodeBegin]] and [[postalCodeEnd]], inclusively. */
-type PostalCodeRangeSpecification = StructuredValue & {
-
-  /** First postal code in a range (included). */
-  'postalCodeBegin': string | string[];
-  /** Last postal code in the range (included). Needs to be after [[postalCodeBegin]]. */
-  'postalCodeEnd': string | string[];
-};
-
-
-
-/** A statistical distribution of values. */
-type QuantitativeValueDistribution = StructuredValue & {
-
-  /** The duration of the item (movie, audio recording, event, etc.) in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601). */
-  'duration': string;
-  /** The median value. */
-  'median': number;
-  /** The 10th percentile value. */
-  'percentile10': number;
-  /** The 25th percentile value. */
-  'percentile25': number;
-  /** The 75th percentile value. */
-  'percentile75': number;
-  /** The 90th percentile value. */
-  'percentile90': number;
-};
+/** Format of this release (the type of recording media used, ie. compact disc, digital media, LP, etc.). */
+type MusicReleaseFormatType = string;
 
 /** A collection of datasets. */
 type DataCatalog = CreativeWork & {

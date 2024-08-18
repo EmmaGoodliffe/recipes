@@ -4,8 +4,6 @@ import type { ExtractEndsWith } from "./types";
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
 
-export const toArray = <T>(x: T | T[] | undefined | null) =>
-  x === undefined || x === null ? [] : Array.isArray(x) ? x : [x];
 
 export const getKeys = <T extends object>(obj: T) =>
   Object.keys(obj) as (string & keyof T)[];

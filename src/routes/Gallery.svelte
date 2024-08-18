@@ -29,8 +29,10 @@
     {#if recipes.length === 0}
       <p>No recipes.</p>
     {/if}
-    {#each recipes as recipe (recipe.original["@id"])}
+    {#each recipes as recipe (recipe.original.url)}
       {@const rec = recipe.edited ?? recipe.original}
+      {@const imageUrl =
+        typeof rec.image === "string" ? rec.image : toArray(rec.image)[0]?.url}
       <button
         class="card enforced-rounded"
         on:click={() => {
@@ -39,9 +41,9 @@
         }}
         transition:fly={{ y: 20 }}
       >
-        {#if rec.image?.url}
+        {#if imageUrl}
           <img
-            src={rec.image.url}
+            src={typeof imageUrl}
             alt={rec.name}
             class="w-full flex-1 object-cover"
           />
@@ -83,12 +85,12 @@
           shoppingList.update(list => {
             const { recipeIngredient, recipeYield } =
               $toBePreviewed.edited ?? $toBePreviewed.original;
-            const id = $toBePreviewed?.original["@id"];
+            const url = $toBePreviewed?.original.url;
             return [
               addIngredientsToShoppingList(
                 list.flat(),
                 toArray(recipeIngredient),
-                { type: "recipe", id, recipeYield },
+                { type: "recipe", url, recipeYield },
               ),
             ];
           })}><i class="bx bxs-basket"></i> add to shopping list</a

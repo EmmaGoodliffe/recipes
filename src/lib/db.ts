@@ -118,8 +118,8 @@ export const addRecipe = async (
     });
   } else {
     const { recipes } = toUserData(userDoc.data());
-    const ids = recipes.map(r => r.original["@id"]);
-    if (ids.includes(recipe["@id"])) {
+    const urls = recipes.map(r => r.original.url);
+    if (urls.includes(recipe.url)) {
       throw new Error("you already have a version of that recipe");
     }
     return safeUpdateDoc(ref, { recipes: [{ original: recipe }, ...recipes] });
@@ -129,7 +129,7 @@ export const addRecipe = async (
 export const deleteWholeRecipe = async (
   auth_: Auth | undefined,
   db_: Firestore | undefined,
-  id: string | undefined,
+  url: string | undefined,
 ) => {
   const { auth, db } = checkAuthAndDb(auth_, db_);
   const uid = checkUid(auth);
@@ -137,14 +137,14 @@ export const deleteWholeRecipe = async (
   const userDoc = await getDoc(ref);
   const { recipes } = toUserData(userDoc.data() ?? {});
   return safeUpdateDoc(ref, {
-    recipes: recipes.filter(r => r.original["@id"] !== id),
+    recipes: recipes.filter(r => r.original.url !== url),
   });
 };
 
 export const deleteOriginalRecipe = async (
   auth_: Auth | undefined,
   db_: Firestore | undefined,
-  id: string,
+  url: string,
 ) => {
   const { auth, db } = checkAuthAndDb(auth_, db_);
   const uid = checkUid(auth);
@@ -153,7 +153,7 @@ export const deleteOriginalRecipe = async (
   const { recipes } = toUserData(userDoc.data() ?? {});
   return safeUpdateDoc(ref, {
     recipes: recipes.map(r =>
-      r.original["@id"] === id ? { original: r.edited ?? r.original } : r,
+      r.original.url === url ? { original: r.edited ?? r.original } : r,
     ),
   });
 };
@@ -161,7 +161,7 @@ export const deleteOriginalRecipe = async (
 export const deleteEditedRecipe = async (
   auth_: Auth | undefined,
   db_: Firestore | undefined,
-  id: string,
+  url: string,
 ) => {
   const { auth, db } = checkAuthAndDb(auth_, db_);
   const uid = checkUid(auth);
@@ -170,7 +170,7 @@ export const deleteEditedRecipe = async (
   const { recipes } = toUserData(userDoc.data() ?? {});
   return safeUpdateDoc(ref, {
     recipes: recipes.map(r =>
-      r.original["@id"] === id ? omit(r, ["edited"]) : r,
+      r.original.url === url ? omit(r, ["edited"]) : r,
     ),
   });
 };
@@ -178,7 +178,7 @@ export const deleteEditedRecipe = async (
 export const saveEditedRecipe = async (
   auth_: Auth | undefined,
   db_: Firestore | undefined,
-  id: string,
+  url: string,
   recipe: Recipe,
 ) => {
   const { auth, db } = checkAuthAndDb(auth_, db_);
@@ -188,7 +188,7 @@ export const saveEditedRecipe = async (
   const { recipes } = toUserData(userDoc.data() ?? {});
   return safeUpdateDoc(ref, {
     recipes: recipes.map(r =>
-      r.original["@id"] === id ? { ...r, edited: recipe } : r,
+      r.original.url === url ? { ...r, edited: recipe } : r,
     ),
   });
 };
