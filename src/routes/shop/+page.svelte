@@ -111,7 +111,7 @@
         const source = section[0]?.source;
         const versions =
           source && source.type === "recipe"
-            ? $recipes?.filter(r => r.original["@id"] === source.id)[0]
+            ? $recipes?.filter(r => r.original.url=== source.url)[0]
             : undefined;
         const rec = versions?.edited ?? versions?.original;
         const name = rec?.name ?? "?";

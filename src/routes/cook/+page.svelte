@@ -8,7 +8,8 @@
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import { toBeCooked } from "$lib/stores";
   import { recipes } from "$lib/stores";
-  import { delay, toArray, uniqueByKey } from "$lib/util";
+  import { toArray } from "$lib/types";
+  import { delay, uniqueByKey } from "$lib/util";
 
   // let truncateIngredients = true;
   let direction: "l" | "r" = "r";
@@ -49,7 +50,7 @@
 
   $: rec = $toBeCooked ? $toBeCooked[version] : undefined;
   $: instructions = toArray(rec?.recipeInstructions);
-  $: instructionText = instructions[instructionIndex]?.text;
+  $: instructionText = instructions[instructionIndex];
   $: ingredients = toArray(rec?.recipeIngredient).filter(i => i !== undefined);
   $: matches = searchInstructionForIngredients(instructionText, ingredients);
   $: matchedIngredients = uniqueByKey("value", matches.ingredientMatches);

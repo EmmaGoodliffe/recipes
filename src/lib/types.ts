@@ -41,7 +41,7 @@ type RecipeExtension = PickThenPartialDeep<
 > &
   Pick<RecipeSchema, "editor" | "image" | "publisher">;
 
-export interface Recipe extends RecipeExtension {
+export interface Recipe extends Omit<RecipeExtension, "recipeYield"> {
   author: { name: string; url?: string };
   description: string;
   editor?: { name: string; url?: string };
@@ -50,7 +50,7 @@ export interface Recipe extends RecipeExtension {
   /** A list whose items are defined by schema.org as "a single ingredient used in the recipe" */
   recipeIngredient: string[];
   recipeInstructions: string[];
-  recipeYield: string;
+  recipeYield: number;
 }
 
 export type RecipeVersions = { original: Recipe; edited?: Recipe };
@@ -73,18 +73,24 @@ const randomAuthor = () => ({
 });
 
 const parseYield = (y: RecipeSchema["recipeYield"]) => {
-  if (!isRecord(y)) {
-    return y;
+  if (typeof y === "string") {
+    const n = parseFloat(y);
+    if (!isNaN(n)) {
+      return n;
+    }
+    return undefined;
   }
-  const { value, minValue, maxValue } = y;
-  if (isRecord(value)) {
-    throw new Error(`can't parse yield ${y}`);
-  }
-  if (typeof value === "number" || typeof value === "string") {
-    return value;
-  }
-  if (minValue !== undefined && maxValue !== undefined) {
-    return `${minValue}-${maxValue}`;
+  if (isRecord(y)) {
+    const { value } = y;
+    if (typeof value === "number") {
+      return value;
+    }
+    if (typeof value === "string") {
+      const n = parseFloat(value);
+      if (!isNaN(n)) {
+        return n;
+      }
+    }
   }
   return undefined;
 };
@@ -125,7 +131,8 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
   const recipeInstructions = toArray(data.recipeInstructions)
     .map(ing => (ing === undefined || typeof ing === "string" ? ing : ing.text))
     .filter(ing => ing !== undefined);
-  const recipeYield = `${parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1}`;
+  const recipeYield =
+    parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1;
   return {
     author,
     cookTime,

@@ -60,7 +60,7 @@ export const recipes = writable<
 export type ShoppingListItem = {
   value: string;
   source:
-    | { type: "recipe"; id: string; recipeYield: number }
+    | { type: "recipe"; url: string; recipeYield: number }
     | { type: "unknown" }
     | { type: "custom" };
   bought: boolean;
@@ -73,8 +73,8 @@ const ingredientToShoppingListItem = (
   source: Partial<ShoppingListItem["source"]> = {},
 ): ShoppingListItem => {
   const fullSource: ShoppingListItem["source"] =
-    source.type === "recipe" && source.id
-      ? { type: "recipe", id: source.id, recipeYield: source.recipeYield ?? 1 }
+    source.type === "recipe" && source.url
+      ? { type: "recipe", url: source.url, recipeYield: source.recipeYield ?? 1 }
       : source.type === "custom"
         ? { type: "custom" }
         : { type: "unknown" };
@@ -95,7 +95,7 @@ const toBareItem = ({
   source: ShoppingListItem["source"];
 }) => ({
   itemValue: parsed.item.map(({ value }) => value).join(" "),
-  sourceId: source.type === "recipe" ? source.id : null,
+  sourceUrl: source.type === "recipe" ? source.url : null,
 });
 
 export const addIngredientsToShoppingList = (

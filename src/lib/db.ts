@@ -58,11 +58,11 @@ const toUserData = (x: Record<string, unknown>): UserData => ({
         return undefined;
       }
       const type = isRecord(source) ? source.type : undefined;
-      const id = isRecord(source) ? source.id : undefined;
+      const url = isRecord(source) ? source.url : undefined;
       const y = isRecord(source) ? source.recipeYield : undefined;
       const s: ShoppingListItem["source"] =
-        type === "recipe" && typeof id === "string"
-          ? { type, id, recipeYield: typeof y === "number" ? y : 1 }
+        type === "recipe" && typeof url === "string"
+          ? { type, url, recipeYield: typeof y === "number" ? y : 1 }
           : type === "custom"
             ? { type }
             : { type: "unknown" };
