@@ -13,8 +13,8 @@ import {
   sum,
   unique,
 } from "./util";
-import type {  Recipe, RecipeVersions } from "./Recipe";
-import type {Func} from "./types";
+import type { Recipe, RecipeVersions } from "./Recipe";
+import type { Func } from "./types";
 import type { User } from "firebase/auth";
 import type { Readable } from "svelte/store";
 
@@ -74,7 +74,11 @@ const ingredientToShoppingListItem = (
 ): ShoppingListItem => {
   const fullSource: ShoppingListItem["source"] =
     source.type === "recipe" && source.url
-      ? { type: "recipe", url: source.url, recipeYield: source.recipeYield ?? 1 }
+      ? {
+          type: "recipe",
+          url: source.url,
+          recipeYield: source.recipeYield ?? 1,
+        }
       : source.type === "custom"
         ? { type: "custom" }
         : { type: "unknown" };

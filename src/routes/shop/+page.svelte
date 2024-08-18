@@ -5,7 +5,7 @@
   import { saveShoppingList } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { parseIngredient, UNITS,toIngredient } from "$lib/nlp";
+  import { parseIngredient, UNITS, toIngredient } from "$lib/nlp";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import {
     getByPath,
@@ -111,7 +111,7 @@
         const source = section[0]?.source;
         const versions =
           source && source.type === "recipe"
-            ? $recipes?.filter(r => r.original.url=== source.url)[0]
+            ? $recipes?.filter(r => r.original.url === source.url)[0]
             : undefined;
         const rec = versions?.edited ?? versions?.original;
         const name = rec?.name ?? "?";
@@ -362,7 +362,6 @@
 </Dialog>
 
 <style lang="postcss">
-
   button.short {
     @apply min-w-max mr-2 disabled:opacity-50;
   }
