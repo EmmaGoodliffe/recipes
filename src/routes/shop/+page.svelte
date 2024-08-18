@@ -5,7 +5,7 @@
   import { saveShoppingList } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
-  import { parseIngredient, UNITS } from "$lib/nlp";
+  import { parseIngredient, UNITS,toIngredient } from "$lib/nlp";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import {
     getByPath,
@@ -14,7 +14,7 @@
     toast,
     toastWrap,
   } from "$lib/stores";
-  import { areDeepEqual, delay, toIngredient, unique } from "$lib/util";
+  import { areDeepEqual, delay, unique } from "$lib/util";
 
   let method: "alphabetical" | "source" = "alphabetical";
   let groups: { name: string }[] = [];

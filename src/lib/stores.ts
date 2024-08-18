@@ -2,7 +2,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { writable } from "svelte/store";
 import { getFb } from "../routes/fb";
 import { getUserData } from "./db";
-import { parseIngredient } from "./nlp";
+import { parseIngredient, toIngredient } from "./nlp";
 import { isRecord } from "./types";
 import {
   areDeepEqual,
@@ -11,10 +11,10 @@ import {
   getKeys,
   keyValuesToObj,
   sum,
-  toIngredient,
   unique,
 } from "./util";
-import type { Func, Recipe, RecipeVersions } from "./types";
+import type {  Recipe, RecipeVersions } from "./Recipe";
+import type {Func} from "./types";
 import type { User } from "firebase/auth";
 import type { Readable } from "svelte/store";
 

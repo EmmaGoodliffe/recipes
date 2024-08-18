@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
   import ViewRecipe from "./ViewRecipe.svelte";
-  import type { RecipeVersions } from "$lib/types";
+  import type { RecipeVersions } from "$lib/Recipe";
   import type { Writable } from "svelte/store";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderText from "$lib/LoaderText.svelte";

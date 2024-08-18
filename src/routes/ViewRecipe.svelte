@@ -4,7 +4,7 @@
   import { getFb } from "./fb";
   import JsonTable from "./JsonTable.svelte";
   import RecipeStats from "./RecipeStats.svelte";
-  import type { Recipe, RecipeVersions } from "$lib/types";
+  import type { Recipe, RecipeVersions } from "$lib/Recipe";
   import {
     deleteEditedRecipe,
     deleteOriginalRecipe,
@@ -14,6 +14,7 @@
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { scaleIngredients } from "$lib/nlp";
+  import { isRecipe } from "$lib/Recipe";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import {
     addIngredientsToShoppingList,
@@ -26,7 +27,7 @@
     updateData,
     user,
   } from "$lib/stores";
-  import { isRecipe, toArray } from "$lib/types";
+  import { toArray } from "$lib/types";
   import {
     addDurations,
     dateToText,

@@ -1,7 +1,8 @@
 import { fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
+import { toRecipe } from "$lib/Recipe";
 import { htmlToJson } from "$lib/scrape";
-import { isRecord, toRecipe } from "$lib/types";
+import { isRecord } from "$lib/types";
 
 export const actions = {
   fetchRecipe: async event => {

@@ -2,15 +2,15 @@
   import { onMount } from "svelte";
   import { getFb } from "./fb";
   import ViewRecipe from "./ViewRecipe.svelte";
-  import type { Recipe } from "$lib/types";
+  import type { Recipe } from "$lib/Recipe";
   import type { Auth } from "firebase/auth";
   import type { Firestore } from "firebase/firestore";
   import { enhance } from "$app/forms";
   import { addRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
+  import { isRecipe, toRecipe } from "$lib/Recipe";
   import { toast, toastWrap, updateData, user } from "$lib/stores";
-  import { isRecipe, toRecipe } from "$lib/types";
 
   let auth: Auth | undefined;
   let db: Firestore | undefined;
