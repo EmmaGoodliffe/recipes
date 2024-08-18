@@ -92,7 +92,7 @@ const parseYield = (y: RecipeSchema["recipeYield"]) => {
 const withName = <T extends { name?: string }>(obj: T | undefined) =>
   obj && obj.name ? { ...obj, name: obj.name } : undefined;
 
-const toRecipe = (data: RecipeSchema): Recipe => {
+export const toRecipe = (data: RecipeSchema): Recipe => {
   const url = data.url;
   if (!url) {
     throw new Error("Recipe had no URL");

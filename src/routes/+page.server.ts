@@ -1,6 +1,7 @@
 import { fail } from "@sveltejs/kit";
-import { load } from "cheerio";
 import type { Actions } from "./$types";
+import { htmlToJson } from "$lib/scrape";
+import { isRecord, toRecipe } from "$lib/types";
 
 export const actions = {
   fetchRecipe: async event => {
@@ -12,12 +13,18 @@ export const actions = {
       }
       const res = await fetch(url);
       const html = await res.text();
-      const $ = load(html);
-      const content = $('script[data-testid="page-schema"]').text();
-      if (!content) {
-        return fail(400, { message: "no readable content on url" });
+      try {
+        const json = htmlToJson(html, "Recipe").data;
+        if (!isRecord(json)) {
+          return fail(400, { message: `data wasn't object, ${json}` });
+        }
+        return toRecipe(json);
+      } catch (error) {
+        if (`${error}`.includes("SchemaError")) {
+          return fail(400, { message: `data didn't satisfy schema, ${error}` });
+        }
+        throw error;
       }
-      return { content: JSON.parse(content) };
     } catch (error) {
       return fail(500, { message: `${error}` });
     }

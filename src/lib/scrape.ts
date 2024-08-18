@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import { toArray } from "./util";
+import { toArray } from "./types";
 import type { CheerioAPI, Element } from "cheerio";
 
 type AttrNames = Readonly<[string, string, string, Readonly<string[]>]>;
@@ -125,7 +125,7 @@ const toJson = (
   );
 };
 
-const htmlToJson = (html: string, schema: string) => {
+export const htmlToJson = (html: string, schema: string) => {
   const $ = load(html);
   const styleDeps = {
     microdata: {
@@ -171,5 +171,3 @@ const htmlToJson = (html: string, schema: string) => {
     `SchemaError: couldn't identify any style of ${schema} schema in the HTML`,
   );
 };
-
-export default htmlToJson;
