@@ -1,0 +1,140 @@
+import { isRecord, toArray } from "./types";
+import { areDeepEqual, toDur, unique } from "./util";
+import type { PickThenPartialDeep } from "./types";
+import type { Recipe_ } from "../../schemas/Recipe.gen";
+import type { Call, Objects } from "hotscript";
+
+type RecipeSchema = Call<Objects.PartialDeep, Recipe_>;
+
+type RecipeBase = PickThenPartialDeep<
+  Recipe_,
+  | "author"
+  | "cookTime"
+  | "dateModified"
+  | "datePublished"
+  | "description"
+  | "name"
+  // | "nutrition"
+  | "prepTime"
+  | "recipeIngredient"
+  | "recipeInstructions"
+  // | "recipeYield"
+  // | "suitableForDiet"
+  | "totalTime"
+  | "url"
+> &
+  Pick<RecipeSchema, "editor" | "image" | "publisher">;
+
+export interface Recipe extends RecipeBase {
+  author: { name: string; url?: string };
+  description: string;
+  editor?: { name: string; url?: string };
+  image?: { url: string };
+  publisher?: { name: string; url?: string; logo?: string };
+  /** A list whose items are defined by schema.org as "a single ingredient used in the recipe" */
+  recipeIngredient: string[];
+  recipeInstructions: string[];
+  recipeYield: number;
+}
+
+export type RecipeVersions = { original: Recipe; edited?: Recipe };
+
+const randomAuthor = () => ({
+  name: Math.random() > 0.5 ? "John Doe" : "Jane Doe",
+});
+
+const parseYield = (y: RecipeSchema["recipeYield"]) => {
+  if (typeof y === "string") {
+    const n = parseFloat(y);
+    if (!isNaN(n)) {
+      return n;
+    }
+    return undefined;
+  }
+  if (isRecord(y)) {
+    const { value } = y;
+    if (typeof value === "number") {
+      return value;
+    }
+    if (typeof value === "string") {
+      const n = parseFloat(value);
+      if (!isNaN(n)) {
+        return n;
+      }
+    }
+  }
+  return undefined;
+};
+
+const withName = <T extends { name?: string }>(obj: T | undefined) =>
+  obj && obj.name ? { ...obj, name: obj.name } : undefined;
+
+export const toRecipe = (data: RecipeSchema): Recipe => {
+  const url = data.url;
+  if (!url) {
+    throw new Error("Recipe had no URL");
+  }
+  try {
+    new URL(url);
+  } catch (error) {
+    console.error(error);
+    throw new Error(`invalid recipe url: ${url}`);
+  }
+  const author = withName(data.author ?? data.creator) ?? randomAuthor();
+  const prepTime = data.prepTime ?? toDur({ h: 0, m: 10 });
+  const cookTime = data.cookTime ?? toDur({ h: 0, m: 10 });
+  const totalTime = data.totalTime ?? toDur({ h: 0, m: 20 });
+  const now = new Date().toISOString();
+  const dateModified = data.dateModified ?? now;
+  const datePublished = data.datePublished ?? now;
+  const descriptionLines = toArray(data.description).filter(x => x);
+  const description =
+    (descriptionLines.length ? descriptionLines.join("\n") : undefined) ??
+    data.text ??
+    "";
+  const editor = withName(data.editor);
+  const firstImage = toArray(data.image)[0];
+  const imageUrl =
+    firstImage === undefined || typeof firstImage === "string"
+      ? firstImage
+      : firstImage.url;
+  const image = imageUrl ? { url: imageUrl } : undefined;
+  const name = data.name ?? data.headline ?? "unknown dish";
+  const pub = withName(data.publisher);
+  const pubLogo = pub && "logo" in pub ? toArray(pub.logo)[0] : undefined;
+  const pubLogoUrl = isRecord(pubLogo) ? pubLogo.url : pubLogo;
+  const publisher = isRecord(pub) ? { ...pub, logo: pubLogoUrl } : pub;
+  const recipeIngredient = unique([
+    ...toArray(data.recipeIngredient),
+    ...toArray(data.ingredients),
+  ]).filter(ing => ing !== undefined);
+  const recipeInstructions = toArray(data.recipeInstructions)
+    .map(ing => (ing === undefined || typeof ing === "string" ? ing : ing.text))
+    .filter(ing => ing !== undefined);
+  const recipeYield =
+    parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1;
+  return {
+    author,
+    cookTime,
+    dateModified,
+    datePublished,
+    description,
+    editor,
+    image,
+    name,
+    prepTime,
+    publisher,
+    recipeIngredient,
+    recipeInstructions,
+    recipeYield,
+    totalTime,
+    url,
+  };
+};
+
+export const isRecipe = (x: unknown): x is Recipe => {
+  if (!isRecord(x)) {
+    return false;
+  }
+  return areDeepEqual(x, toRecipe(x));
+};
