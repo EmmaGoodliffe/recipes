@@ -26,17 +26,13 @@
     updateData,
     user,
   } from "$lib/stores";
-  import { isRecipe } from "$lib/types";
+  import { isRecipe, toArray } from "$lib/types";
   import {
     addDurations,
     dateToText,
-    deepUnique,
     delay,
     doesEndWith,
-    fetchImage,
-    hasRequiredKeys,
     parseDur,
-    toArray,
     toDur,
   } from "$lib/util";
 
@@ -58,7 +54,7 @@
   let showVc = false;
   let scale = true;
   let version: "original" | "edited" = "edited";
-  let authorCredit: { name: string; url?: string } | undefined;
+  let editorCredit: { name: string; url?: string } | undefined;
 
   const edit = async (key: string & keyof Recipe) => {
     if (key === "image") {
@@ -99,7 +95,7 @@
   );
   $: disabled = !(editable && version === "edited");
   $: name = $user?.displayName;
-  $: authorCredit = name
+  $: editorCredit = name
     ? { name, url: `https://recipes-7ef89.web.app/u/${$user?.uid}` }
     : undefined;
   $: authors = toArray($rec("author"));
@@ -143,7 +139,7 @@
         return [
           addIngredientsToShoppingList(list.flat(), toArray(recipeIngredient), {
             type: "recipe",
-            id: recipeVersions.original["@id"],
+            url: recipeVersions.original.url,
             recipeYield,
           }),
         ];
@@ -157,20 +153,17 @@
       deleteLoading}
     onClick={async () => {
       saveLoading = true;
-      const existentAuthors = authors
-        .filter(a => a !== undefined)
-        .filter(a => hasRequiredKeys(a, ["name"]));
       const data = {
         ...rec.data,
         dateModified: new Date().toISOString(),
-        author: deepUnique([...existentAuthors, ...toArray(authorCredit)]),
+        editor: editorCredit,
       };
       recipeVersions.edited = data;
       const { auth, db } = getFb();
       const error = await toastWrap(saveEditedRecipe)(
         auth,
         db,
-        recipeVersions.original["@id"],
+        recipeVersions.original.url,
         data,
       );
       if (!error) {
@@ -207,7 +200,7 @@
               await toastWrap(deleteEditedRecipe)(
                 auth,
                 db,
-                recipeVersions.original["@id"],
+                recipeVersions.original.url,
               );
               await updateData();
               revertLoading = false;
@@ -232,7 +225,7 @@
               await toastWrap(deleteOriginalRecipe)(
                 auth,
                 db,
-                recipeVersions.original["@id"],
+                recipeVersions.original.url,
               );
               await updateData();
               overwriteLoading = false;
@@ -253,7 +246,7 @@
               await toastWrap(deleteWholeRecipe)(
                 auth,
                 db,
-                recipeVersions.original["@id"],
+                recipeVersions.original.url,
               );
               toBeEdited.set(undefined);
               await updateData();
@@ -308,13 +301,17 @@
   <div class="flex flex-col sm:flex-row justify-center items-center">
     <!-- VIEW: publisher -->
     {#if pub}
-      <a href={pub.url} target="_blank">
-        <img
-          src={pub.logo?.url}
-          alt="{pub.name} logo"
-          class="w-24 mx-2"
-          style="filter: contrast(50%);"
-        />
+      <a href={pub.url} target="_blank" class="font-semibold">
+        {#if pub.logo}
+          <img
+            src={pub.logo}
+            alt="{pub.name} logo"
+            class="w-24 mx-2"
+            style="filter: contrast(50%);"
+          />
+        {:else}
+          {pub.name}
+        {/if}
       </a>
     {/if}
     <!-- VIEW: history -->
@@ -388,7 +385,7 @@
       <!-- VIEW: steps -->
       <ol class="list-inside list-decimal">
         {#each toArray($rec("recipeInstructions")) as step}
-          <li class="pb-2" class:truncate={concise}>{step?.text ?? "?"}</li>
+          <li class="pb-2" class:truncate={concise}>{step}</li>
         {/each}
       </ol>
       <!-- VIEW: nutrition -->
@@ -475,12 +472,7 @@
       on:submit={async e => {
         e.preventDefault();
         if (editKey === "image") {
-          const image = await fetchImage(inputValue);
-          rec.set("image", {
-            url: inputValue,
-            width: image.width,
-            height: image.height,
-          });
+          rec.set("image", { url: inputValue });
         } else if (editKey === "recipeYield" && scale) {
           const prevYield = rec.get("recipeYield");
           const newYield = parseFloat(inputValue);
@@ -488,9 +480,9 @@
             throw new Error(`can't scale yield ${prevYield}`);
           }
           const scaling = newYield / prevYield;
-          const ingredients = toArray(rec.get("recipeIngredient")).filter(
-            ing => ing !== undefined,
-          );
+          const ingredients = rec
+            .get("recipeIngredient")
+            .filter(ing => ing !== undefined);
           const scaledIngredients = scaleIngredients(ingredients, scaling);
           rec.set("recipeYield", newYield);
           rec.set("recipeIngredient", scaledIngredients);

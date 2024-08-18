@@ -46,7 +46,7 @@ export interface Recipe extends Omit<RecipeExtension, "recipeYield"> {
   description: string;
   editor?: { name: string; url?: string };
   image?: { url: string };
-  publisher?: { name: string; url?: string };
+  publisher?: { name: string; url?: string; logo?: string };
   /** A list whose items are defined by schema.org as "a single ingredient used in the recipe" */
   recipeIngredient: string[];
   recipeInstructions: string[];
@@ -123,7 +123,10 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
       : firstImage.url;
   const image = imageUrl ? { url: imageUrl } : undefined;
   const name = data.name ?? data.headline ?? "unknown dish";
-  const publisher = withName(data.publisher);
+  const pub = withName(data.publisher);
+  const pubLogo = pub && "logo" in pub ? toArray(pub.logo)[0] : undefined;
+  const pubLogoUrl = isRecord(pubLogo) ? pubLogo.url : pubLogo;
+  const publisher = isRecord(pub) ? { ...pub, logo: pubLogoUrl } : pub;
   const recipeIngredient = unique([
     ...toArray(data.recipeIngredient),
     ...toArray(data.ingredients),

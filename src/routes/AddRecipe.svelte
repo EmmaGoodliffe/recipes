@@ -10,8 +10,7 @@
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { toast, toastWrap, updateData, user } from "$lib/stores";
-  import { isRecipe } from "$lib/types";
-  import { toDur } from "$lib/util";
+  import { isRecipe, toRecipe } from "$lib/types";
 
   let auth: Auth | undefined;
   let db: Firestore | undefined;
@@ -86,9 +85,7 @@
             const uid = $user?.uid ?? "_";
             const rid = `${Date.now()}-${Math.random().toString().slice(2)}`;
             const url = `https://recipes-7ef89.web.app/u/${uid}/r/${rid}`;
-            recipe = {
-            
-            };
+            recipe = toRecipe({ url });
           }}>go</button
         >
       {:else}

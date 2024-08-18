@@ -12,7 +12,7 @@
     toBeEdited,
     toBePreviewed,
   } from "$lib/stores";
-  import { toArray } from "$lib/util";
+  import { toArray } from "$lib/types";
 
   export let recipes: RecipeVersions[] | undefined;
   export let selectStores: Writable<RecipeVersions | undefined>[];
