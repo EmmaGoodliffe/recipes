@@ -68,18 +68,18 @@ export const doesInclude = <T extends readonly string[]>(
 //   x: object,
 // ): x is T[number] => arr.some(item => areDeepEqual(item, x));
 
-// const pick = <T extends object, K extends string & keyof T>(
-//   obj: T,
-//   keys: K[],
-// ) => {
-//   const result: Partial<T> = {};
-//   for (const k of getKeys(obj)) {
-//     if (doesInclude(keys, k)) {
-//       result[k] = obj[k];
-//     }
-//   }
-//   return result as Pick<T, K>;
-// };
+export const pick = <T extends object, K extends string & keyof T>(
+  obj: T,
+  keys: readonly K[],
+) => {
+  const result: Partial<T> = {};
+  for (const k of getKeys(obj)) {
+    if (doesInclude(keys, k)) {
+      result[k] = obj[k];
+    }
+  }
+  return result as Pick<T, K>;
+};
 
 export const omit = <T extends object, K extends string & keyof T>(
   obj: T,

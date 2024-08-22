@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { isRecipe } from "./Recipe";
+import { isRecipe, parseYield } from "./Recipe";
 import { toast } from "./stores";
 import { deepOmitUndefined, isRecord, toArray } from "./types";
 import { omit } from "./util";
@@ -63,7 +63,7 @@ const toUserData = (x: Record<string, unknown>): UserData => ({
       const y = isRecord(source) ? source.recipeYield : undefined;
       const s: ShoppingListItem["source"] =
         type === "recipe" && typeof url === "string"
-          ? { type, url, recipeYield: typeof y === "number" ? y : 1 }
+          ? { type, url, recipeYield: parseYield(y) ?? 1 }
           : type === "custom"
             ? { type }
             : { type: "unknown" };
@@ -86,7 +86,7 @@ const safeSetDoc = <C extends "users">(
 const safeUpdateDoc = <C extends "users">(
   ref: DocumentReference,
   data: C extends "users" ? Partial<UserData> : never,
-) => updateDoc(ref, data);
+) => updateDoc(ref, deepOmitUndefined(data));
 
 export const getUserData = async (
   auth_: Auth | undefined,
@@ -99,6 +99,7 @@ export const getUserData = async (
   }
   const ref = doc(db, "users", uid);
   const userDoc = await getDoc(ref);
+  console.log("db read");
   return toUserData(userDoc.data() ?? {});
 };
 

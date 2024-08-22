@@ -1,29 +1,30 @@
 import { isRecord, toArray } from "./types";
-import { areDeepEqual, toDur, unique } from "./util";
+import { areDeepEqual, pick, toDur, unique } from "./util";
 import type { PickThenPartialDeep } from "./types";
 import type { Recipe_ } from "../../schemas/Recipe.gen";
 import type { Call, Objects } from "hotscript";
 
 type RecipeSchema = Call<Objects.PartialDeep, Recipe_>;
 
-type RecipeBase = PickThenPartialDeep<
-  Recipe_,
-  | "author"
-  | "cookTime"
-  | "dateModified"
-  | "datePublished"
-  | "description"
-  | "name"
-  // | "nutrition"
-  | "prepTime"
-  | "recipeIngredient"
-  | "recipeInstructions"
-  // | "recipeYield"
-  // | "suitableForDiet"
-  | "totalTime"
-  | "url"
-> &
-  Pick<RecipeSchema, "editor" | "image" | "publisher">;
+const REQUIRED_KEYS = [
+  "author",
+  "cookTime",
+  "dateModified",
+  "datePublished",
+  "description",
+  "name",
+  // "nutrition",
+  "prepTime",
+  "recipeIngredient",
+  "recipeInstructions",
+  "recipeYield",
+  // "suitableForDiet",
+  "totalTime",
+  "url",
+] as const;
+
+type RecipeBase = PickThenPartialDeep<Recipe_, (typeof REQUIRED_KEYS)[number]> &
+  RecipeSchema;
 
 export interface Recipe extends RecipeBase {
   author: { name: string; url?: string };
@@ -34,7 +35,7 @@ export interface Recipe extends RecipeBase {
   /** A list whose items are defined by schema.org as "a single ingredient used in the recipe" */
   recipeIngredient: string[];
   recipeInstructions: string[];
-  recipeYield: number;
+  // recipeYield: number;
 }
 
 export type RecipeVersions = { original: Recipe; edited?: Recipe };
@@ -43,7 +44,10 @@ const randomAuthor = () => ({
   name: Math.random() > 0.5 ? "John Doe" : "Jane Doe",
 });
 
-const parseYield = (y: RecipeSchema["recipeYield"]) => {
+export const parseYield = (y: unknown) => {
+  if (typeof y === "number") {
+    return y;
+  }
   if (typeof y === "string") {
     const n = parseFloat(y);
     if (!isNaN(n)) {
@@ -111,9 +115,9 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
   const recipeInstructions = toArray(data.recipeInstructions)
     .map(ing => (ing === undefined || typeof ing === "string" ? ing : ing.text))
     .filter(ing => ing !== undefined);
-  const recipeYield =
-    parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1;
+  const recipeYield = `${parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1}`;
   return {
+    ...data,
     author,
     cookTime,
     dateModified,
@@ -136,5 +140,10 @@ export const isRecipe = (x: unknown): x is Recipe => {
   if (!isRecord(x)) {
     return false;
   }
-  return areDeepEqual(x, toRecipe(x));
+  const y: RecipeSchema = x;
+  const requiredPart = pick(y, REQUIRED_KEYS);
+  return areDeepEqual(
+    requiredPart,
+    pick(toRecipe(requiredPart), REQUIRED_KEYS),
+  );
 };
