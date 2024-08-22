@@ -63,7 +63,7 @@
               if (!isRecipe(content)) {
                 throw new Error("invalid recipe");
               }
-              console.log({content});
+              console.log({ content });
               recipe = content;
             };
           }}

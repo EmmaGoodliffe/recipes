@@ -115,7 +115,9 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
   const recipeInstructions = toArray(data.recipeInstructions)
     .map(ing => (ing === undefined || typeof ing === "string" ? ing : ing.text))
     .filter(ing => ing !== undefined);
-  const recipeYield = decimalToString(parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1)
+  const recipeYield = decimalToString(
+    parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1,
+  );
   return {
     ...data,
     author,
