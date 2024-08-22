@@ -5,6 +5,7 @@
   import type { Writable } from "svelte/store";
   import Dialog from "$lib/Dialog.svelte";
   import LoaderText from "$lib/LoaderText.svelte";
+  import { parseYield } from "$lib/Recipe";
   import {
     addIngredientsToShoppingList,
     shoppingList,
@@ -90,7 +91,7 @@
               addIngredientsToShoppingList(
                 list.flat(),
                 toArray(recipeIngredient),
-                { type: "recipe", url, recipeYield },
+                { type: "recipe", url, recipeYield: parseYield(recipeYield) },
               ),
             ];
           })}><i class="bx bxs-basket"></i> add to shopping list</a

@@ -5,11 +5,12 @@
   import Dialog from "$lib/Dialog.svelte";
   import { searchInstructionForIngredients } from "$lib/nlp";
   import { scaleIngredients } from "$lib/nlp";
+  import { parseYield } from "$lib/Recipe";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import { toBeCooked } from "$lib/stores";
   import { recipes } from "$lib/stores";
   import { toArray } from "$lib/types";
-  import { delay, uniqueByKey } from "$lib/util";
+  import { decimalToString, delay, uniqueByKey } from "$lib/util";
 
   // let truncateIngredients = true;
   let direction: "l" | "r" = "r";
@@ -90,13 +91,13 @@
     prepTime={rec?.prepTime}
     cookTime={rec?.cookTime}
     totalTime={rec?.totalTime}
-    recipeYield={rec?.recipeYield}
+    recipeYield={parseYield(rec?.recipeYield)}
     editing={{
       timeEditable: false,
       timeEdit: () => {},
       yieldEditable: true,
       yieldEdit: async () => {
-        scaleValue = rec?.recipeYield ?? 0;
+        scaleValue = parseYield(rec?.recipeYield) ?? 0;
         scaleShow = true;
         await delay(10);
         scaleInput?.focus();
@@ -167,7 +168,7 @@
   <form
     on:submit={e => {
       e.preventDefault();
-      const prevYield = rec?.recipeYield;
+      const prevYield = parseYield(rec?.recipeYield);
       const newYield = scaleValue;
       if (!prevYield) {
         throw new Error(`can't scale from ${prevYield} to ${newYield}`);
@@ -183,7 +184,7 @@
         }
         rv[version] = {
           ...(rv[version] ?? rv.original),
-          recipeYield: newYield,
+          recipeYield: decimalToString(newYield),
           recipeIngredient: scaledIngredients,
         };
         return rv;

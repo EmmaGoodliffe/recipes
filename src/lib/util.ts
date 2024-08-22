@@ -142,9 +142,9 @@ export const durToText = (dur: string | undefined) => {
   }
   const { period, time } = parseDur(dur);
   const pText = period
-    .map(x => `${x.num}${overwrite(x.label, { p: "", m: "mo" })}`)
+    .map(x => decimalToString(x.num) + overwrite(x.label, { p: "", m: "mo" }))
     .join(" ");
-  const tText = time.map(x => `${x.num}${x.label}`).join(" ");
+  const tText = time.map(x => decimalToString(x.num) + x.label).join(" ");
   return pText + tText;
 };
 

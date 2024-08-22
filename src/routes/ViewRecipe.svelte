@@ -14,7 +14,7 @@
   import Dialog from "$lib/Dialog.svelte";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { scaleIngredients } from "$lib/nlp";
-  import { isRecipe } from "$lib/Recipe";
+  import { isRecipe, parseYield } from "$lib/Recipe";
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import {
     Editable,
@@ -31,6 +31,7 @@
   import {
     addDurations,
     dateToText,
+    decimalToString,
     delay,
     doesEndWith,
     parseDur,
@@ -141,7 +142,7 @@
           addIngredientsToShoppingList(list.flat(), toArray(recipeIngredient), {
             type: "recipe",
             url: recipeVersions.original.url,
-            recipeYield,
+            recipeYield: parseYield(recipeYield),
           }),
         ];
       })}><i class="bx bxs-basket"></i> add to shopping list</a
@@ -344,7 +345,7 @@
     prepTime={$rec("prepTime")}
     cookTime={$rec("cookTime")}
     totalTime={$rec("totalTime")}
-    recipeYield={$rec("recipeYield")}
+    recipeYield={parseYield($rec("recipeYield"))}
     editing={{
       timeEditable: !disabled,
       timeEdit: edit,
@@ -475,7 +476,7 @@
         if (editKey === "image") {
           rec.set("image", { url: inputValue });
         } else if (editKey === "recipeYield" && scale) {
-          const prevYield = rec.get("recipeYield");
+          const prevYield = parseYield(rec.get("recipeYield"));
           const newYield = parseFloat(inputValue);
           if (!prevYield) {
             throw new Error(`can't scale yield ${prevYield}`);
@@ -485,7 +486,7 @@
             .get("recipeIngredient")
             .filter(ing => ing !== undefined);
           const scaledIngredients = scaleIngredients(ingredients, scaling);
-          rec.set("recipeYield", newYield);
+          rec.set("recipeYield", decimalToString(newYield));
           rec.set("recipeIngredient", scaledIngredients);
         } else {
           rec.setByPath(editKey ?? "", inputValue);

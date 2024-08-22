@@ -1,5 +1,5 @@
 import { isRecord, toArray } from "./types";
-import { areDeepEqual, pick, toDur, unique } from "./util";
+import { areDeepEqual, decimalToString, pick, toDur, unique } from "./util";
 import type { PickThenPartialDeep } from "./types";
 import type { Recipe_ } from "../../schemas/Recipe.gen";
 import type { Call, Objects } from "hotscript";
@@ -115,7 +115,7 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
   const recipeInstructions = toArray(data.recipeInstructions)
     .map(ing => (ing === undefined || typeof ing === "string" ? ing : ing.text))
     .filter(ing => ing !== undefined);
-  const recipeYield = `${parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1}`;
+  const recipeYield = decimalToString(parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1)
   return {
     ...data,
     author,
