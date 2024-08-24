@@ -24,6 +24,7 @@ A simple and free app for collecting recipes and generating shopping lists.
   - [x] Responsive CSS
   - [ ] `beforeinstallprompt`
 - UX
+  - [ ] Logo
   - [x] Smooth motion
   - [ ] Make UI more unique
   - [ ] Swipe to navigate
