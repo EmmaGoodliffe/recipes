@@ -489,7 +489,7 @@
           rec.set("recipeYield", decimalToString(newYield));
           rec.set("recipeIngredient", scaledIngredients);
         } else {
-          rec.setByPath(editKey ?? "", inputValue);
+          rec.setByPath(editKey ?? "", `${inputValue}`);
         }
         editKey = undefined;
       }}
@@ -504,7 +504,7 @@
               bind:this={input}
             />
           </div>
-        {:else if typeof editObj === "number"}
+        {:else if editKey === "recipeYield"}
           <input
             type="number"
             class="long font-mono"
@@ -512,7 +512,7 @@
             bind:value={inputValue}
             bind:this={input}
           />
-          <div class="check">
+          <div class="mt-2 check">
             <input
               type="checkbox"
               name="scale"

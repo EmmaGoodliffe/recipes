@@ -4,7 +4,7 @@ import { decimalToString, doesInclude, getKeys, overlap, unique } from "./util";
 import type { ItsFunction } from "wink-nlp";
 
 const nlp = wink(model);
-console.log("making model");
+console.log("nlp");
 
 const nlpTokens = (text: string) => {
   const doc = nlp.readDoc(text);

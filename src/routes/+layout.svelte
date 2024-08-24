@@ -49,7 +49,7 @@
   });
 </script>
 
-<div class="overflow-x-hidden">
+<header class="overflow-x-hidden">
   {#if selectedPage === "/" && $toBeEdited}
     <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>edit recipe</h1>
   {:else if selectedPage === "/"}
@@ -61,14 +61,14 @@
   {:else if selectedPage === "/account"}
     <h1 in:fly={{ x: direction === "l" ? -50 : 50 }}>account</h1>
   {/if}
-</div>
+</header>
 <main class="w-11/12 max-w-5xl mx-auto pb-16 flex flex-col text-text">
   <slot />
 </main>
 <Toast />
 <!-- TODO: place scrollbar behind footer -->
 <footer class="fixed bottom-0 w-full py-2 bg-dark-bg text-text text-3xl">
-  <nav class="flex justify-evenly">
+  <nav class="max-w-5xl mx-auto flex justify-evenly">
     {#each pages as p}
       <a href={p.url} on:click={p.onClick ?? (() => {})}>
         {#if p.url !== selectedPage && p.emptySvg}

@@ -35,7 +35,7 @@
       {@const imageUrl =
         typeof rec.image === "string" ? rec.image : toArray(rec.image)[0]?.url}
       <button
-        class="card enforced-rounded"
+        class="border-2 border-border text-left flex flex-col shadow-md rounded-lg overflow-hidden enforced-rounded"
         on:click={() => {
           selectStores.map(s => s.set(recipe));
           showPreview = true;
@@ -49,7 +49,7 @@
             class="w-full flex-1 object-cover"
           />
         {/if}
-        <div class="w-full px-6 py-4 bg-bg">
+        <div class="w-full px-6 py-4">
           <p class="text-lg font-bold truncate">{rec.name}</p>
           <p class="text-sm opacity-50 truncate">
             {rec.publisher?.name
@@ -99,9 +99,3 @@
     </div>
   </Dialog>
 {/if}
-
-<style lang="postcss">
-  button.card {
-    @apply border-2 border-border text-left flex flex-col shadow-md rounded-lg overflow-hidden;
-  }
-</style>

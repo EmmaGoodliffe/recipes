@@ -5,26 +5,30 @@ A simple and free app for collecting recipes and generating shopping lists.
 # To do
 
 - Features
-  - ~~Import recipes~~
-  - ~~Cook recipes~~
-  - ~~Scale recipes~~
-  - ~~Edit recipes~~
-  - Tag recipes
-  - ~~Shopping list~~
+  - [ ] Import recipes
+    - [x] From free URL
+    - [ ] From clipboard
+    - [x] Blank
+  - [x] Cook recipes
+  - [x] Scale recipes
+  - [x] Edit recipes
+  - [ ] Tag recipes
+  - [x] Shopping list
 - PWA
-  - Hosting
-  - ~~Service worker~~
-  - Caching
-  - ~~`manifest.json`~~
-  - ~~https~~
-  - Shell layouts
-  - ~~Responsive CSS~~
-  - `beforeinstallprompt`
-- Compatibility
-  - [x] www.bbcgoodfood.com
-- Aesthetics
-  - ~~Smooth motion~~
-  - Make UI more unique
+  - [ ] Hosting
+  - [x] Service worker
+  - [ ] Caching
+  - [x] `manifest.json`
+  - [x] HTTPS
+  - [ ] Shell layouts
+  - [x] Responsive CSS
+  - [ ] `beforeinstallprompt`
+- UX
+  - [x] Smooth motion
+  - [ ] Make UI more unique
+  - [ ] Swipe to navigate
 - DX
-  - ~~Linting within Svelte~~
-  - Purge unused exports
+  - [x] Linting within Svelte
+  - [ ] Purge unused exports
+- URL compatibility
+  - [x] www.bbcgoodfood.com

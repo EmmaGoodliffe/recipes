@@ -63,7 +63,6 @@
               if (!isRecipe(content)) {
                 throw new Error("invalid recipe");
               }
-              console.log({ content });
               recipe = content;
             };
           }}
@@ -82,9 +81,9 @@
           type="submit"
           class="long bg-file"
           on:click={() => {
-            const uid = $user?.uid ?? "_";
-            const rid = `${Date.now()}-${Math.random().toString().slice(2)}`;
-            const url = `https://recipes-7ef89.web.app/u/${uid}/r/${rid}`;
+            const uid = $user?.uid ?? "x";
+            const rid = `${uid}-${Date.now()}-${Math.random().toString().slice(2)}`;
+            const url = `https://recipes-7ef89.web.app/r/${rid}`;
             recipe = toRecipe({ url });
           }}>go</button
         >

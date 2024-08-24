@@ -41,7 +41,7 @@ type ParsedHtml = Record<
 /**
  * Like `Object.assign` but puts duplicated keys' values into an array rather than overwriting
  * @param arr array of objects, e.g. `[{a:1},{b:2},{a:3}]`
- * @returns overlayed object, e.g `{a:[1,3],b:2}`
+ * @returns overlaid object, e.g `{a:[1,3],b:2}`
  */
 const overlay = <T>(arr: Record<string, T | T[]>[]) => {
   const result: (typeof arr)[number] = {};

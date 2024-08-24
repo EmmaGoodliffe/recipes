@@ -68,9 +68,12 @@
     try {
       return f();
     } catch (error) {
-      if (`${error}`.includes("tried to get path")) {
-        console.log("caught path problems");
-        return undefined;
+      if (
+        error instanceof Error &&
+        error.message.includes("tried to get path")
+      ) {
+        console.log("caught path problems:", error.message);
+        return;
       }
       throw error;
     }
@@ -100,7 +103,7 @@
       ];
       groups = [];
     } else if (method === "source") {
-      sorted = sortByPath(list.flat(), "source.id");
+      sorted = sortByPath(list.flat(), "source.url");
       groups = sorted.map(section => {
         const yields = unique(
           section.map(item =>

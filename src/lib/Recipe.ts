@@ -144,8 +144,6 @@ export const isRecipe = (x: unknown): x is Recipe => {
   }
   const y: RecipeSchema = x;
   const requiredPart = pick(y, REQUIRED_KEYS);
-  return areDeepEqual(
-    requiredPart,
-    pick(toRecipe(requiredPart), REQUIRED_KEYS),
-  );
+  const normalised = pick(toRecipe(requiredPart), REQUIRED_KEYS);
+  return areDeepEqual(requiredPart, normalised);
 };
