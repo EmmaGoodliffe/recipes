@@ -8,7 +8,7 @@
   import { initAll, toBeEdited } from "$lib/stores";
 
   const pageIcons = [
-    { url: "/", icon: "home", onClick: () => toBeEdited.set(undefined) },
+    { url: "/", icon: "home", onClick: () => {} },
     { url: "/cook", icon: "flask", emptySvg: emptyFlask },
     { url: "/shop", icon: "basket" },
     { url: "/account", icon: "user" },
@@ -42,6 +42,9 @@
   });
 
   beforeNavigate(nav => {
+    if (nav.from?.route.id === '/' && nav.to?.route.id === '/') {
+      toBeEdited.set(undefined);
+    }
     if (nav.to?.route.id) {
       selectedPage = nav.to.route.id;
     }

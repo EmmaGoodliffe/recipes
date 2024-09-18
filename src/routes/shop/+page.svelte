@@ -16,7 +16,7 @@
   } from "$lib/stores";
   import { areDeepEqual, delay, unique } from "$lib/util";
 
-  let method: "alphabetical" | "source" = "alphabetical";
+  let method: "alphabetical" | "source" = "source";
   let groups: { name: string }[] = [];
   let editIndex: { i: number; j: number } | undefined;
   let smartEdit = false;

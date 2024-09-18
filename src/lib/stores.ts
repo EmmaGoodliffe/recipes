@@ -10,6 +10,7 @@ import {
   deepUnique,
   getKeys,
   keyValuesToObj,
+  subscribeToInterval,
   sum,
   unique,
 } from "./util";
@@ -28,14 +29,12 @@ export const toast = (text: string) => {
   toastQueue.update(q => [...q, { text, since: Date.now(), open: true }]);
 };
 
-const initToasts = () => {
-  const int = setInterval(() => {
+const initToasts = () =>
+  subscribeToInterval(1000, () =>
     toastQueue.update(q =>
       q.map(t => ({ ...t, open: t.open && Date.now() - t.since < TOAST_TIME })),
-    );
-  }, 1000);
-  return () => clearInterval(int);
-};
+    ),
+  );
 
 export const toastWrap = <T extends Func>(func: T) => {
   return async (

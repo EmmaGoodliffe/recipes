@@ -240,3 +240,8 @@ export const debounce = (
       );
     });
 };
+
+export const subscribeToInterval = (timeInMs: number, f: () => void) => {
+  const int = setInterval(f, timeInMs);
+  return () => clearInterval(int);
+};

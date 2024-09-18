@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { afterUpdate } from "svelte";
+  import { afterUpdate, onMount } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { tweened } from "svelte/motion";
-  import { delay } from "./util";
+  import { delay, subscribeToInterval } from "./util";
 
   export let padding = 5;
   export let ease = false;
@@ -23,16 +23,11 @@
   };
 
   afterUpdate(async () => {
-    // hacky
     await delay(10);
     update();
-    await delay(500);
-    update();
-    await delay(200);
-    update();
-    await delay(200);
-    update();
   });
+
+  onMount(() => subscribeToInterval(500, update));
 </script>
 
 <div class="overflow-hidden" style="height: {$h + padding}px;">
