@@ -6,8 +6,8 @@ A simple and free app for collecting recipes and generating shopping lists.
 
 - Features
   - [ ] Import recipes
-    - [x] From free URL
-    - [ ] From clipboard
+    - [x] By URL
+    - [x] From clipboard
     - [x] Blank
   - [x] Cook recipes
   - [x] Scale recipes
@@ -24,7 +24,7 @@ A simple and free app for collecting recipes and generating shopping lists.
   - [x] Responsive CSS
   - [ ] `beforeinstallprompt`
 - UX
-  - [ ] Logo
+  - [x] Logo
   - [x] Smooth motion
   - [ ] Make UI more unique
   - [ ] Swipe to navigate

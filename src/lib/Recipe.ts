@@ -1,4 +1,4 @@
-import { isRecord, toArray } from "./types";
+import { deepOmitUndefined, isRecord, toArray } from "./types";
 import { areDeepEqual, decimalToString, pick, toDur, unique } from "./util";
 import type { PickThenPartialDeep } from "./types";
 import type { Recipe_ } from "../../schemas/Recipe.gen";
@@ -73,6 +73,9 @@ export const parseYield = (y: unknown) => {
 const withName = <T extends { name?: string }>(obj: T | undefined) =>
   obj && obj.name ? { ...obj, name: obj.name } : undefined;
 
+const first = <T>(x: T | T[] | null | undefined): T | undefined =>
+  toArray(x)[0];
+
 export const toRecipe = (data: RecipeSchema): Recipe => {
   const url = data.url;
   if (!url) {
@@ -84,7 +87,7 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
     console.error(error);
     throw new Error(`invalid recipe url: ${url}`);
   }
-  const author = withName(data.author ?? data.creator) ?? randomAuthor();
+  const author = withName(first(data.author ?? data.creator)) ?? randomAuthor();
   const prepTime = data.prepTime ?? toDur({ h: 0, m: 10 });
   const cookTime = data.cookTime ?? toDur({ h: 0, m: 10 });
   const totalTime = data.totalTime ?? toDur({ h: 0, m: 20 });
@@ -96,16 +99,16 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
     (descriptionLines.length ? descriptionLines.join("\n") : undefined) ??
     data.text ??
     "";
-  const editor = withName(data.editor);
-  const firstImage = toArray(data.image)[0];
+  const editor = withName(first(data.editor));
+  const firstImage = first(data.image);
   const imageUrl =
     firstImage === undefined || typeof firstImage === "string"
       ? firstImage
       : firstImage.url;
   const image = imageUrl ? { url: imageUrl } : undefined;
   const name = data.name ?? data.headline ?? "unknown dish";
-  const pub = withName(data.publisher);
-  const pubLogo = pub && "logo" in pub ? toArray(pub.logo)[0] : undefined;
+  const pub = withName(first(data.publisher));
+  const pubLogo = pub && "logo" in pub ? first(pub.logo) : undefined;
   const pubLogoUrl = isRecord(pubLogo) ? pubLogo.url : pubLogo;
   const publisher = isRecord(pub) ? { ...pub, logo: pubLogoUrl } : pub;
   const recipeIngredient = unique([
@@ -118,7 +121,7 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
   const recipeYield = decimalToString(
     parseYield(data.recipeYield) ?? parseYield(data.yield) ?? 1,
   );
-  return {
+  return deepOmitUndefined({
     ...data,
     author,
     cookTime,
@@ -135,7 +138,7 @@ export const toRecipe = (data: RecipeSchema): Recipe => {
     recipeYield,
     totalTime,
     url,
-  };
+  });
 };
 
 export const isRecipe = (x: unknown): x is Recipe => {

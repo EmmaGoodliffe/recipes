@@ -51,13 +51,18 @@
         {/if}
         <div class="w-full px-6 py-4">
           <p class="text-lg font-bold truncate">{rec.name}</p>
-          <p class="text-sm opacity-50 truncate">
-            {rec.publisher?.name
-              ? `Imported from ${rec.publisher.name}`
-              : `By ${toArray(rec.author)
-                  .map(a => a?.name)
-                  .filter(n => n)
-                  .join(", ")}`}
+          <p class="text-sm truncate">
+            <span class="opacity-50 italic"
+              >{rec.publisher?.name ? "imported from" : "by"}</span
+            >
+            <span class="opacity-75">
+              {rec.publisher?.name
+                ? rec.publisher.name
+                : toArray(rec.author)
+                    .map(a => a?.name)
+                    .filter(n => n)
+                    .join(", ")}</span
+            >
           </p>
         </div>
       </button>

@@ -83,7 +83,7 @@ const parseHtmlEl = (
   };
 };
 
-type JsonValue = string | undefined | { [k: string]: MaybeArray<JsonValue> };
+type JsonValue = string | undefined | JsonValue[] | { [k: string]: JsonValue };
 
 const toJson = (
   arr: ParsedHtml[string],
@@ -125,8 +125,10 @@ const toJson = (
   );
 };
 
-export const htmlToJson = (html: string, schema: string) => {
-  const $ = load(html);
+export const htmlToJson = (
+  html: string,
+  schema: string,
+): { success: true; style: string; data: JsonValue } | { success: false } => {
   const styleDeps = {
     microdata: {
       attrNames: ["itemprop", "itemtype", "content", ["itemscope"]],
@@ -137,6 +139,7 @@ export const htmlToJson = (html: string, schema: string) => {
       parentPrefix: "",
     },
   } as const;
+  const $ = load(html);
   for (const [style, deps] of Object.entries(styleDeps)) {
     const { attrNames, parentPrefix } = deps;
     const [, typeAttr] = attrNames;
@@ -144,7 +147,7 @@ export const htmlToJson = (html: string, schema: string) => {
     try {
       const data = toJson(parseHtmlEl($, el, attrNames, 0)._, 0);
       if (data) {
-        return { style, data };
+        return { success: true, style, data };
       }
     } catch (error) {
       if (`${error}`.includes("AttrError")) {
@@ -158,16 +161,17 @@ export const htmlToJson = (html: string, schema: string) => {
     const [el] = $('script[type="application/ld+json"]');
     const data = JSON.parse($(el).text());
     if (data) {
-      return { style: "ld", data };
+      return { success: true, style: "ld", data };
     }
   } catch (ldError) {
     if (`${ldError}`.includes("AttrError")) {
       console.log("ld parsing failed");
+    } else if (`${ldError}`.includes("JSON")) {
+      console.log("couldn't convert ld to json");
     } else {
       throw ldError;
     }
   }
-  throw new Error(
-    `SchemaError: couldn't identify any style of ${schema} schema in the HTML`,
-  );
+  console.log(`couldn't identify any style of ${schema} schema in the HTML`);
+  return { success: false };
 };

@@ -1,7 +1,7 @@
 import { fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
+import { htmlToJson } from "$lib/html";
 import { toRecipe } from "$lib/Recipe";
-import { htmlToJson } from "$lib/scrape";
 import { isRecord } from "$lib/types";
 
 export const actions = {

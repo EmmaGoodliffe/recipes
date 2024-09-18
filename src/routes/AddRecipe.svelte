@@ -8,15 +8,18 @@
   import { enhance } from "$app/forms";
   import { addRecipe } from "$lib/db";
   import Dialog from "$lib/Dialog.svelte";
+  import { htmlToJson } from "$lib/html";
   import LoaderButton from "$lib/LoaderButton.svelte";
   import { isRecipe, toRecipe } from "$lib/Recipe";
   import { toast, toastWrap, updateData, user } from "$lib/stores";
+    import { isRecord } from "$lib/types";
 
   let auth: Auth | undefined;
   let db: Firestore | undefined;
   let show = false;
   let loading = false;
-  let method: "by-url" | "blank" = "by-url";
+  let method: "url" | "text" | "blank" = "url";
+  let text = "";
   let recipe: Recipe | undefined;
   let onCancel = () => {};
 
@@ -32,13 +35,14 @@
 <Dialog bind:show title="add recipe" onClose={onCancel}>
   <div class="px-4">
     <select name="method" class="long" bind:value={method}>
-      <option value="by-url">by URL</option>
+      <option value="url">by URL</option>
+      <option value="text">from text</option>
       <option value="blank">blank</option>
     </select>
   </div>
   {#if recipe === undefined}
     <div class="px-4 pb-2">
-      {#if method === "by-url"}
+      {#if method === "url"}
         <form
           action="?/fetchRecipe"
           method="post"
@@ -61,6 +65,7 @@
               }
               const content = result.data?.content;
               if (!isRecipe(content)) {
+                toast("invalid recipe");
                 throw new Error("invalid recipe");
               }
               recipe = content;
@@ -71,9 +76,35 @@
             type="url"
             name="url"
             placeholder="https://www.example.com"
-            value="https://www.bbcgoodfood.com/recipes/courgette-curry"
+            value=""
             class="long font-mono"
           />
+          <LoaderButton buttonType="submit" {loading}>go</LoaderButton>
+        </form>
+      {:else if method === "text"}
+        <form
+          on:submit={() => {
+            try {
+              try {
+                const json = JSON.parse(text);
+                recipe = toRecipe(json);
+              } catch (jsonError) {
+                if (!`${jsonError}`.includes("JSON")) {
+                  throw jsonError;
+                }
+                const json = htmlToJson(text, "Recipe");
+                if (json.success === false || !isRecord(json.data)) {
+                  throw new Error("no json in html");
+                }
+                recipe = toRecipe(json.data);
+              }
+            } catch (error) {
+              console.error(error);
+              toast(`invalid recipe: ${error}`);
+            }
+          }}
+        >
+          <textarea class="my-2 font-mono" bind:value={text} />
           <LoaderButton buttonType="submit" {loading}>go</LoaderButton>
         </form>
       {:else if method === "blank"}

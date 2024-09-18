@@ -80,7 +80,7 @@ export default {
         },
       },
       screens: {
-        xs: "320px",
+        xs: "480px",
       },
     },
   },
