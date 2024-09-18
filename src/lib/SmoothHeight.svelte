@@ -8,16 +8,16 @@
   export let ease = false;
   export let duration = ease ? 600 : 200;
 
-  let inner: HTMLDivElement | undefined;
+  let div: HTMLDivElement | undefined;
   const h = tweened(0, { duration, easing: ease ? cubicOut : undefined });
 
   let targetH = 0;
 
   const update = () => {
-    if (inner) {
-      if (Math.abs(targetH - inner.clientHeight) > 0.01) {
-        targetH = inner.clientHeight;
-        h.set(inner.clientHeight);
+    if (div) {
+      if (Math.abs(targetH - div.clientHeight) > 0.01) {
+        targetH = div.clientHeight;
+        h.set(div.clientHeight);
       }
     }
   };
@@ -31,7 +31,7 @@
 </script>
 
 <div class="overflow-hidden" style="height: {$h + padding}px;">
-  <div bind:this={inner}>
+  <div bind:this={div}>
     <slot />
   </div>
 </div>

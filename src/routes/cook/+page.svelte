@@ -9,6 +9,7 @@
   import SmoothHeight from "$lib/SmoothHeight.svelte";
   import { toBeCooked } from "$lib/stores";
   import { recipes } from "$lib/stores";
+  import SwipeToNav from "$lib/SwipeToNav.svelte";
   import { toArray } from "$lib/types";
   import { decimalToString, delay, uniqueByKey } from "$lib/util";
 
@@ -47,6 +48,20 @@
       );
     }
     return result;
+  };
+
+  const updateInstructionIndex = async (d: "l" | "r") => {
+    direction = d;
+    await delay(50);
+    if (d === "l") {
+      if (instructionIndex > 0) {
+        instructionIndex--;
+      }
+    } else {
+      if (instructionIndex < toArray(rec?.recipeInstructions).length - 1) {
+        instructionIndex++;
+      }
+    }
   };
 
   $: rec = $toBeCooked ? $toBeCooked[version] : undefined;
@@ -105,33 +120,29 @@
     }}
   />
   <div class="instruction">
-    <SmoothHeight>
-      {#each instructions as _, i}
-        {#if i === instructionIndex}
-          <p in:fly={{ x: direction === "r" ? 200 : -200 }}>
-            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-            {instructionIndex + 1}. {@html instructionHtml}
-          </p>
-        {/if}
-      {/each}
-    </SmoothHeight>
+    <SwipeToNav onSwipe={updateInstructionIndex}>
+      <SmoothHeight>
+        {#each instructions as _, i}
+          {#if i === instructionIndex}
+            <p in:fly={{ x: direction === "r" ? 200 : -200 }}>
+              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+              {instructionIndex + 1}. {@html instructionHtml}
+            </p>
+          {/if}
+        {/each}
+      </SmoothHeight>
+    </SwipeToNav>
     <div class="flex">
       <button
         disabled={instructionIndex <= 0}
-        on:click={async () => {
-          direction = "l";
-          await delay(50);
-          instructionIndex--;
-        }}><i class="bx bx-chevron-left"></i></button
+        on:click={() => updateInstructionIndex("l")}
+        ><i class="bx bx-chevron-left"></i></button
       >
       <button
         disabled={instructionIndex >=
           toArray(rec?.recipeInstructions).length - 1}
-        on:click={async () => {
-          direction = "r";
-          await delay(50);
-          instructionIndex++;
-        }}><i class="bx bx-chevron-right"></i></button
+        on:click={() => updateInstructionIndex("r")}
+        ><i class="bx bx-chevron-right"></i></button
       >
       <!-- TODO: allow swipes -->
     </div>
