@@ -1,4 +1,4 @@
-// import { getAnalytics } from "firebase/analytics";
+import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -16,7 +16,7 @@ const firebaseConfig = {
 export const getFb = () => {
   try {
     const app = initializeApp(firebaseConfig);
-    // const analytics = getAnalytics(app);
+    getAnalytics(app);
     const auth = getAuth(app);
     const db = getFirestore(app);
     return { auth, db };
