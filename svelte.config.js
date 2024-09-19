@@ -8,7 +8,9 @@ const config = {
   // for more information about preprocessors
   preprocess: vitePreprocess(),
   kit: {
-    adapter: adapter({ out: "functions" }),
+    adapter: adapter({
+      //  out: "functions"
+    }),
   },
 };
 
