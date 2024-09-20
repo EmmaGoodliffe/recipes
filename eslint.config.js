@@ -13,12 +13,7 @@ export default [
   prettier,
   ...svelte.configs["flat/prettier"],
   {
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
+    languageOptions: { globals: { ...globals.browser, ...globals.node } },
   },
   {
     files: ["**/*.svelte"],
@@ -34,9 +29,7 @@ export default [
     ignores: ["build/", ".svelte-kit/", "dist/"],
   },
   {
-    plugins: {
-      import: imp,
-    },
+    plugins: { import: imp },
     rules: {
       "sort-imports": ["error", { ignoreDeclarationSort: true }],
       "import/order": [

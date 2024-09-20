@@ -22,12 +22,12 @@
 
 // from svelte-adapter-firebase
 
-import { logger, region } from "firebase-functions";
-import ssrFunctionServer from "./ssrFunction";
+const { logger, region } = require("firebase-functions");
+const ssrFunction = require("./ssrFunction").default;
 
-export const ssrFunction = region("europe-west1").https.onRequest(
+exports.ssr = region("europe-west1").https.onRequest(
   async (request, response) => {
-    logger.info("Requested resource: " + request.originalUrl);
-    return ssrFunctionServer(request, response);
+    logger.info("requested", request.originalUrl);
+    return ssrFunction(request, response);
   },
 );

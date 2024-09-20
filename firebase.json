@@ -6,7 +6,16 @@
   "hosting": {
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [{ "source": "**", "function": "ssrFunction" }]
+    "rewrites": [
+      {
+        "source": "**",
+        "function": {
+          "functionId": "ssr",
+          "region": "europe-west1",
+          "pinTag": true
+        }
+      }
+    ]
   },
   "functions": {
     "source": "functions",
