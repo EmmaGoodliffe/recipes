@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { writable } from "svelte/store";
-import { getFb } from "../routes/fb";
+import { getFb } from "./fb";
 import { getUserData } from "./db";
 import { parseIngredient, toIngredient } from "./nlp";
 import { isRecord } from "./types";
